@@ -1482,3 +1482,53 @@ h3:hover .hanchor { opacity: 1; }
   background: var(--accent-glow);
   transform: translateY(-2px);
 }
+
+/* ── Post Card Stat Cards ──────────────────────────────────── */
+.post-card-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  transition: var(--transition);
+  cursor: default;
+}
+
+.stat-card .icon {
+  font-size: 1rem;
+}
+
+.stat-card .count {
+  font-weight: 700;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.stat-card .label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-card:hover {
+  background: var(--bg-card);
+  border-color: var(--accent-border);
+  transform: translateY(-2px);
+}
+
+.stat-card:first-child .icon { color: var(--accent); }
+.stat-card:last-child .icon { color: #5ea3ff; } /* Yorumlar için hafif mavi ton */
+
+.post.on-list:hover .stat-card {
+  border-color: rgba(229, 57, 53, 0.2);
+}
