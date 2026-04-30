@@ -1,8 +1,8 @@
 <div class="post-actions">
     <div class="post-actions__likes">
-        <button id="like-button" class="action-btn like-btn">
+        <button id="like-button" class="action-btn like-btn" data-post-id="{{ .RelPermalink }}">
             <span class="icon">❤</span>
-            <span id="like-count">0</span> Beğeni
+            <span class="count" id="like-count">0</span> Beğeni
         </button>
     </div>
     

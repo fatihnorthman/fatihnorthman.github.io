@@ -1526,9 +1526,29 @@ h3:hover .hanchor { opacity: 1; }
   transform: translateY(-2px);
 }
 
-.stat-card:first-child .icon { color: var(--accent); }
-.stat-card:last-child .icon { color: #5ea3ff; } /* Yorumlar için hafif mavi ton */
-
-.post.on-list:hover .stat-card {
-  border-color: rgba(229, 57, 53, 0.2);
+.stat-card.likeable {
+  cursor: pointer;
+  background: transparent;
+  padding: 6px 14px;
 }
+
+.stat-card.is-liked {
+  border-color: var(--accent) !important;
+  background: var(--accent-glow) !important;
+}
+
+.stat-card.is-liked .count {
+  color: var(--accent) !important;
+}
+
+.action-btn.is-liked {
+  border-color: var(--accent) !important;
+  background: var(--accent-glow) !important;
+  color: #fff !important;
+}
+
+.action-btn.is-liked .icon {
+  transform: scale(1.2);
+  display: inline-block;
+}
+
