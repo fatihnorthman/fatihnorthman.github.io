@@ -129,15 +129,16 @@ hr {
 
 /* ── Header ─────────────────────────────────────────────────── */
 .header {
-  padding: 28px 0 !important;
-  border-bottom: 1px solid var(--border) !important;
+  padding: 24px 0 !important;
+  border-bottom: 1px solid rgba(229, 57, 53, 0.15) !important;
   margin-bottom: 56px !important;
   position: sticky;
   top: 0;
   z-index: 100;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  background: rgba(13, 13, 23, 0.85) !important;
+  background: rgba(13, 13, 23, 0.8) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(229, 57, 53, 0.1);
   animation: fadeIn 0.8s var(--ease);
 }
 
