@@ -19,13 +19,13 @@
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
 <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.subtitle }}{{ end }}{{ end }}">
-<meta property="og:image" content="{{ .Site.BaseURL }}logo.svg">
+<meta property="og:image" content="{{ .Site.BaseURL }}logo.png">
 
 {{- /* Twitter Cards */ -}}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
 <meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.subtitle }}{{ end }}{{ end }}">
-<meta name="twitter:image" content="{{ .Site.BaseURL }}logo.svg">
+<meta name="twitter:image" content="{{ .Site.BaseURL }}logo.png">
 
 {{- /* JSON-LD Structured Data */ -}}
 <script type="application/ld+json">
@@ -38,7 +38,7 @@
   },
   "headline": "{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}",
   "description": "{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.subtitle }}{{ end }}{{ end }}",
-  "image": "{{ .Site.BaseURL }}logo.svg",
+  "image": "{{ .Site.BaseURL }}logo.png",
   "author": {
     "@type": "Person",
     "name": "{{ .Site.Title }}",
@@ -49,11 +49,11 @@
     "name": "{{ .Site.Title }}",
     "logo": {
       "@type": "ImageObject",
-      "url": "{{ .Site.BaseURL }}logo.svg"
+      "url": "{{ .Site.BaseURL }}logo.png"
     }
   },
   "datePublished": "{{ .Date.Format "2006-01-02" }}"
 }
 </script>
 
-<link rel="shortcut icon" href="/logo.svg">
+<link rel="shortcut icon" href="/logo.png">
