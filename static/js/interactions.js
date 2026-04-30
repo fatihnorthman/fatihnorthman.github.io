@@ -1,4 +1,4 @@
-// NORTH PROTOCOL - Interactions Engine (Final Stable Version + 3D Tilt)
+// NORTH PROTOCOL - Interactions Engine (Full Suite)
 const _0x4a = ["xusjivptdjytbcobarxh", "supabase.co", "https://"];
 const _0x9b = ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9", "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1c2ppdnB0ZGp5dGJjb2JhcnhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NDQxNjIsImV4cCI6MjA5MzEyMDE2Mn0", "IRKtH_4VOkJeQYTxuTAhGXL1KPS0NsNEP70iTdyZ_B4"];
 
@@ -9,6 +9,7 @@ function startEngine() {
     initInteractions();
     initScrollReveal();
     init3DTilt();
+    initClickRipple();
 }
 
 if (document.readyState === 'loading') {
@@ -17,29 +18,38 @@ if (document.readyState === 'loading') {
     startEngine();
 }
 
+// --- CLICK RIPPLE ENGINE ---
+function initClickRipple() {
+    window.addEventListener('mousedown', (e) => {
+        const ripple = document.createElement('div');
+        ripple.className = 'click-ripple';
+        ripple.style.left = `${e.clientX}px`;
+        ripple.style.top = `${e.clientY}px`;
+        document.body.appendChild(ripple);
+        
+        // Animasyon bitince temizle
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    });
+}
+
 // --- 3D TILT ENGINE ---
 function init3DTilt() {
     const containers = document.querySelectorAll('.post.on-list');
-    
     containers.forEach(container => {
         const card = container.querySelector('.post-card-inner');
         if (!card) return;
-
         container.addEventListener('mousemove', (e) => {
             const rect = container.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-            
-            // Böleni 150 yaparak hareketi mikro seviyeye indirdim
             const rotateX = (y - centerY) / 150; 
             const rotateY = (centerX - x) / 150;
-            
             card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.005)`;
         });
-        
         container.addEventListener('mouseleave', () => {
             card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
         });
