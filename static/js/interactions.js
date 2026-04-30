@@ -10,7 +10,28 @@ function startEngine() {
     initScrollReveal();
     init3DTilt();
     initClickRipple();
+    initCustomCursor();
 }
+
+function initCustomCursor() {
+    const cursor = document.querySelector('.custom-cursor');
+    if (!cursor) return;
+
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('mousedown', () => cursor.style.transform = 'translate(-50%, -50%) scale(0.8)');
+    document.addEventListener('mouseup', () => cursor.style.transform = 'translate(-50%, -50%) scale(1)');
+
+    const interactiveElements = document.querySelectorAll('a, button, .likeable, .stat-card, input, textarea');
+    interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
+    });
+}
+
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', startEngine);

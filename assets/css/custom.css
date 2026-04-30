@@ -2120,3 +2120,51 @@ html, body {
     width: 100% !important;
   }
 }
+
+/* ── Custom Cyber-Cursor & Enhanced Ripple ────────────────── */
+.custom-cursor {
+  width: 25px;
+  height: 25px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999999;
+  transition: transform 0.1s ease-out, opacity 0.3s ease;
+  box-shadow: 0 0 10px var(--accent);
+  transform: translate(-50%, -50%);
+  display: none; /* JS ile gösterilecek */
+}
+
+/* Linklere odaklandığında büyüme efekti */
+.custom-cursor.cursor-hover {
+  transform: translate(-50%, -50%) scale(2);
+  background: rgba(229, 57, 53, 0.1);
+  border-width: 1px;
+}
+
+/* Tıklama Dalgası (Daha belirgin) */
+.click-ripple {
+  position: absolute;
+  border: 2px solid var(--accent);
+  background: rgba(229, 57, 53, 0.3);
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple-ultra 0.8s ease-out;
+  pointer-events: none;
+  z-index: 9999998;
+  box-shadow: 0 0 20px var(--accent);
+}
+
+@keyframes ripple-ultra {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Masaüstünde imleci sakla */
+@media (min-width: 769px) {
+  * { cursor: none !important; }
+  .custom-cursor { display: block; }
+}
