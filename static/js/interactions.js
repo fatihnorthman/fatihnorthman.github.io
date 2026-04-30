@@ -209,36 +209,31 @@ async function fetchGlobalLikes() {
                 "Cache-Control": "no-cache" // Önbelleği parametre eklemeden kırmanın en temiz yolu
             }
         });
-        const data = await response.json();
-        const currentPath = decodeURIComponent(window.location.pathname).replace(/\/$/, "");
-
-        if (data && Array.isArray(data)) {
-            // Önce tüm beğenileri normalize ve decode edilmiş ID'lere göre toplayalım
+            // Önce tüm beğenileri normalize, decode ve temizlenmiş ID'lere göre toplayalım
             const consolidatedLikes = {};
             data.forEach(item => {
-                const normalizedId = decodeURIComponent(item.post_id).replace(/\/$/, "");
+                // Her türlü kodlamayı çöz, slashları at, küçük harfe çevir
+                const normalizedId = decodeURIComponent(item.post_id).toLowerCase().replace(/\/$/, "").split('/').pop();
                 consolidatedLikes[normalizedId] = (consolidatedLikes[normalizedId] || 0) + (parseInt(item.count) || 0);
             });
 
+            const currentPathClean = decodeURIComponent(window.location.pathname).toLowerCase().replace(/\/$/, "").split('/').pop();
+
             // Şimdi sayfadaki tüm butonları tara ve eşleşenleri güncelle
-            Object.keys(consolidatedLikes).forEach(normalizedId => {
-                const totalCount = consolidatedLikes[normalizedId];
+            const allPotential = document.querySelectorAll('.like-btn, .stat-card, #like-count, .count');
+            allPotential.forEach(el => {
+                // Elementin kendi ID'sini veya bulunduğu sayfanın ID'sini al
+                let elRawId = el.dataset.postId || (el.closest('[data-post-id]') ? el.closest('[data-post-id]').dataset.postId : window.location.pathname);
+                const elCleanId = decodeURIComponent(elRawId).toLowerCase().replace(/\/$/, "").split('/').pop();
                 
-                // Sayfadaki tüm potansiyel butonları bul
-                const allPotential = document.querySelectorAll('.like-btn, .stat-card, #like-count');
-                allPotential.forEach(el => {
-                    const elRawId = el.dataset.postId || (el.id === 'like-count' ? window.location.pathname : null);
-                    if (!elRawId) return;
-                    
-                    const elCleanId = decodeURIComponent(elRawId).replace(/\/$/, "");
-                    if (elCleanId === normalizedId) {
-                        const countSpan = el.querySelector('.count') || (el.id === 'like-count' ? el : null);
-                        if (countSpan) {
-                            const localCount = parseInt(countSpan.innerText) || 0;
-                            if (totalCount >= localCount) countSpan.innerText = totalCount;
-                        }
+                const totalCount = consolidatedLikes[elCleanId];
+                if (totalCount !== undefined) {
+                    const countSpan = el.classList.contains('count') ? el : (el.querySelector('.count') || (el.id === 'like-count' ? el : null));
+                    if (countSpan) {
+                        const localCount = parseInt(countSpan.innerText) || 0;
+                        if (totalCount >= localCount) countSpan.innerText = totalCount;
                     }
-                });
+                }
             });
         }
     } catch (e) { console.error("Like fetch error:", e); }
