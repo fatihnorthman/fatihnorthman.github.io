@@ -224,34 +224,38 @@ function _SUPABASE_URL() { return `${_0x4a[2]}${_0x4a[0]}.${_0x4a[1]}`; }
 function _SUPABASE_KEY() { return `${_0x9b[0]}.${_0x9b[1]}.${_0x9b[2]}`; }
 
 async function updateLikeInDB(postId) {
+    // URL sonundaki slash farklarını temizleyerek ID'yi standartlaştır
+    const cleanId = postId.replace(/\/$/, ""); 
+    console.log("Updating Like for:", cleanId);
+
     try {
-        const url = `${_SUPABASE_URL()}/rest/v1/likes?post_id=eq.${postId}`;
+        const url = `${_SUPABASE_URL()}/rest/v1/likes?post_id=eq.${cleanId}`;
         const headers = { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` };
         
         const res = await fetch(url, { headers });
         const data = await res.json();
         
         if (data && data.length > 0) {
-            // Mevcut kaydı güncelle (+1 yap)
             const newCount = (parseInt(data[0].count) || 0) + 1;
-            await fetch(url, {
+            const updateRes = await fetch(url, {
                 method: 'PATCH',
                 headers: { ...headers, "Content-Type": "application/json", "Prefer": "return=minimal" },
                 body: JSON.stringify({ count: newCount })
             });
+            if (updateRes.ok) console.log("Like Updated Successfully to:", newCount);
         } else {
-            // Yeni kayıt oluştur
-            await fetch(`${_SUPABASE_URL()}/rest/v1/likes`, {
+            const insertRes = await fetch(`${_SUPABASE_URL()}/rest/v1/likes`, {
                 method: 'POST',
                 headers: { ...headers, "Content-Type": "application/json", "Prefer": "return=minimal" },
-                body: JSON.stringify({ post_id: postId, count: 1 })
+                body: JSON.stringify({ post_id: cleanId, count: 1 })
             });
+            if (insertRes.ok) console.log("New Like Entry Created");
         }
         
-        // Güncelleme sonrası tüm cihazlardaki sayıları tazele
-        setTimeout(fetchGlobalLikes, 500); 
+        // Veritabanı işleminin yansıması için kısa bir süre bekleyip tüm sayaçları tazele
+        setTimeout(fetchGlobalLikes, 800); 
     } catch (e) {
-        console.error("DB Update Error:", e);
+        console.error("Critical Like Sync Error:", e);
     }
 }
 
