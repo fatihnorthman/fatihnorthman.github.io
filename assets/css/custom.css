@@ -1669,3 +1669,25 @@ h3:hover .hanchor { opacity: 1; }
 @keyframes fillBar {
   to { width: 100%; }
 }
+
+/* ── Scroll Reveal Animations ──────────────────────────────── */
+.post.on-list {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease);
+  filter: blur(4px);
+  will-change: transform, opacity;
+}
+
+.post.on-list.reveal-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+/* Geri kaydırmada yumuşak bir çıkış için */
+.post.on-list:not(.reveal-visible) {
+  opacity: 0;
+  transform: translateY(30px) scale(0.98);
+  filter: blur(4px);
+}
