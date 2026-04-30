@@ -1804,64 +1804,44 @@ h3:hover .hanchor { opacity: 1; }
   .stat-card { padding: 8px 12px; flex: 1; justify-content: center; }
   .read-more { width: 100%; text-align: center; justify-content: center; }
 
-  /* ── Post Interaction Hub (Like & Share Cards) ──────────────── */
+  /* ── Post Interaction Hub (Like & Share) ──────────────── */
   .post-interaction-hub {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin: 40px 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 0;
+    flex-wrap: wrap;
   }
 
   .interaction-card {
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(229, 57, 53, 0.2);
-    border-radius: 16px;
-    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 12px 20px;
     transition: all 0.3s ease;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    align-items: center;
+    min-width: 140px;
   }
 
   .interaction-card:hover {
     border-color: var(--accent);
     background: rgba(229, 57, 53, 0.05);
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
   }
 
   .interaction-btn.like-btn {
-    background: transparent;
-    border: none;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    cursor: pointer;
+    gap: 12px;
   }
 
   .like-btn .icon {
-    font-size: 2.2rem;
+    font-size: 1.6rem; /* Devasa boyuttan daha zarif bir boyuta çekildi */
     color: #555;
-    transition: all 0.3s ease;
-  }
-
-  .like-btn.liked .icon {
-    color: var(--accent);
-    text-shadow: 0 0 15px var(--accent);
-  }
-
-  .like-btn .stats {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
   }
 
   .like-btn .count {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
   }
 
   .like-btn .label {
@@ -2046,18 +2026,31 @@ h3:hover .hanchor { opacity: 1; }
   }
 
   .post-card-stats {
-    gap: 12px !important;
+    gap: 10px !important;
     display: flex !important;
     align-items: center !important;
   }
 
   .stat-card {
-    background: transparent !important;
-    padding: 0 !important;
-    border: none !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: 0.85rem !important;
+    color: #ccc !important;
+    transition: all 0.3s ease !important;
   }
 
-  .stat-card .label { display: none !important; } /* Sadece ikon ve sayı */
+  .stat-card:active {
+    background: var(--accent) !important;
+    color: #fff !important;
+    transform: scale(0.95);
+  }
+
+  .stat-card .label { display: none !important; }
 
   .read-more {
     width: auto !important;
