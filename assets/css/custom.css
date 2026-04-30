@@ -1712,6 +1712,9 @@ h3:hover .hanchor { opacity: 1; }
 
 .post.on-list:hover .post-card-inner {
   border-color: var(--accent);
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 
+              0 0 15px rgba(229, 57, 53, 0.1);
+  transform: translateY(-5px); /* Hafifçe yukarı kalkma hissi */
 }
+
 
