@@ -2235,3 +2235,40 @@ html, body {
     display: none !important;
   }
 }
+
+/* ── In-Feed Horizontal Ad Slot ─────────────────────────── */
+.in-feed-ad {
+  width: 100%;
+  margin: 30px 0;
+  background: rgba(15, 15, 20, 0.6);
+  border: 1px dashed rgba(255, 193, 7, 0.4); /* Sarı Cyber-Border */
+  border-radius: 12px;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.ad-placeholder-horizontal {
+  color: rgba(255, 193, 7, 0.6);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 20px;
+}
+
+.in-feed-ad:hover {
+  border-color: #ffc107;
+  box-shadow: 0 0 20px rgba(255, 193, 7, 0.1);
+}
+
+@media screen and (max-width: 768px) {
+  .in-feed-ad {
+    margin: 20px 0;
+    min-height: 80px;
+  }
+}
