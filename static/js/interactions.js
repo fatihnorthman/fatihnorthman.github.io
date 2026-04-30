@@ -252,49 +252,47 @@ function _SUPABASE_URL() { return `${_0x4a[2]}${_0x4a[0]}.${_0x4a[1]}`; }
 function _SUPABASE_KEY() { return `${_0x9b[0]}.${_0x9b[1]}.${_0x9b[2]}`; }
 
 async function updateLikeInDB(rawPostId) {
-    const rawParts = decodeURIComponent(rawPostId).toLowerCase().split('/').filter(p => p);
-    const cleanIdForQuery = rawParts.length > 0 ? rawParts.pop() : "home";
-    const standardId = rawPostId.replace(/\/$/, "");
+    // fetchGlobalLikes ile AYNI slug mantığı
+    const parts = decodeURIComponent(rawPostId).toLowerCase().split('/').filter(p => p);
+    const slug = parts.length > 0 ? parts.pop() : "home";
     
     try {
         const headers = { 
             "apikey": _SUPABASE_KEY(), 
             "Authorization": `Bearer ${_SUPABASE_KEY()}`,
             "Content-Type": "application/json",
-            "Prefer": "resolution=merge-duplicates",
-            "Cache-Control": "no-cache"
+            "Prefer": "resolution=merge-duplicates"
         };
         
-        // Önce veritabanındaki TÜM kayıtları çekip bu yazıya ait olanları toplayalım
-        const getRes = await fetch(`${_SUPABASE_URL()}/rest/v1/likes`, {
-            headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}`, "Cache-Control": "no-cache" }
+        // Tüm kayıtları çek, bu yazıya ait olanları SLUG ile eşleştir
+        const getRes = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?select=*`, {
+            cache: "no-store",
+            headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` }
         });
         const data = await getRes.json();
         let currentTotal = 0;
         if (data && Array.isArray(data)) {
             data.forEach(item => {
-                if (decodeURIComponent(item.post_id).replace(/\/$/, "") === cleanIdForQuery) {
+                // Aynı slug mantığı ile karşılaştır
+                const itemParts = decodeURIComponent(item.post_id).toLowerCase().split('/').filter(p => p);
+                const itemSlug = itemParts.length > 0 ? itemParts.pop() : "home";
+                if (itemSlug === slug) {
                     currentTotal += (parseInt(item.count) || 0);
                 }
             });
         }
         const newCount = currentTotal + 1;
+        console.log(`Slug: ${slug}, Current: ${currentTotal}, New: ${newCount}`);
 
-        // On Conflict Do Update: Hugo'nun standart ID'si üzerine yaz
+        // DB'ye slug ile yaz (tutarlı format)
         const res = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?on_conflict=post_id`, {
             method: 'POST',
             headers: headers,
-            body: JSON.stringify({ post_id: standardId, count: newCount })
+            body: JSON.stringify({ post_id: `/${slug}`, count: newCount })
         });
 
         if (res.ok) {
-            console.log("DB Persistence Success! Combined Count:", newCount);
-            // Mobilde geri bildirim için butonu parlat
-            const btn = document.querySelector(`[data-post-id="${rawPostId}"], #like-button`);
-            if (btn) {
-                btn.style.boxShadow = "0 0 30px var(--accent)";
-                setTimeout(() => { btn.style.boxShadow = ""; }, 1000);
-            }
+            console.log("DB Persistence Success! Count:", newCount);
             setTimeout(fetchGlobalLikes, 1500); 
         } else {
             console.error("DB Update Failed:", res.status);
