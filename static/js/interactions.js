@@ -170,18 +170,54 @@ async function initInteractions() {
             await updateLikeInDB(rawId); // Veritabanına orjinal (encoded) ID'yi gönder
         };
     });
-    if (document.getElementById('comments-list')) fetchComments(window.location.pathname);
+    // Yorum listesini yükle (slug tabanlı)
+    const commentsList = document.getElementById('comments-list');
+    if (commentsList) {
+        const slug = decodeURIComponent(window.location.pathname).toLowerCase().split('/').filter(p => p).pop() || 'home';
+        fetchComments(`/${slug}`);
+    }
+
     if (commentForm) {
         commentForm.onsubmit = async (e) => {
             e.preventDefault();
-            const honeypot = document.getElementById('comment-honeypot').value;
-            if (honeypot) return; // Bot detected
+            const honeypot = document.getElementById('comment-honeypot')?.value;
+            if (honeypot) return; // Bot tespit edildi
 
-            const name = document.getElementById('comment-name').value;
-            const content = document.getElementById('comment-text').value;
-            const postId = window.location.pathname;
-            await submitComment(postId, name, content);
-            commentForm.reset(); fetchComments(postId);
+            const name = document.getElementById('comment-name')?.value?.trim();
+            const content = document.getElementById('comment-text')?.value?.trim();
+
+            // Basit doğrulama
+            if (!name || name.length < 2) {
+                alert('Lütfen geçerli bir isim girin.');
+                return;
+            }
+            if (!content || content.length < 3) {
+                alert('Lütfen bir yorum yazın.');
+                return;
+            }
+
+            const slug = decodeURIComponent(window.location.pathname).toLowerCase().split('/').filter(p => p).pop() || 'home';
+            const postId = `/${slug}`;
+
+            const submitBtn = commentForm.querySelector('button[type="submit"]');
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = 'Gönderiliyor...'; }
+
+            try {
+                await submitComment(postId, name, content);
+                commentForm.reset();
+                fetchComments(postId);
+                // Başarı geri bildirimi
+                const msg = document.createElement('p');
+                msg.style.cssText = 'color:#4caf50;font-size:0.9rem;margin-top:8px;';
+                msg.innerText = '✓ Yorumunuz gönderildi!';
+                commentForm.appendChild(msg);
+                setTimeout(() => msg.remove(), 3000);
+            } catch (err) {
+                alert('Yorum gönderilemedi, lütfen tekrar deneyin.');
+                console.error('Comment submit error:', err);
+            } finally {
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = 'Gönder'; }
+            }
         };
     }
 }
@@ -303,31 +339,40 @@ async function updateLikeInDB(rawPostId) {
 }
 
 async function fetchComments(postId) {
-    const res = await fetch(`${_SUPABASE_URL()}/rest/v1/comments?post_id=eq.${postId}&order=created_at.desc`, {
-        headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` }
-    });
-    const data = await res.json();
-    const list = document.getElementById('comments-list');
-    if (data && Array.isArray(data) && data.length > 0) {
-        list.innerHTML = data.map(c => {
-            const safeName = escapeHTML(c.name);
-            const safeContent = escapeHTML(c.content);
-            const initials = safeName.substring(0,2).toUpperCase();
-            const safeDate = new Date(c.created_at).toLocaleDateString('tr-TR');
-            
-            return `
-                <div class="comment-card">
-                    <div class="comment-header">
-                        <div class="comment-avatar">${initials}</div>
-                        <div class="comment-info">
-                            <span class="comment-author">${safeName}</span>
-                            <span class="comment-date">${safeDate}</span>
+    try {
+        const res = await fetch(`${_SUPABASE_URL()}/rest/v1/comments?post_id=eq.${encodeURIComponent(postId)}&order=created_at.desc`, {
+            cache: "no-store",
+            headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` }
+        });
+        const data = await res.json();
+        const list = document.getElementById('comments-list');
+        if (!list) return;
+
+        if (data && Array.isArray(data) && data.length > 0) {
+            list.innerHTML = data.map(c => {
+                const safeName = escapeHTML(c.name || 'Anonim');
+                const safeContent = escapeHTML(c.content || '');
+                const initials = safeName.substring(0,2).toUpperCase();
+                const safeDate = c.created_at ? new Date(c.created_at).toLocaleDateString('tr-TR') : '';
+                
+                return `
+                    <div class="comment-card">
+                        <div class="comment-header">
+                            <div class="comment-avatar">${initials}</div>
+                            <div class="comment-info">
+                                <span class="comment-author">${safeName}</span>
+                                <span class="comment-date">${safeDate}</span>
+                            </div>
                         </div>
+                        <div class="comment-body">${safeContent}</div>
                     </div>
-                    <div class="comment-body">${safeContent}</div>
-                </div>
-            `;
-        }).join('');
+                `;
+            }).join('');
+        } else {
+            list.innerHTML = '<p style="color:#888;font-size:0.9rem;">Henüz yorum yok. İlk yorumu sen yap!</p>';
+        }
+    } catch (err) {
+        console.error('Comment fetch error:', err);
     }
 }
 
