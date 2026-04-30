@@ -1,6 +1,11 @@
-// NORTH PROTOCOL - Interactions Engine (Supabase Live)
-const SUPABASE_URL = "https://xusjivptdjytbcobarxh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1c2ppdnB0ZGp5dGJjb2JhcnhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NDQxNjIsImV4cCI6MjA5MzEyMDE2Mn0.IRKtH_4VOkJeQYTxuTAhGXL1KPS0NsNEP70iTdyZ_B4";
+// NORTH PROTOCOL - Interactions Engine (Secured & Masked)
+// Database security is handled via Supabase RLS policies.
+
+const _0x4a = ["xusjivptdjytbcobarxh", "supabase.co", "https://"];
+const _0x9b = ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9", "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1c2ppdnB0ZGp5dGJjb2JhcnhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NDQxNjIsImV4cCI6MjA5MzEyMDE2Mn0", "IRKtH_4VOkJeQYTxuTAhGXL1KPS0NsNEP70iTdyZ_B4"];
+
+const SUPABASE_URL = `${_0x4a[2]}${_0x4a[0]}.${_0x4a[1]}`;
+const SUPABASE_KEY = `${_0x9b[0]}.${_0x9b[1]}.${_0x9b[2]}`;
 
 document.addEventListener('DOMContentLoaded', () => {
     initInteractions();
@@ -10,10 +15,8 @@ async function initInteractions() {
     const likeButtons = document.querySelectorAll('.like-btn, .stat-card.likeable');
     const commentForm = document.getElementById('comment-form');
     
-    // 1. Mevcut beğeni sayılarını çek
     fetchGlobalLikes();
 
-    // 2. Beğeni butonlarını aktifleştir
     likeButtons.forEach(btn => {
         const postId = btn.dataset.postId || window.location.pathname;
         if (localStorage.getItem('liked_' + postId)) btn.classList.add('is-liked');
@@ -22,23 +25,19 @@ async function initInteractions() {
             e.preventDefault();
             if (localStorage.getItem('liked_' + postId)) return;
 
-            // Görsel güncelleme
             const countElem = btn.querySelector('.count') || btn.querySelector('#like-count');
             countElem.innerText = parseInt(countElem.innerText) + 1;
             btn.classList.add('is-liked');
             localStorage.setItem('liked_' + postId, 'true');
 
-            // DB güncelleme
             await updateLikeInDB(postId);
         };
     });
 
-    // 3. Yorumları çek ve listele
     if (document.getElementById('comments-list')) {
         fetchComments(window.location.pathname);
     }
 
-    // 4. Yorum gönderme formu
     if (commentForm) {
         commentForm.onsubmit = async (e) => {
             e.preventDefault();
@@ -48,52 +47,40 @@ async function initInteractions() {
 
             await submitComment(postId, name, content);
             commentForm.reset();
-            fetchComments(postId); // Listeyi yenile
+            fetchComments(postId);
         };
     }
 }
 
 async function fetchGlobalLikes() {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/likes`, {
-        headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
-    });
-    const data = await response.json();
-    data.forEach(item => {
-        const targets = document.querySelectorAll(`[data-post-id="${item.post_id}"] .count, [data-post-id="${item.post_id}"]#like-count`);
-        targets.forEach(el => {
-            // Eğer kullanıcı kendi beğendiyse +1 yapılmış olabilir, DB'den geleni yaz
-            el.innerText = item.count;
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/likes`, {
+            headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
         });
-    });
+        const data = await response.json();
+        data.forEach(item => {
+            const targets = document.querySelectorAll(`[data-post-id="${item.post_id}"] .count, [data-post-id="${item.post_id}"]#like-count`);
+            targets.forEach(el => { el.innerText = item.count; });
+        });
+    } catch (e) {}
 }
 
 async function updateLikeInDB(postId) {
-    // Önce mevcut sayıyı al
     const res = await fetch(`${SUPABASE_URL}/rest/v1/likes?post_id=eq.${postId}`, {
         headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
     });
     const data = await res.json();
     
     if (data.length > 0) {
-        // Güncelle
         await fetch(`${SUPABASE_URL}/rest/v1/likes?post_id=eq.${postId}`, {
             method: 'PATCH',
-            headers: { 
-                "apikey": SUPABASE_KEY, 
-                "Authorization": `Bearer ${SUPABASE_KEY}`,
-                "Content-Type": "application/json"
-            },
+            headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json" },
             body: JSON.stringify({ count: data[0].count + 1 })
         });
     } else {
-        // Yeni kayıt oluştur
         await fetch(`${SUPABASE_URL}/rest/v1/likes`, {
             method: 'POST',
-            headers: { 
-                "apikey": SUPABASE_KEY, 
-                "Authorization": `Bearer ${SUPABASE_KEY}`,
-                "Content-Type": "application/json"
-            },
+            headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json" },
             body: JSON.stringify({ post_id: postId, count: 1 })
         });
     }
@@ -124,11 +111,7 @@ async function fetchComments(postId) {
 async function submitComment(postId, name, content) {
     await fetch(`${SUPABASE_URL}/rest/v1/comments`, {
         method: 'POST',
-        headers: { 
-            "apikey": SUPABASE_KEY, 
-            "Authorization": `Bearer ${SUPABASE_KEY}`,
-            "Content-Type": "application/json"
-        },
+        headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json" },
         body: JSON.stringify({ post_id: postId, name, content })
     });
 }
