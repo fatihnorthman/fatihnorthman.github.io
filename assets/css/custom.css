@@ -720,21 +720,82 @@ h3:hover .hanchor { opacity: 1; }
 
 /* ── Footer ─────────────────────────────────────────────────── */
 .footer {
-  padding: 40px 0 !important;
+  padding: 48px 0 32px !important;
   border-top: 1px solid var(--border) !important;
   margin-top: 60px !important;
 }
 
 .footer__inner {
   display: flex !important;
+  flex-direction: column !important;
   align-items: center !important;
-  justify-content: space-between !important;
-  flex-wrap: wrap !important;
-  gap: 12px !important;
+  gap: 20px !important;
 }
 
-.copyright,
-.copyright--user {
+/* Üst satır: Nav linkleri */
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 24px;
+}
+
+.footer-nav a {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted) !important;
+  text-decoration: none;
+  transition: color 0.2s;
+  border: none !important;
+  letter-spacing: 0.03em;
+}
+
+.footer-nav a:hover {
+  color: var(--accent) !important;
+}
+
+/* Alt satır: Telif + Sosyal */
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  width: 100%;
+}
+
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.25);
+}
+
+.footer-copy strong {
+  color: rgba(255,255,255,0.4);
+}
+
+.footer-social {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-social a {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.25) !important;
+  text-decoration: none;
+  transition: color 0.2s;
+  border: none !important;
+}
+
+.footer-social a:hover {
+  color: var(--accent) !important;
+}
+
+/* Eski copyright sınıfları (uyumluluk için) */
+.copyright, .copyright--user {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--text-muted) !important;
@@ -744,16 +805,19 @@ h3:hover .hanchor { opacity: 1; }
   align-items: center;
 }
 
-.copyright a,
-.copyright--user a {
+.copyright a, .copyright--user a {
   color: var(--text-muted) !important;
   transition: color 0.2s;
   border: none !important;
 }
 
-.copyright a:hover,
-.copyright--user a:hover {
+.copyright a:hover, .copyright--user a:hover {
   color: var(--accent) !important;
+}
+
+@media (max-width: 600px) {
+  .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+  .footer-nav { gap: 8px 16px; }
 }
 
 /* ── Scrollbar ──────────────────────────────────────────────── */
