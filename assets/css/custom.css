@@ -53,6 +53,10 @@ body {
   line-height: 1.8;
   margin: 0;
   animation: fadeIn 0.4s var(--ease);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(229, 57, 53, 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(229, 57, 53, 0.03) 0%, transparent 40%);
+  background-attachment: fixed;
 }
 
 @keyframes fadeIn {
@@ -176,6 +180,7 @@ hr {
   color: var(--text-dim);
   letter-spacing: 0.08em;
   transition: var(--transition);
+  text-shadow: 0 0 8px rgba(229, 57, 53, 0.2);
 }
 
 .header__logo a:hover .logo-signature {
@@ -190,7 +195,7 @@ hr {
   background: transparent !important;
   padding: 0 !important;
   margin: 0 !important;
-  filter: drop-shadow(0 0 12px rgba(229, 57, 53, 0.15));
+  filter: drop-shadow(0 0 15px rgba(229, 57, 53, 0.3));
   transition: transform 0.3s var(--ease), filter 0.3s var(--ease);
 }
 
@@ -789,6 +794,7 @@ h3:hover .hanchor { opacity: 1; }
   margin: 0 0 20px !important;
   letter-spacing: -0.03em;
   color: #fff !important;
+  text-shadow: 0 0 30px rgba(229, 57, 53, 0.1);
 }
 
 .hero__name {
