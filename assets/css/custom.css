@@ -1866,7 +1866,19 @@ h3:hover .hanchor { opacity: 1; }
     color: #888;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     flex: 1;
+    -webkit-tap-highlight-color: transparent; /* Mavi kutuyu kaldır */
+    user-select: none;
   }
+
+  .mobile-nav__item:active {
+    transform: scale(0.92); /* Dokunsal geri bildirim */
+  }
+
+  .mobile-nav__item:active .nav-icon {
+    filter: drop-shadow(0 0 12px var(--accent)) !important;
+    stroke: var(--accent) !important;
+  }
+
 
   .nav-icon {
     width: 22px;
