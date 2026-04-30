@@ -4,6 +4,7 @@ date: 2026-04-30T17:36:00+03:00
 draft: false
 tags: ["Linux", "Windows", "Winboat", "Docker", "Sanallaştırma", "Rehber"]
 categories: ["Yazılım"]
+image: "/images/winboat-preview.jpg"
 author: "Fatih Northman"
 description: "Linux üzerinde Windows uygulamalarını gerçek bir Windows ortamında ama yerel bir pencere gibi çalıştırmanızı sağlayan Winboat yazılımını inceliyoruz."
 ---

@@ -29,6 +29,13 @@
     {{ range $index, $page := $paginator.Pages }}
         <article class="post on-list">
           <div class="post-card-inner">
+            {{ with .Params.image }}
+            <div class="post-card-image">
+              <a href="{{ $.RelPermalink }}">
+                <img src="{{ . }}" alt="{{ $.Title }}">
+              </a>
+            </div>
+            {{ end }}
             <div class="post-header">
               <div class="fn-avatar-frame">
                 <img src="/logo.svg" alt="Fatih Northman Logo">
