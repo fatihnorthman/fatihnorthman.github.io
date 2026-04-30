@@ -1694,16 +1694,24 @@ h3:hover .hanchor { opacity: 1; }
 
 /* ── 3D Tilt Effect ────────────────────────────────────────── */
 .post.on-list {
-  perspective: 1000px; /* 3D derinlik hissi */
-  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out !important;
+  perspective: 1000px;
+  overflow: visible !important; /* Tilt taşması için */
+  margin-bottom: 40px;
 }
 
-.post.on-list .post-card-inner {
-  transition: transform 0.15s ease-out;
+.post-card-inner {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 30px;
+  height: 100%;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out !important;
   transform-style: preserve-3d;
+  will-change: transform;
 }
 
-.post.on-list:hover {
-  z-index: 10;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+.post.on-list:hover .post-card-inner {
+  border-color: var(--accent);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
 }
+

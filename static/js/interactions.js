@@ -19,24 +19,27 @@ if (document.readyState === 'loading') {
 
 // --- 3D TILT ENGINE ---
 function init3DTilt() {
-    const cards = document.querySelectorAll('.post.on-list');
+    const containers = document.querySelectorAll('.post.on-list');
     
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
+    containers.forEach(container => {
+        const card = container.querySelector('.post-card-inner');
+        if (!card) return;
+
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             
-            const rotateX = (y - centerY) / 15; // Eğilme sertliği
-            const rotateY = (centerX - x) / 15;
+            const rotateX = (y - centerY) / 10; 
+            const rotateY = (centerX - x) / 10;
             
             card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
         });
         
-        card.addEventListener('mouseleave', () => {
+        container.addEventListener('mouseleave', () => {
             card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
         });
     });

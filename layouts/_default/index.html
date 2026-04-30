@@ -29,63 +29,65 @@
     {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
     {{ range $paginator.Pages }}
         <article class="post on-list">
-          <div class="post-header">
-            <div class="fn-avatar-frame">
-              <img src="/logo.svg" alt="Fatih Northman Logo">
-            </div>
-            <div class="post-user-info">
-              <span class="post-username">Fatih Northman</span>
-              <span class="post-handle">@fatihnorthman</span>
-            </div>
-          </div>
-
-          <h2 class="post-title">
-            <a href="{{ .Permalink }}">{{ .Title | markdownify }}</a>
-          </h2>
-
-          <div class="post-meta">
-            {{- if .Date -}}
-              <time class="post-date">
-                {{- partial "post-date" . -}}
-              </time>
-            {{- end -}}
-            {{- if and (.Param "readingTime") (eq (.Param "readingTime") true) -}}
-              <span class="post-reading-time">· {{ .ReadingTime }} dk okuma</span>
-            {{- end -}}
-          </div>
-
-          <div class="post-content">
-            {{ if .Description }}
-              {{ .Description | markdownify }}
-            {{ else }}
-              {{ .Summary }}
-            {{ end }}
-          </div>
-
-          <div class="post-tags-list">
-            {{ if .Params.tags }}
-              {{ range .Params.tags }}
-              #<a href="{{ (urlize (printf "tags/%s/" . )) | absLangURL }}">{{- . -}}</a>&nbsp;
-              {{ end }}
-            {{ end }}
-          </div>
-
-          <div class="post-footer">
-            <div class="post-card-stats">
-              <button class="stat-card likeable" data-post-id="{{ .RelPermalink }}">
-                <span class="icon">❤</span> 
-                <span class="count">0</span>
-                <span class="label">Beğeni</span>
-              </button>
-              <div class="stat-card">
-                <span class="icon">💬</span> 
-                <span class="count">0</span>
-                <span class="label">Yorum</span>
+          <div class="post-card-inner">
+            <div class="post-header">
+              <div class="fn-avatar-frame">
+                <img src="/logo.svg" alt="Fatih Northman Logo">
+              </div>
+              <div class="post-user-info">
+                <span class="post-username">Fatih Northman</span>
+                <span class="post-handle">@fatihnorthman</span>
               </div>
             </div>
-            <a class="read-more button inline" href="{{ .RelPermalink }}">
-              Yazıyı Oku →
-            </a>
+
+            <h2 class="post-title">
+              <a href="{{ .Permalink }}">{{ .Title | markdownify }}</a>
+            </h2>
+
+            <div class="post-meta">
+              {{- if .Date -}}
+                <time class="post-date">
+                  {{- partial "post-date" . -}}
+                </time>
+              {{- end -}}
+              {{- if and (.Param "readingTime") (eq (.Param "readingTime") true) -}}
+                <span class="post-reading-time">· {{ .ReadingTime }} dk okuma</span>
+              {{- end -}}
+            </div>
+
+            <div class="post-content">
+              {{ if .Description }}
+                {{ .Description | markdownify }}
+              {{ else }}
+                {{ .Summary }}
+              {{ end }}
+            </div>
+
+            <div class="post-tags-list">
+              {{ if .Params.tags }}
+                {{ range .Params.tags }}
+                #<a href="{{ (urlize (printf "tags/%s/" . )) | absLangURL }}">{{- . -}}</a>&nbsp;
+                {{ end }}
+              {{ end }}
+            </div>
+
+            <div class="post-footer">
+              <div class="post-card-stats">
+                <button class="stat-card likeable" data-post-id="{{ .RelPermalink }}">
+                  <span class="icon">❤</span> 
+                  <span class="count">0</span>
+                  <span class="label">Beğeni</span>
+                </button>
+                <div class="stat-card">
+                  <span class="icon">💬</span> 
+                  <span class="count">0</span>
+                  <span class="label">Yorum</span>
+                </div>
+              </div>
+              <a class="read-more button inline" href="{{ .RelPermalink }}">
+                Yazıyı Oku →
+              </a>
+            </div>
           </div>
         </article>
     {{ end }}
