@@ -106,13 +106,12 @@ hr {
   padding: 28px 0 !important;
   border-bottom: 1px solid var(--border) !important;
   margin-bottom: 56px !important;
-  background: transparent !important;
   position: sticky;
   top: 0;
   z-index: 100;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  background: rgba(8, 8, 16, 0.85) !important;
+  background: rgba(13, 13, 23, 0.85) !important;
 }
 
 .header__inner {
@@ -720,24 +719,24 @@ h3:hover .hanchor { opacity: 1; }
   display: inline-flex;
   align-items: center;
   padding: 12px 28px;
-  background: var(--accent);
-  color: #fff !important;
+  background: transparent !important;
+  color: var(--accent) !important;
   font-family: var(--font-mono);
   font-size: 0.85rem;
   font-weight: 600;
   border-radius: 8px;
   text-decoration: none !important;
-  border: 1px solid var(--accent) !important;
+  border: 2px solid var(--accent) !important;
   transition: var(--transition);
   letter-spacing: 0.02em;
-  box-shadow: 0 4px 20px rgba(229, 57, 53, 0.25);
 }
 
 .hero__cta:hover {
-  background: var(--accent-dim) !important;
+  background: var(--accent-glow) !important;
   color: #fff !important;
+  border-color: var(--accent) !important;
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(229, 57, 53, 0.35);
+  box-shadow: 0 4px 16px rgba(229, 57, 53, 0.25);
 }
 
 .hero__secondary {
