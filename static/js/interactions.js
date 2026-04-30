@@ -147,6 +147,7 @@ async function initInteractions() {
     const likeButtons = document.querySelectorAll('.like-btn, .stat-card.likeable');
     const commentForm = document.getElementById('comment-form');
     fetchGlobalLikes();
+    fetchGlobalCommentCounts(); // Ana sayfadaki yorum sayılarını güncelle
     likeButtons.forEach(btn => {
         const rawId = btn.dataset.postId || window.location.pathname;
         const cleanId = decodeURIComponent(rawId).replace(/\/$/, ""); 
@@ -281,6 +282,35 @@ async function fetchGlobalLikes() {
             });
         }
     } catch (e) { console.error("Like fetch error:", e); }
+}
+
+async function fetchGlobalCommentCounts() {
+    try {
+        // Tüm yorumları çek (Supabase'de GROUP BY desteği için count ile)
+        const res = await fetch(`${_SUPABASE_URL()}/rest/v1/comments?select=post_id`, {
+            cache: "no-store",
+            headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` }
+        });
+        const data = await res.json();
+        if (!data || !Array.isArray(data)) return;
+
+        // Slug bazında say
+        const counts = {};
+        data.forEach(item => {
+            const slug = decodeURIComponent(item.post_id || '').toLowerCase().split('/').filter(p => p).pop();
+            if (slug) counts[slug] = (counts[slug] || 0) + 1;
+        });
+
+        // Ana sayfadaki yorum kartlarını güncelle
+        document.querySelectorAll('.comment-count-card').forEach(card => {
+            const rawId = card.dataset.postId || '';
+            const slug = decodeURIComponent(rawId).toLowerCase().split('/').filter(p => p).pop();
+            if (slug && counts[slug] !== undefined) {
+                const countEl = card.querySelector('.count');
+                if (countEl) countEl.innerText = counts[slug];
+            }
+        });
+    } catch (e) { console.error("Comment count fetch error:", e); }
 }
 
 // Yardımcı fonksiyonlar (şifreli keyleri korumak için)
