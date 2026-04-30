@@ -1,12 +1,18 @@
-{{- /* SEO Meta Tags */ -}}
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="index, follow">
 <meta name="author" content="{{ .Site.Title }}">
 <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.subtitle }}{{ end }}{{ end }}">
 
-{{- /* Canonical URL */ -}}
-<link rel="canonical" href="{{ .Permalink }}">
+<link rel="canonical" href="{{ .Permalink }}" />
+
+{{- /* Theme CSS Assets (Orijinal Mantık) */ -}}
+{{ $css := resources.Match "css/*.css" }}
+{{ range $css }}
+  {{ $styles := . | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $styles.Permalink }}">
+{{ end }}
+<link rel="stylesheet" href="/css/custom.css">
 
 {{- /* Open Graph / Facebook */ -}}
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
@@ -50,8 +56,4 @@
 }
 </script>
 
-{{- /* Favicon & Assets */ -}}
 <link rel="shortcut icon" href="/logo.svg">
-{{ range .Site.Params.customCSS }}
-<link rel="stylesheet" href="{{ . | relURL }}">
-{{ end }}
