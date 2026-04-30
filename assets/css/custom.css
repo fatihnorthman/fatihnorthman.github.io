@@ -66,6 +66,7 @@ body {
   max-width: var(--max-width) !important;
   margin: 0 auto !important;
   padding: 0 0 80px !important;
+  border-right: none !important;
 }
 
 /* ── Typography ─────────────────────────────────────────────── */
@@ -122,28 +123,31 @@ hr {
 
 /* ── Logo ───────────────────────────────────────────────────── */
 .header__logo {
-  display: none !important;
+  display: block !important;
+  margin-right: 20px;
 }
 
 .header__logo .logo,
 .header__logo a {
-  display: none !important;
+  display: flex !important;
+  align-items: center;
+  text-decoration: none !important;
+  border: none !important;
 }
 
-.header__logo .logo::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
-  box-shadow: 0 0 10px var(--accent);
-  animation: pulse 2.5s ease-in-out infinite;
+.header-favicon {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: 0 0 10px rgba(229, 57, 53, 0.15);
+  transition: var(--transition);
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--accent); }
-  50%       { opacity: 0.6; box-shadow: 0 0 20px var(--accent); }
+.header-favicon:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(229, 57, 53, 0.3);
+  border-color: var(--accent);
 }
 
 /* ── Navigation ─────────────────────────────────────────────── */
