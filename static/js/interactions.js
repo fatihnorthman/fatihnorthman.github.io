@@ -202,9 +202,12 @@ function initScrollReveal() {
 
 async function fetchGlobalLikes() {
     try {
-        // Önbelleği kırmak için timestamp ekliyoruz
-        const response = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?t=${Date.now()}`, {
-            headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` }
+        const response = await fetch(`${_SUPABASE_URL()}/rest/v1/likes`, {
+            headers: { 
+                "apikey": _SUPABASE_KEY(), 
+                "Authorization": `Bearer ${_SUPABASE_KEY()}`,
+                "Cache-Control": "no-cache" // Önbelleği parametre eklemeden kırmanın en temiz yolu
+            }
         });
         const data = await response.json();
         const currentPath = window.location.pathname.replace(/\/$/, "");
@@ -251,18 +254,23 @@ async function updateLikeInDB(postId) {
             "apikey": _SUPABASE_KEY(), 
             "Authorization": `Bearer ${_SUPABASE_KEY()}`,
             "Content-Type": "application/json",
-            "Prefer": "resolution=merge-duplicates"
+            "Prefer": "resolution=merge-duplicates",
+            "Cache-Control": "no-cache"
         };
         
-        // Önce EN GÜNCEL sayıyı çekelim (Cache buster ile)
-        const getRes = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?post_id=eq.${cleanId}&t=${Date.now()}`, {
-            headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` }
+        // Mevcut en taze sayıyı çek
+        const getRes = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?post_id=eq.${cleanId}`, {
+            headers: { 
+                "apikey": _SUPABASE_KEY(), 
+                "Authorization": `Bearer ${_SUPABASE_KEY()}`,
+                "Cache-Control": "no-cache"
+            }
         });
         const getData = await getRes.json();
         const currentCount = (getData && getData[0]) ? (parseInt(getData[0].count) || 0) : 0;
         const newCount = currentCount + 1;
 
-        // Veritabanına kesin emir gönder: Varsa post_id üzerinden üzerine yaz (Upsert)
+        // Veritabanına kesin emir gönder
         const res = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?on_conflict=post_id`, {
             method: 'POST',
             headers: headers,
