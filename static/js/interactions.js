@@ -202,13 +202,11 @@ function initScrollReveal() {
 
 async function fetchGlobalLikes() {
     try {
-        // Parametre çakışmasını önlemek için select=* yanına cache buster ekliyoruz
-        const response = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?select=*&_cache=${Date.now()}`, {
+        const response = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?select=*`, {
+            cache: "no-store", // Tarayıcı önbelleğini fetch API ile doğru şekilde atla
             headers: { 
                 "apikey": _SUPABASE_KEY(), 
-                "Authorization": `Bearer ${_SUPABASE_KEY()}`,
-                "Cache-Control": "no-cache",
-                "Pragma": "no-cache"
+                "Authorization": `Bearer ${_SUPABASE_KEY()}`
             }
         });
         const data = await response.json();
