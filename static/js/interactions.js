@@ -15,6 +15,9 @@ function startEngine() {
 }
 
 function initMouseTrail() {
+    // Mobil/Dokunmatik cihazlarda iptal et
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+
     const canvas = document.getElementById('trail-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -43,34 +46,35 @@ function initMouseTrail() {
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        ctx.beginPath();
-        ctx.strokeStyle = 'rgba(229, 57, 53, 0.4)'; /* Daha zarif ve şeffaf */
-        ctx.lineWidth = 1.5;
-        ctx.lineJoin = 'round';
-        ctx.lineCap = 'round';
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = '#e53935';
+        for (let i = 1; i < points.length; i++) {
+            const p1 = points[i - 1];
+            const p2 = points[i];
+            p1.age += 1;
 
-        for (let i = 0; i < points.length; i++) {
-            const point = points[i];
-            point.age += 1;
+            // Fade efekti: Yaşlandıkça şeffaflaş ve incel
+            const opacity = Math.max(0, 1 - p1.age / 15);
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(255, 193, 7, ${opacity})`; // Cyber Yellow
+            ctx.lineWidth = 4 * opacity; // Arkaya doğru incelen çizgi
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.shadowBlur = 10 * opacity;
+            ctx.shadowColor = '#ffc107';
             
-            if (i === 0) {
-                ctx.moveTo(point.x, point.y);
-            } else {
-                ctx.lineTo(point.x, point.y);
-            }
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
 
-            if (point.age > 30) { /* Daha hızlı sönümlenme */
-                points.splice(i, 1);
+            if (p1.age > 15) { // Çok daha hızlı yok olma
+                points.splice(i - 1, 1);
                 i--;
             }
         }
-        ctx.stroke();
         requestAnimationFrame(animate);
     }
     animate();
 }
+
 
 
 
