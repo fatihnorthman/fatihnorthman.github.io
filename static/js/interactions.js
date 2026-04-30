@@ -262,18 +262,20 @@ async function updateLikeInDB(postId) {
         const currentCount = (getData && getData[0]) ? (parseInt(getData[0].count) || 0) : 0;
         const newCount = currentCount + 1;
 
-        // UPSERT İşlemi: On Conflict Do Update
-        const res = await fetch(`${_SUPABASE_URL()}/rest/v1/likes`, {
+        // Veritabanına kesin emir gönder: Varsa post_id üzerinden üzerine yaz (Upsert)
+        const res = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?on_conflict=post_id`, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({ post_id: cleanId, count: newCount })
         });
 
         if (res.ok) {
-            console.log("Success! New count:", newCount);
-            setTimeout(fetchGlobalLikes, 1500);
+            console.log("DB Persistence Success! New count saved:", newCount);
+            // 2 saniye bekle ve tüm arayüzü tazele
+            setTimeout(fetchGlobalLikes, 2000); 
         } else {
-            console.error("Update failed with status:", res.status);
+            const errorText = await res.text();
+            console.error("DB Update Failed:", res.status, errorText);
         }
     } catch (e) {
         console.error("Critical Like Sync Error:", e);
