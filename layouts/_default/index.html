@@ -27,7 +27,7 @@
   <div class="posts">
     {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
     {{ range $index, $page := $paginator.Pages }}
-        {{ if eq $index 2 }}
+        {{ if eq $index 1 }}
           <!-- In-Feed Ad Slot -->
           <div class="in-feed-ad">
             <div class="ad-placeholder-horizontal">REKLAM ALANI (MOBİL & MASAÜSTÜ UYUMLU)</div>
