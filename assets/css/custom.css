@@ -1672,7 +1672,7 @@ h3:hover .hanchor { opacity: 1; }
 
 /* ── Premium Pop & Reveal Animation ────────────────────────── */
 .post.on-list {
-  opacity: 0;
+  opacity: 0.01;
   transform: translateY(40px) scale(0.92);
   transition: opacity 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), 
               transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);

@@ -1,14 +1,21 @@
-// NORTH PROTOCOL - Interactions Engine (Secured & Masked)
+// NORTH PROTOCOL - Interactions Engine (Final Stable Version)
 const _0x4a = ["xusjivptdjytbcobarxh", "supabase.co", "https://"];
 const _0x9b = ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9", "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1c2ppdnB0ZGp5dGJjb2JhcnhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NDQxNjIsImV4cCI6MjA5MzEyMDE2Mn0", "IRKtH_4VOkJeQYTxuTAhGXL1KPS0NsNEP70iTdyZ_B4"];
 
 const SUPABASE_URL = `${_0x4a[2]}${_0x4a[0]}.${_0x4a[1]}`;
 const SUPABASE_KEY = `${_0x9b[0]}.${_0x9b[1]}.${_0x9b[2]}`;
 
-document.addEventListener('DOMContentLoaded', () => {
+function startEngine() {
+    console.log('--- Interactions Engine Active ---');
     initInteractions();
     initScrollReveal();
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startEngine);
+} else {
+    startEngine();
+}
 
 async function initInteractions() {
     const likeButtons = document.querySelectorAll('.like-btn, .stat-card.likeable');
@@ -22,6 +29,7 @@ async function initInteractions() {
 
         btn.onclick = async (e) => {
             e.preventDefault();
+            e.stopPropagation();
             if (localStorage.getItem('liked_' + postId)) return;
 
             const countElem = btn.querySelector('.count') || btn.querySelector('#like-count');
@@ -33,7 +41,6 @@ async function initInteractions() {
     });
 
     if (document.getElementById('comments-list')) fetchComments(window.location.pathname);
-
     if (commentForm) {
         commentForm.onsubmit = async (e) => {
             e.preventDefault();
@@ -47,17 +54,21 @@ async function initInteractions() {
     }
 }
 
-// --- SCROLL REVEAL ENGINE ---
 function initScrollReveal() {
     const posts = document.querySelectorAll('.post.on-list');
-    const observerOptions = { 
-        threshold: 0.05, // Çok daha hassas: %5 göründüğünde tetikle
-        rootMargin: '0px 0px -20px 0px' 
+    console.log('Found posts for reveal:', posts.length);
+    
+    if (!posts.length) return;
+
+    const observerOptions = {
+        threshold: 0.01, // Çok daha agresif: %1 göründüğünde tetikle
+        rootMargin: '0px 0px 100px 0px' // Görünmeden önce başla
     };
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
+                console.log('Revealing post:', entry.target);
                 entry.target.classList.add('reveal-visible');
             } else {
                 entry.target.classList.remove('reveal-visible');
