@@ -1194,6 +1194,49 @@ h3:hover .hanchor { opacity: 1; }
   fill: currentColor;
 }
 
+.share-card { gap: 12px; }
+
+.share-card .card-title {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.share-grid {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.share-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  transition: all 0.25s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.share-item svg { width: 16px; height: 16px; fill: #888; transition: all 0.25s ease; }
+.share-item.copy svg { fill: none; stroke: #888; }
+
+.share-item.wa:hover  { background: rgba(37,211,102,0.15); border-color: #25d366; }
+.share-item.wa:hover svg { fill: #25d366; }
+.share-item.in:hover  { background: rgba(0,119,181,0.15); border-color: #0077b5; }
+.share-item.in:hover svg { fill: #0077b5; }
+.share-item.tw:hover  { background: rgba(255,255,255,0.1); border-color: #fff; }
+.share-item.tw:hover svg { fill: #fff; }
+.share-item.copy:hover { background: rgba(229,57,53,0.15); border-color: var(--accent); }
+.share-item.copy:hover svg { stroke: var(--accent); }
+
 .action-btn {
   background: var(--bg-surface);
   border: 1px solid var(--border);
