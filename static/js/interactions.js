@@ -262,7 +262,8 @@ async function fetchGlobalLikes() {
             const currentPathClean = currentParts.length > 0 ? currentParts.pop() : "home";
 
             // Şimdi sayfadaki tüm butonları tara ve eşleşenleri güncelle
-            const allPotential = document.querySelectorAll('.like-btn, .stat-card, #like-count, .count, [data-post-id]');
+            // Sadece BEĞENİ elemanlarını hedefle, yorum kartlarını DIŞLA
+            const allPotential = document.querySelectorAll('.like-btn, .stat-card.likeable, #like-count');
             allPotential.forEach(el => {
                 let elRawId = el.dataset.postId || (el.id === 'like-count' ? window.location.pathname : "");
                 if (!elRawId) return;
