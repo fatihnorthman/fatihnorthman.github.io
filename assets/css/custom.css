@@ -245,18 +245,38 @@ hr {
 .posts {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 24px;
 }
 
 .post.on-list {
-  padding: 36px 0;
-  border-bottom: 1px solid var(--border);
+  padding: 32px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   animation: slideUp 0.5s var(--ease) both;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.post.on-list:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-border);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.post.on-list::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px;
+  height: 0;
+  background: var(--accent);
   transition: var(--transition);
 }
 
-.post.on-list:last-child {
-  border-bottom: none;
+.post.on-list:hover::after {
+  height: 100%;
 }
 
 @keyframes slideUp {
