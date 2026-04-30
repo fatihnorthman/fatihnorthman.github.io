@@ -1,4 +1,24 @@
 {{ define "main" }}
+  <div class="hero">
+    <div class="hero__badge">
+      <span class="hero__badge-dot"></span>
+      Infrastructure Architect
+    </div>
+    <h1 class="hero__title">
+      Merhaba, ben <span class="hero__name">Fatih</span>.
+    </h1>
+    <p class="hero__subtitle">
+      Linux dünyasına dair pratik bilgiler, sistem yönetimi ipuçları ve terminal kullanımını kolaylaştıracak teknik rehberler. 
+      Karmaşık süreçleri basitleştiren notlarımı burada paylaşıyorum.
+    </p>
+    <div class="hero__links">
+      <a href="/posts" class="hero__cta">Yazıları Oku</a>
+      <a href="https://github.com/fatihnorthman" class="hero__secondary" target="_blank" rel="noopener">
+        GitHub ↗
+      </a>
+    </div>
+  </div>
+
   {{ if .Content }}
     <div class="index-content">
       {{ .Content }}
