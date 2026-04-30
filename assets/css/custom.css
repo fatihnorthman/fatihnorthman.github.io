@@ -1553,29 +1553,34 @@ h3:hover .hanchor { opacity: 1; }
 }
 
 
-/* ── Post Avatar Image Styling ─────────────────────────────── */
-.post-avatar {
+/* ── Final Profile Avatar Frame (No Background) ────────────── */
+.fn-avatar-frame {
+  all: unset !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   width: 64px !important;
   height: 64px !important;
-  overflow: hidden;
+  border-radius: 50% !important;
+  border: 1px solid var(--border-hover) !important;
   background: none !important;
   background-color: transparent !important;
-  border: 1px solid var(--border-hover) !important;
-  border-radius: 50% !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden !important;
   padding: 0 !important;
   box-shadow: none !important;
+  margin-right: 12px !important;
 }
 
-.post-avatar img {
+.fn-avatar-frame img {
+  all: unset !important;
   width: 100% !important;
   height: 100% !important;
   object-fit: contain !important;
   border-radius: 50% !important;
-  background: none !important;
+  background: transparent !important;
+  display: block !important;
 }
+
 
 
 
