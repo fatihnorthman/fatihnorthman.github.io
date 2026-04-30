@@ -38,16 +38,21 @@ enableEmoji = true
       unsafe = true
 
 [[menu.main]]
+  name = "Ana Sayfa"
+  url = "/"
+  weight = 1
+
+[[menu.main]]
   name = "Yazılar"
   url = "/posts"
-  weight = 1
+  weight = 2
 
 [[menu.main]]
   name = "Hakkımda"
   url = "/about"
-  weight = 2
+  weight = 3
 
 [[menu.main]]
   name = "Etiketler"
   url = "/tags"
-  weight = 3
+  weight = 4
