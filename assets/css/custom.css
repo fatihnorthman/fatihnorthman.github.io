@@ -1755,3 +1755,64 @@ h3:hover .hanchor { opacity: 1; }
   pointer-events: auto !important;
 }
 
+
+/* ── Comprehensive Responsive Design ──────────────────────── */
+
+/* Tablet & Küçük Ekranlar (max 860px) */
+@media screen and (max-width: 860px) {
+  .hero__title { font-size: 2.8rem; }
+  .post-card-inner { padding: 20px; }
+  .header { width: 95%; }
+}
+
+/* Mobil Cihazlar (max 600px) */
+@media screen and (max-width: 600px) {
+  /* Header Ayarları */
+  .header {
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-top: 10px;
+  }
+  .header__inner { flex-direction: column; gap: 10px; }
+  .menu { margin-left: 0 !important; }
+  .menu__inner { 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 10px; 
+    font-size: 0.9rem;
+  }
+
+  /* Hero Ayarları */
+  .hero { padding: 60px 15px; text-align: center; }
+  .hero__title { font-size: 2.2rem; line-height: 1.2; }
+  .hero__subtitle { font-size: 1rem; }
+  .hero__links { justify-content: center; flex-direction: column; width: 100%; }
+  .hero__cta, .hero__secondary { width: 100%; text-align: center; }
+
+  /* Post Kartları Ayarları */
+  .post-header { gap: 12px; }
+  .fn-avatar-frame { width: 48px !important; height: 48px !important; }
+  .post-username { font-size: 1rem; }
+  .post-title { font-size: 1.5rem !important; }
+  
+  .post-footer { 
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 20px; 
+  }
+  .post-card-stats { width: 100%; justify-content: space-between; }
+  .stat-card { padding: 8px 12px; flex: 1; justify-content: center; }
+  .read-more { width: 100%; text-align: center; justify-content: center; }
+
+  /* Yorumlar */
+  .comment-form-grid { grid-template-columns: 1fr; }
+  .post-actions { flex-direction: column; gap: 15px; }
+  .share-buttons { justify-content: center; }
+}
+
+/* Çok Küçük Ekranlar (max 400px) */
+@media screen and (max-width: 400px) {
+  .hero__title { font-size: 1.8rem; }
+  .preloader__logo { width: 80px; height: 80px; }
+  .stat-card .label { display: none; } /* Sadece ikon ve sayı kalsın */
+}

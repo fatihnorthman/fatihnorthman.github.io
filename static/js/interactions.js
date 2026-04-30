@@ -36,6 +36,9 @@ function initClickRipple() {
 
 // --- 3D TILT ENGINE ---
 function init3DTilt() {
+    // Mobilde/Dokunmatikte 3D Tilt'i kapat (etkileşimi bozmaması için)
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+
     const containers = document.querySelectorAll('.post.on-list');
     containers.forEach(container => {
         const card = container.querySelector('.post-card-inner');
@@ -46,9 +49,10 @@ function init3DTilt() {
             const y = e.clientY - rect.top;
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-            const rotateX = (y - centerY) / 150; 
-            const rotateY = (centerX - x) / 150;
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.005)`;
+            // Böleni 300 yaparak hareketi mikro-mikro seviyeye indirdim
+            const rotateX = (y - centerY) / 300; 
+            const rotateY = (centerX - x) / 300;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.002)`;
         });
         container.addEventListener('mouseleave', () => {
             card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
