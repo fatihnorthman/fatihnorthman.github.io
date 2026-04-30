@@ -2047,3 +2047,32 @@ html, body {
   margin: 0 auto;
 }
 
+
+/* ── CachyOS Table & Overflow Fix ────────────────────────── */
+@media screen and (max-width: 600px) {
+  /* Tabloyu sayfadan bağımsız kendi içinde kaydırılabilir yap */
+  .post-content table {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    /* Tablo kenarlarını yumuşat */
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+  }
+
+  /* Sayfayı sağa itebilecek her şeyi kısıtla */
+  .post-content * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Başlıklar ve paragraflar taşmasın */
+  h1, h2, h3, h4, p, li {
+    overflow-wrap: break-word !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+  }
+}
