@@ -56,8 +56,28 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px var(--accent); }
+  50% { opacity: 0.6; transform: scale(1.1); box-shadow: 0 0 16px var(--accent); }
 }
 
 /* ── Layout Container ───────────────────────────────────────── */
@@ -113,6 +133,7 @@ hr {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   background: rgba(13, 13, 23, 0.85) !important;
+  animation: fadeIn 0.8s var(--ease);
 }
 
 .header__inner {
@@ -127,6 +148,7 @@ hr {
 .header__logo {
   display: block !important;
   margin: 0 0 24px 0 !important;
+  animation: scaleIn 0.8s var(--ease);
 }
 
 .header__logo .logo,
@@ -179,8 +201,8 @@ hr {
 
 /* ── Navigation ─────────────────────────────────────────────── */
 .navigation-menu {
-  margin-top: 0 !important;
   width: 100% !important;
+  animation: fadeIn 1s var(--ease) both;
 }
 
 .navigation-menu__inner {
@@ -697,6 +719,7 @@ h3:hover .hanchor { opacity: 1; }
   flex-direction: column;
   align-items: center;
   text-align: center;
+  animation: slideUp 0.8s var(--ease) both;
 }
 
 .hero::after {
