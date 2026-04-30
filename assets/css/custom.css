@@ -2018,39 +2018,32 @@ html, body {
 }
 
 /* ── Anti-Horizontal Scroll & Mobile Layout Fix ───────────── */
-html, body {
-  overflow-x: hidden !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
+@media screen and (max-width: 768px) {
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .container, .content, .post, .post-content {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    word-wrap: break-word !important;
+    box-sizing: border-box !important;
+  }
+
+  pre, code, .highlight {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+  }
 }
 
-.container, .content, .post, .post-content {
-  max-width: 100% !important;
-  overflow-x: hidden !important;
-  word-wrap: break-word !important;
-  overflow-wrap: break-word !important;
-  box-sizing: border-box !important;
+/* Masaüstü Konteynırını Eski Haline Getir */
+.container {
+  max-width: 860px; /* Temanın orijinal genişliği */
+  margin: 0 auto;
 }
 
-/* Kod bloklarını kendi içinde hapset */
-pre, code, .highlight {
-  max-width: 100% !important;
-  overflow-x: auto !important;
-  display: block !important;
-  white-space: pre-wrap !important; /* Uzun satırları aşağı kaydır */
-  word-break: break-all !important;
-}
-
-/* Görsel ve videoların taşmasını engelle */
-img, video, iframe {
-  max-width: 100% !important;
-  height: auto !important;
-}
-
-/* Tabloları mobilde kaydırılabilir yap */
-table {
-  display: block !important;
-  width: 100% !important;
-  overflow-x: auto !important;
-}
