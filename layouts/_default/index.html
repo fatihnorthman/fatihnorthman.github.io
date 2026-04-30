@@ -27,18 +27,6 @@
   <div class="posts">
     {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
     {{ range $index, $page := $paginator.Pages }}
-        {{ if eq $index 1 }}
-          <!-- In-Feed Ad Slot -->
-          <div class="in-feed-ad">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="fluid"
-                 data-ad-layout-key="-fa+59+6o-d2+2t"
-                 data-ad-client="ca-pub-1926124607497508"
-                 data-ad-slot="5904731275"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-          </div>
-        {{ end }}
         <article class="post on-list">
           <div class="post-card-inner">
             <div class="post-header">
@@ -101,6 +89,17 @@
             </div>
           </div>
         </article>
+
+        <!-- In-Feed Ad Slot (Appears after every post) -->
+        <div class="in-feed-ad">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-format="fluid"
+               data-ad-layout-key="-fa+59+6o-d2+2t"
+               data-ad-client="ca-pub-1926124607497508"
+               data-ad-slot="5904731275"></ins>
+          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
     {{ end }}
     {{ partial "pagination.html" . }}
   </div>
