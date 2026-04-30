@@ -6,10 +6,21 @@
   {{ end }}
   {{ partial "head.html" . }}
 </head>
-<body>
+<body class="colorscheme-dark">
+  <div id="scroll-progress"></div>
+  
   <div class="preloader">
-    <div class="preloader__spinner"></div>
+    <div class="preloader__content">
+      <div class="preloader__logo">
+        <img src="/logo.svg" alt="Loading...">
+      </div>
+      <div class="preloader__bar">
+        <div class="preloader__bar-fill"></div>
+      </div>
+    </div>
   </div>
+
+  <div class="preloader-overlay"></div>
 
 {{ $container := cond ($.Site.Params.FullWidthTheme | default false) "container full" (cond ($.Site.Params.CenterTheme | default false) "container center" "container") }}
 
@@ -31,11 +42,22 @@
 <script>
   window.addEventListener('load', function() {
     const preloader = document.querySelector('.preloader');
-    preloader.classList.add('preloader--hidden');
+    const overlay = document.querySelector('.preloader-overlay');
+    
     setTimeout(() => {
-      preloader.style.display = 'none';
-    }, 800);
+      preloader.classList.add('preloader--hidden');
+      if(overlay) overlay.style.opacity = '0';
+      document.body.style.overflow = 'auto';
+    }, 2000); 
   });
+
+  // Scroll Progress Logic
+  window.onscroll = function() {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    document.getElementById("scroll-progress").style.width = scrolled + "%";
+  };
 </script>
 
 </body>
