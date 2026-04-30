@@ -1898,58 +1898,75 @@ h3:hover .hanchor { opacity: 1; }
 }
 
 
-/* ── Final Responsive & Mobile Cleanup ────────────────────── */
-@media screen and (max-width: 768px) {
-    /* Masaüstü header menülerini HER KOŞULDA gizle */
-    header .menu, 
-    .header .menu, 
-    .menu--desktop, 
-    nav.menu,
-    .header__inner nav {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-        position: absolute !important;
-        left: -9999px !important;
-    }
+@media screen and (max-width: 600px) {
+  /* Post Kartları: Ultra Minimalist Yapı */
+  .post.on-list {
+    margin-bottom: 50px !important;
+    padding: 0 !important; /* Dış boşluğu sıfırla */
+  }
 
-    /* Post Kartları Arası Mesafe */
-    .post.on-list {
-        margin-bottom: 60px !important;
-        padding: 0 10px !important;
-    }
+  .post-card-inner {
+    padding: 30px 20px !important;
+    border: none !important; /* Kenarlıkları kaldır */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; /* Sadece alt çizgi */
+    background: transparent !important; /* Arka planı temizle */
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
 
-    /* Post Kartı İç Boşlukları */
-    .post-card-inner {
-        padding: 35px 20px !important;
-        border-radius: 20px !important;
-    }
+  /* Başlık ve İçerik */
+  .post-title {
+    margin-top: 10px !important;
+    margin-bottom: 15px !important;
+    font-size: 1.5rem !important;
+    letter-spacing: -0.5px;
+  }
 
-    .post-title {
-        margin: 20px 0 !important;
-        line-height: 1.3 !important;
-        font-size: 1.7rem !important;
-    }
+  .post-content {
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+    color: #ccc !important;
+    margin-bottom: 25px !important;
+  }
 
-    .post-content {
-        margin-bottom: 30px !important;
-        line-height: 1.7 !important;
-        font-size: 1.1rem !important;
-    }
+  /* Footer: Daha ince ve şık */
+  .post-footer {
+    border-top: none !important;
+    padding-top: 10px !important;
+    flex-direction: row !important; /* Mobilde tekrar yan yana */
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    /* Alt Navigasyon Barı İyileştirmesi */
-    .mobile-nav {
-        display: flex !important; /* Her sayfada zorla göster */
-    }
-    
-    .nav-icon {
-        width: 24px;
-        height: 24px;
-        stroke: var(--accent);
-        filter: drop-shadow(0 0 5px rgba(229, 57, 53, 0.4));
-    }
+  .post-card-stats {
+    gap: 15px !important;
+  }
+
+  .stat-card {
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  .stat-card .label { display: none !important; } /* Sadece ikon ve sayı */
+
+  .read-more {
+    width: auto !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent) !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .hero__title {
+    font-size: 1.8rem !important;
+    margin-bottom: 15px !important;
+  }
 }
+
 
 /* ── Performance & Speed Optimizations ────────────────────── */
 * {
