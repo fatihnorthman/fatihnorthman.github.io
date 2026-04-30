@@ -1320,3 +1320,165 @@ h3:hover .hanchor { opacity: 1; }
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(229, 57, 53, 0.4);
 }
+
+/* ── Post Card Stats (Home Page) ────────────────────────────── */
+.post-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.stat-item .icon {
+  font-size: 0.85rem;
+}
+
+.stat-item:first-child .icon { color: var(--accent); }
+
+/* ── Scroll to Comments Button (Single Post) ────────────────── */
+.scroll-to-comments {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent) !important;
+  text-decoration: none !important;
+  border: 1px solid var(--accent-border) !important;
+  padding: 4px 12px;
+  border-radius: 100px;
+  background: var(--accent-glow);
+  transition: var(--transition);
+}
+
+.scroll-to-comments:hover {
+  background: var(--accent);
+  color: #fff !important;
+  transform: translateY(-2px);
+}
+
+/* ── Refined Share Link Button ──────────────────────────────── */
+.share-link-btn {
+  border-style: dashed !important;
+  background: transparent !important;
+}
+
+.share-link-btn:hover {
+  border-style: solid !important;
+  background: var(--accent-glow) !important;
+}
+
+/* ── Social Share Icon Buttons ─────────────────────────────── */
+.share-buttons-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.share-icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  background: var(--bg-surface);
+  color: var(--text-dim) !important;
+  cursor: pointer;
+}
+
+.share-icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.share-icon-btn:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  color: #fff !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.share-icon-btn.wa:hover { color: #25D366 !important; border-color: #25D366; }
+.share-icon-btn.in:hover { color: #0077B5 !important; border-color: #0077B5; }
+.share-icon-btn.tw:hover { color: #fff !important; border-color: #fff; }
+.share-icon-btn.link:hover { color: var(--accent) !important; border-color: var(--accent); }
+
+/* ── Refined Post Card Stats (Social Style) ─────────────────── */
+.post-card-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.post-card-stats .stat-item {
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.post-card-stats .icon {
+  font-size: 1rem;
+}
+
+.post-tags-list {
+  margin-bottom: 24px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.post-tags-list a {
+  color: var(--accent) !important;
+  opacity: 0.8;
+  transition: var(--transition);
+}
+
+.post-tags-list a:hover {
+  opacity: 1;
+  text-decoration: underline !important;
+}
+
+/* ── Refined Share Copy Button ─────────────────────────────── */
+.share-copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.share-copy-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.share-copy-btn:hover {
+  border-color: var(--accent);
+  color: #fff;
+  background: var(--accent-glow);
+  transform: translateY(-2px);
+}
