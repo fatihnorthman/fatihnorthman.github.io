@@ -137,7 +137,13 @@ hr {
   justify-content: center;
   text-decoration: none !important;
   border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
   gap: 10px;
+}
+
+.header__logo::after {
+  display: none !important;
 }
 
 .logo-signature {
