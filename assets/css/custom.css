@@ -1719,28 +1719,39 @@ h3:hover .hanchor { opacity: 1; }
 
 
 
-/* ── Click Ripple Effect (Sound Wave) ─────────────────────── */
+/* ── Click Ripple Effect (Refined) ─────────────────────────── */
 .click-ripple {
   position: fixed;
-  border: 2px solid var(--accent);
+  border: 3px solid var(--accent); /* Daha kalın */
   border-radius: 50%;
-  pointer-events: none; /* Tıklamayı engellememesi için */
+  pointer-events: none;
   transform: translate(-50%, -50%) scale(0);
-  animation: rippleWave 0.6s cubic-bezier(0, 0, 0.2, 1) forwards;
+  animation: rippleWave 0.5s cubic-bezier(0, 0, 0.2, 1) forwards;
   z-index: 99999;
-  opacity: 0.5;
+  opacity: 0.8; /* Daha belirgin */
 }
 
 @keyframes rippleWave {
   0% {
     width: 0;
     height: 0;
-    opacity: 0.5;
+    opacity: 0.8;
   }
   100% {
-    width: 150px;
-    height: 150px;
+    width: 80px; /* Daha küçük */
+    height: 80px;
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1.5);
+    transform: translate(-50%, -50%) scale(1.2);
   }
 }
+
+/* ── Fix Button Clickability in 3D Cards ───────────────────── */
+.post-card-inner button, 
+.post-card-inner a.button,
+.post-card-inner .stat-card.likeable {
+  position: relative;
+  z-index: 50; /* Butonları en öne çek */
+  transform: translateZ(20px); /* 3D düzlemde öne fırlat */
+  pointer-events: auto !important;
+}
+
