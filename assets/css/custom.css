@@ -54,8 +54,9 @@ body {
   margin: 0;
   animation: fadeIn 0.4s var(--ease);
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(229, 57, 53, 0.03) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(229, 57, 53, 0.03) 0%, transparent 40%);
+    radial-gradient(circle at 10% 20%, rgba(229, 57, 53, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(229, 57, 53, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(229, 57, 53, 0.02) 0%, transparent 60%);
   background-attachment: fixed;
 }
 
@@ -268,73 +269,118 @@ hr {
   display: none !important;
 }
 
-/* ── Post Cards (Social Media Style) ────────────────────────── */
+/* ── Post Cards (Pro Social Media Style) ────────────────────── */
 .posts {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 28px;
 }
 
 .post.on-list {
-  padding: 32px;
+  padding: 24px;
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   animation: slideUp 0.8s var(--ease) both;
   transition: var(--transition);
   position: relative;
-  overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
 }
 
 .post.on-list:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
   border-color: var(--accent-border);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  background: rgba(22, 22, 42, 0.8);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  background: #151525;
 }
 
-/* Post Header / Social Feel */
+/* Post Header / Social Profile */
 .post.on-list::before {
-  content: 'FN';
-  position: absolute;
-  top: 32px;
-  left: 32px;
-  width: 40px;
-  height: 40px;
-  background: var(--accent-glow);
-  border: 1px solid var(--accent-border);
+  display: none !important; /* Eskisini kaldır */
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.post-avatar {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--accent) 0%, #ff6659 100%);
   border-radius: 50%;
-  color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.8rem;
+  color: #fff;
+  font-size: 0.9rem;
+  box-shadow: 0 0 15px rgba(229, 57, 53, 0.3);
 }
 
-.post.on-list .post-title,
-.post.on-list .post-meta,
-.post.on-list .post-content,
-.post.on-list .post-tags,
-.post.on-list .read-more {
-  margin-left: 56px !important;
+.post-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-username {
+  font-weight: 700;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.post-handle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  opacity: 0.8;
 }
 
 .post.on-list .post-title {
-  font-size: 1.4rem !important;
-  margin-bottom: 8px !important;
+  margin-left: 0 !important;
+  font-size: 1.5rem !important;
+  margin-bottom: 12px !important;
+  color: #fff !important;
 }
 
 .post.on-list .post-meta {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  margin-left: 0 !important;
+  margin-top: -8px;
+  margin-bottom: 16px !important;
   color: var(--text-muted);
-  margin-bottom: 20px !important;
-  display: flex;
-  gap: 12px;
 }
+
+.post.on-list .post-content {
+  margin-left: 0 !important;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  margin-bottom: 20px !important;
+}
+
+.post.on-list .post-tags {
+  margin-left: 0 !important;
+  margin-bottom: 20px !important;
+}
+
+.post-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.post.on-list .read-more {
+  margin-left: 0 !important;
+  margin-top: 0 !important;
+}
+
 
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(16px); }
