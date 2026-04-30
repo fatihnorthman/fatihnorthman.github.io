@@ -2188,3 +2188,50 @@ html, body {
   pointer-events: none; /* Tıklamalara engel olma */
   z-index: 9999998;
 }
+
+/* ── Cyber-Red Ad Sidebar Slots ─────────────────────────── */
+.ad-sidebar {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 160px; /* Standart Skyscraper genişliği */
+  height: 600px;
+  background: rgba(15, 15, 20, 0.4);
+  backdrop-filter: blur(5px);
+  border: 1px dashed rgba(229, 57, 53, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.ad-sidebar--left {
+  left: 20px;
+}
+
+.ad-sidebar--right {
+  right: 20px;
+}
+
+.ad-placeholder {
+  color: rgba(229, 57, 53, 0.5);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  writing-mode: vertical-rl;
+  text-transform: uppercase;
+}
+
+.ad-sidebar:hover {
+  border-color: var(--accent);
+  background: rgba(15, 15, 20, 0.6);
+  box-shadow: 0 0 15px rgba(229, 57, 53, 0.2);
+}
+
+/* Mobilde ve Küçük Ekranlarda Reklamları Gizle */
+@media screen and (max-width: 1300px) {
+  .ad-sidebar {
+    display: none !important;
+  }
+}
