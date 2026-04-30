@@ -2,11 +2,13 @@ baseURL = 'https://fatihnorthman.github.io/'
 locale = 'tr-TR'
 title = 'Fatih Şahan'
 theme = 'terminal'
-paginate = 5
-enableRobotsTXT = true
-enableEmoji = true
+paginate = 10
+
+[permalinks]
+  posts = "/:title/"
 
 [params]
+
   logoText = "~/ northman"
   contentTypeName = "posts"
   themeColor = "red"
