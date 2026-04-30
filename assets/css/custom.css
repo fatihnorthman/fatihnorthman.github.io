@@ -137,21 +137,17 @@ hr {
   border: none !important;
 }
 
-.custom-logo-text {
-  font-family: var(--font-sans) !important;
-  font-size: 3.5rem !important;
-  font-weight: 800 !important;
-  letter-spacing: -3px !important;
-  text-shadow: 0 0 20px rgba(229, 57, 53, 0.15);
-  transition: transform 0.3s var(--ease);
+.header-svg-logo {
+  height: 64px;
+  width: auto;
+  filter: drop-shadow(0 0 12px rgba(229, 57, 53, 0.15));
+  transition: transform 0.3s var(--ease), filter 0.3s var(--ease);
 }
 
-.custom-logo-text:hover {
+.header-svg-logo:hover {
   transform: scale(1.05);
+  filter: drop-shadow(0 0 20px rgba(229, 57, 53, 0.4));
 }
-
-.fn-f { color: #fff !important; }
-.fn-n { color: var(--accent) !important; }
 
 /* ── Navigation ─────────────────────────────────────────────── */
 .navigation-menu {
