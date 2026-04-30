@@ -1,0 +1,60 @@
+<div class="post-actions">
+    <div class="post-actions__likes">
+        <button id="like-button" class="action-btn like-btn">
+            <span class="icon">❤</span>
+            <span id="like-count">0</span> Beğeni
+        </button>
+    </div>
+    
+    <div class="post-actions__share">
+        <span class="share-label">Paylaş:</span>
+        <a href="https://api.whatsapp.com/send?text={{ .Title }} {{ .Permalink }}" target="_blank" rel="noopener" class="share-btn wa" title="WhatsApp'ta Paylaş">
+            WA
+        </a>
+        <a href="https://twitter.com/intent/tweet?text={{ .Title }}&url={{ .Permalink }}" target="_blank" rel="noopener" class="share-btn tw" title="Twitter'da Paylaş">
+            TW
+        </a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ .Permalink }}" target="_blank" rel="noopener" class="share-btn in" title="LinkedIn'de Paylaş">
+            IN
+        </a>
+        <button onclick="copyToClipboard()" class="share-btn link" title="Bağlantıyı Kopyala">
+            LINK
+        </button>
+    </div>
+</div>
+
+<div class="comments-section">
+    <h3 class="comments-title">Yorumlar</h3>
+    
+    <div id="comments-list" class="comments-list">
+        <!-- Örnek Yorum Kartı -->
+        <div class="comment-card">
+            <div class="comment-header">
+                <div class="comment-avatar">AN</div>
+                <div class="comment-info">
+                    <span class="comment-author">Anonim Okuyucu</span>
+                    <span class="comment-date">Yeni</span>
+                </div>
+            </div>
+            <div class="comment-body">
+                Henüz yorum yapılmamış. İlk yorumu siz yapın!
+            </div>
+        </div>
+    </div>
+
+    <div class="comment-form-container">
+        <h4 class="form-title">Düşüncelerini Paylaş</h4>
+        <form id="comment-form" class="comment-form">
+            <input type="text" id="comment-name" placeholder="İsminiz" required>
+            <textarea id="comment-text" placeholder="Yorumunuzu buraya yazın..." required></textarea>
+            <button type="submit" class="submit-comment">Gönder</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function copyToClipboard() {
+    navigator.clipboard.writeText(window.location.href);
+    alert('Bağlantı kopyalandı!');
+}
+</script>

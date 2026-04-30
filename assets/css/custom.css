@@ -1119,3 +1119,204 @@ h3:hover .hanchor { opacity: 1; }
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* ── Post Interactions (Likes & Shares) ────────────────────── */
+.post-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin: 48px 0;
+}
+
+.action-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.like-btn:hover {
+  border-color: var(--accent);
+  color: #fff;
+  background: var(--accent-glow);
+  transform: scale(1.05);
+}
+
+.like-btn .icon { color: var(--accent); font-size: 1.1rem; }
+
+.post-actions__share {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.share-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.share-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-dim) !important;
+  transition: var(--transition);
+  background: transparent;
+}
+
+.share-btn:hover {
+  border-color: var(--accent);
+  color: #fff !important;
+  background: var(--accent-glow);
+  transform: translateY(-3px);
+}
+
+/* ── Comments Section (Card Style) ─────────────────────────── */
+.comments-section {
+  margin-top: 64px;
+}
+
+.comments-title {
+  font-size: 1.5rem !important;
+  margin-bottom: 32px !important;
+  color: #fff !important;
+}
+
+.comment-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+  animation: slideUp 0.6s var(--ease) both;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.comment-avatar {
+  width: 36px;
+  height: 36px;
+  background: #2a2a3a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.comment-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.comment-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.comment-body {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Comment Form */
+.comment-form-container {
+  margin-top: 48px;
+  padding: 32px;
+  background: rgba(229, 57, 53, 0.03);
+  border: 1px dashed var(--accent-border);
+  border-radius: var(--radius-lg);
+}
+
+.form-title {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  margin-bottom: 24px !important;
+  color: #fff !important;
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.comment-form input,
+.comment-form textarea {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.comment-form input:focus,
+.comment-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(229, 57, 53, 0.02);
+}
+
+.comment-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.submit-comment {
+  align-self: flex-start;
+  background: var(--accent) !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.submit-comment:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(229, 57, 53, 0.4);
+}
