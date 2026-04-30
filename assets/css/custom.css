@@ -1670,24 +1670,23 @@ h3:hover .hanchor { opacity: 1; }
   to { width: 100%; }
 }
 
-/* ── Scroll Reveal Animations ──────────────────────────────── */
+/* ── Final Scroll Reveal (Smooth Card Motion) ──────────────── */
 .post.on-list {
   opacity: 0;
-  transform: translateY(40px) scale(0.98);
-  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease);
-  filter: blur(4px);
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), 
+              transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform, opacity;
 }
 
 .post.on-list.reveal-visible {
   opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0);
+  transform: translateY(0);
 }
 
-/* Geri kaydırmada yumuşak bir çıkış için */
+/* Geri kaydırmada yumuşak bir çıkış */
 .post.on-list:not(.reveal-visible) {
   opacity: 0;
-  transform: translateY(30px) scale(0.98);
-  filter: blur(4px);
+  transform: translateY(20px);
 }
+
