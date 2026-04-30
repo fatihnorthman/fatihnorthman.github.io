@@ -1,0 +1,53 @@
+baseURL = 'https://fatihnorthman.dev/'
+locale = 'tr-TR'
+title = 'Fatih Şahan'
+theme = 'terminal'
+paginate = 5
+enableRobotsTXT = true
+enableEmoji = true
+
+[params]
+  logoText = "~/ northman"
+  contentTypeName = "posts"
+  themeColor = "red"
+  customCSS = ["css/custom.css"]
+  showLastUpdated = false
+  ReadMore = "Devamını Oku"
+  minuteReadingTime = "dk okuma"
+  words = "kelime"
+  Toc = false
+  TocTitle = "İçindekiler"
+
+  # Social / Contact
+  github = "fatihnorthman"
+  email = "sahanfatih2798@gmail.com"
+
+[languages]
+  [languages.tr]
+    title = "Fatih Şahan"
+    subtitle = "Infrastructure Architect & Linux Enthusiast"
+    [languages.tr.params]
+      mainSections = ["posts"]
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+    style = "monokai"
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[[menu.main]]
+  name = "Yazılar"
+  url = "/posts"
+  weight = 1
+
+[[menu.main]]
+  name = "Hakkımda"
+  url = "/about"
+  weight = 2
+
+[[menu.main]]
+  name = "Etiketler"
+  url = "/tags"
+  weight = 3

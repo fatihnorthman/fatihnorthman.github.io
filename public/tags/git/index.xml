@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Git on Fatih Şahan</title>
+    <link>http://localhost:1313/tags/git/</link>
+    <description>Recent content in Git on Fatih Şahan</description>
+    <generator>Hugo</generator>
+    <language>tr-TR</language>
+    <lastBuildDate>Tue, 28 Apr 2026 10:30:00 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Arch Linux&#39;ta Dotfile Yönetimi: Bare Git Repo ile Sıfır Sembolik Link</title>
+      <link>http://localhost:1313/posts/arch-dotfile-yonetimi-bare-git/</link>
+      <pubDate>Tue, 28 Apr 2026 10:30:00 +0300</pubDate>
+      <guid>http://localhost:1313/posts/arch-dotfile-yonetimi-bare-git/</guid>
+      <description>&lt;p&gt;Her Linux kullanıcısının er ya da geç karşılaştığı o an gelir: Yeni bir makine kuruyorsunuz ve tüm o özenle düzenlediğiniz yapılandırmaları sıfırdan kurmak zorunda kalıyorsunuz. Ya da &lt;code&gt;stow&lt;/code&gt; ile sembolik link yönetimi yaparken kendinizi bir karmaşanın içinde buluyorsunuz.&lt;/p&gt;&#xA;&lt;p&gt;Bugün size hem daha temiz, hem daha güçlü bir çözüm sunacağım: &lt;strong&gt;Bare Git Repository&lt;/strong&gt;.&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;problem-neden-normal-git-repo-kullanmıyoruz&#34;&gt;Problem: Neden Normal Git Repo Kullanmıyoruz?&lt;/h2&gt;&#xA;&lt;p&gt;Home dizininizi (&lt;code&gt;~/&lt;/code&gt;) doğrudan bir git reposuna çevirmek teoride mümkün, ancak pratikte felakettir. &lt;code&gt;git status&lt;/code&gt; çalıştırdığınızda &lt;strong&gt;tüm home dizinindeki takip edilmeyen dosyaları&lt;/strong&gt; görürsünüz — binlerce satır çıktı sizi karşılar.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

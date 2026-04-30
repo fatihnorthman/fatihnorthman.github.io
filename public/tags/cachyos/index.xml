@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cachyos on Fatih Şahan</title>
+    <link>http://localhost:1313/tags/cachyos/</link>
+    <description>Recent content in Cachyos on Fatih Şahan</description>
+    <generator>Hugo</generator>
+    <language>tr-TR</language>
+    <lastBuildDate>Thu, 30 Apr 2026 13:10:00 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/cachyos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CachyOS ve Fish Shell: Sistem Hiyerarşisini Kendi Kurallarımızla Ezmek</title>
+      <link>http://localhost:1313/posts/fish-shell-update-alias-ve-paru/</link>
+      <pubDate>Thu, 30 Apr 2026 13:10:00 +0300</pubDate>
+      <guid>http://localhost:1313/posts/fish-shell-update-alias-ve-paru/</guid>
+      <description>&lt;p&gt;Arch tabanlı bir dağıtım kullanmanın en büyük cazibesi, sistemin &amp;ldquo;bitmiş&amp;rdquo; bir ürün değil, sizinle birlikte yaşayan ve şekillenen bir yapı olmasıdır. CachyOS, sunduğu optimize edilmiş çekirdekler ve paketlerle bu deneyimi bir üst seviyeye taşıyor. Ancak bazen sistem, size &amp;ldquo;kolaylık&amp;rdquo; olsun diye kendi varsayılan ayarlarını dayatır.&lt;/p&gt;&#xA;&lt;p&gt;Bugün, Fish shell üzerindeki masum görünen bir &lt;code&gt;update&lt;/code&gt; komutunun arka planında dönen hiyerarşi savaşını ve kontrolü nasıl tamamen ele aldığımı adım adım, teknik derinliğiyle inceleyeceğiz.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

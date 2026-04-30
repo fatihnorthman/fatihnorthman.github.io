@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Fatih Şahan</title>
+    <link>http://localhost:1313/tags/</link>
+    <description>Recent content in Tags on Fatih Şahan</description>
+    <generator>Hugo</generator>
+    <language>tr-TR</language>
+    <lastBuildDate>Thu, 30 Apr 2026 13:10:00 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Arch-Linux</title>
+      <link>http://localhost:1313/tags/arch-linux/</link>
+      <pubDate>Thu, 30 Apr 2026 13:10:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/arch-linux/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Automation</title>
+      <link>http://localhost:1313/tags/automation/</link>
+      <pubDate>Thu, 30 Apr 2026 13:10:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/automation/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cachyos</title>
+      <link>http://localhost:1313/tags/cachyos/</link>
+      <pubDate>Thu, 30 Apr 2026 13:10:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/cachyos/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Fish-Shell</title>
+      <link>http://localhost:1313/tags/fish-shell/</link>
+      <pubDate>Thu, 30 Apr 2026 13:10:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/fish-shell/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Linux</title>
+      <link>http://localhost:1313/tags/linux/</link>
+      <pubDate>Thu, 30 Apr 2026 13:10:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/linux/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Paru</title>
+      <link>http://localhost:1313/tags/paru/</link>
+      <pubDate>Thu, 30 Apr 2026 13:10:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/paru/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Terminal</title>
+      <link>http://localhost:1313/tags/terminal/</link>
+      <pubDate>Thu, 30 Apr 2026 13:10:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/terminal/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

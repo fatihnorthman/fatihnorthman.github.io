@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fatih Şahan</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on Fatih Şahan</description>
+    <generator>Hugo</generator>
+    <language>tr-TR</language>
+    <lastBuildDate>Thu, 30 Apr 2026 13:10:00 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CachyOS ve Fish Shell: Sistem Hiyerarşisini Kendi Kurallarımızla Ezmek</title>
+      <link>http://localhost:1313/posts/fish-shell-update-alias-ve-paru/</link>
+      <pubDate>Thu, 30 Apr 2026 13:10:00 +0300</pubDate>
+      <guid>http://localhost:1313/posts/fish-shell-update-alias-ve-paru/</guid>
+      <description>&lt;p&gt;Arch tabanlı bir dağıtım kullanmanın en büyük cazibesi, sistemin &amp;ldquo;bitmiş&amp;rdquo; bir ürün değil, sizinle birlikte yaşayan ve şekillenen bir yapı olmasıdır. CachyOS, sunduğu optimize edilmiş çekirdekler ve paketlerle bu deneyimi bir üst seviyeye taşıyor. Ancak bazen sistem, size &amp;ldquo;kolaylık&amp;rdquo; olsun diye kendi varsayılan ayarlarını dayatır.&lt;/p&gt;&#xA;&lt;p&gt;Bugün, Fish shell üzerindeki masum görünen bir &lt;code&gt;update&lt;/code&gt; komutunun arka planında dönen hiyerarşi savaşını ve kontrolü nasıl tamamen ele aldığımı adım adım, teknik derinliğiyle inceleyeceğiz.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Hakkımda</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/about/</guid>
+      <description>&lt;p&gt;Merhaba! Ben &lt;strong&gt;Muhammet Fatih Şahan&lt;/strong&gt; — sistem yönetimi ve altyapı mimarisi üzerine çalışan, Linux dünyasına ve otomasyona tutkulu bir mühendisim.&lt;/p&gt;&#xA;&lt;h2 id=&#34;teknoloji-yığınım&#34;&gt;Teknoloji Yığınım&lt;/h2&gt;&#xA;&lt;p&gt;Günlük iş akışımın merkezinde &lt;strong&gt;CachyOS&lt;/strong&gt; ve &lt;strong&gt;Arch Linux&lt;/strong&gt; bulunuyor. Sunucu tarafında ise RHEL tabanlı dağıtımlar ve Debian ailesiyle çalışıyorum. Terminal, editör ve araç seçimlerimi olabildiğince kasıtlı yapıyor; her konfigürasyonun neden öyle olduğunu anlamaya özen gösteriyorum.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Kullandığım araçlar:&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Shell:&lt;/strong&gt; Fish Shell — hız ve kullanıcı deneyimi için&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Editör:&lt;/strong&gt; Neovim — kendi yapılandırdığım, sıfırdan&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Sanallaştırma:&lt;/strong&gt; Proxmox, Docker, Podman&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Otomasyon:&lt;/strong&gt; Ansible, Bash/Fish scripting&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Güvenlik:&lt;/strong&gt; Kali Linux, Burp Suite, Nmap&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;bu-blog-hakkında&#34;&gt;Bu Blog Hakkında&lt;/h2&gt;&#xA;&lt;p&gt;Bu blog; sistemlere hükmetme serüvenimin dijital not defteri. Karşılaştığım teknik sorunları, çözüm yollarını ve öğrendiklerimi burada belgeliyorum. Hedefim &amp;ldquo;nasıl yapılır&amp;rdquo; değil, &lt;strong&gt;&amp;ldquo;neden böyle çalışır&amp;rdquo;&lt;/strong&gt; sorusuna cevap vermek.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
