@@ -1691,3 +1691,19 @@ h3:hover .hanchor { opacity: 1; }
 }
 
 
+
+/* ── 3D Tilt Effect ────────────────────────────────────────── */
+.post.on-list {
+  perspective: 1000px; /* 3D derinlik hissi */
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out !important;
+}
+
+.post.on-list .post-card-inner {
+  transition: transform 0.15s ease-out;
+  transform-style: preserve-3d;
+}
+
+.post.on-list:hover {
+  z-index: 10;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}

@@ -1,4 +1,4 @@
-// NORTH PROTOCOL - Interactions Engine (Final Stable Version)
+// NORTH PROTOCOL - Interactions Engine (Final Stable Version + 3D Tilt)
 const _0x4a = ["xusjivptdjytbcobarxh", "supabase.co", "https://"];
 const _0x9b = ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9", "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1c2ppdnB0ZGp5dGJjb2JhcnhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NDQxNjIsImV4cCI6MjA5MzEyMDE2Mn0", "IRKtH_4VOkJeQYTxuTAhGXL1KPS0NsNEP70iTdyZ_B4"];
 
@@ -6,9 +6,9 @@ const SUPABASE_URL = `${_0x4a[2]}${_0x4a[0]}.${_0x4a[1]}`;
 const SUPABASE_KEY = `${_0x9b[0]}.${_0x9b[1]}.${_0x9b[2]}`;
 
 function startEngine() {
-    console.log('--- Interactions Engine Active ---');
     initInteractions();
     initScrollReveal();
+    init3DTilt();
 }
 
 if (document.readyState === 'loading') {
@@ -17,21 +17,41 @@ if (document.readyState === 'loading') {
     startEngine();
 }
 
+// --- 3D TILT ENGINE ---
+function init3DTilt() {
+    const cards = document.querySelectorAll('.post.on-list');
+    
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 15; // Eğilme sertliği
+            const rotateY = (centerX - x) / 15;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+        });
+    });
+}
+
 async function initInteractions() {
     const likeButtons = document.querySelectorAll('.like-btn, .stat-card.likeable');
     const commentForm = document.getElementById('comment-form');
-    
     fetchGlobalLikes();
-
     likeButtons.forEach(btn => {
         const postId = btn.dataset.postId || window.location.pathname;
         if (localStorage.getItem('liked_' + postId)) btn.classList.add('is-liked');
-
         btn.onclick = async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+            e.preventDefault(); e.stopPropagation();
             if (localStorage.getItem('liked_' + postId)) return;
-
             const countElem = btn.querySelector('.count') || btn.querySelector('#like-count');
             countElem.innerText = (parseInt(countElem.innerText) || 0) + 1;
             btn.classList.add('is-liked');
@@ -39,7 +59,6 @@ async function initInteractions() {
             await updateLikeInDB(postId);
         };
     });
-
     if (document.getElementById('comments-list')) fetchComments(window.location.pathname);
     if (commentForm) {
         commentForm.onsubmit = async (e) => {
@@ -48,34 +67,22 @@ async function initInteractions() {
             const content = document.getElementById('comment-text').value;
             const postId = window.location.pathname;
             await submitComment(postId, name, content);
-            commentForm.reset();
-            fetchComments(postId);
+            commentForm.reset(); fetchComments(postId);
         };
     }
 }
 
 function initScrollReveal() {
     const posts = document.querySelectorAll('.post.on-list');
-    console.log('Found posts for reveal:', posts.length);
-    
-    if (!posts.length) return;
-
-    const observerOptions = {
-        threshold: 0.01, // Çok daha agresif: %1 göründüğünde tetikle
-        rootMargin: '0px 0px 100px 0px' // Görünmeden önce başla
-    };
-
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                console.log('Revealing post:', entry.target);
                 entry.target.classList.add('reveal-visible');
             } else {
                 entry.target.classList.remove('reveal-visible');
             }
         });
-    }, observerOptions);
-
+    }, { threshold: 0.01, rootMargin: '0px 0px 100px 0px' });
     posts.forEach(post => observer.observe(post));
 }
 
