@@ -148,8 +148,10 @@ async function initInteractions() {
     const commentForm = document.getElementById('comment-form');
     fetchGlobalLikes();
     likeButtons.forEach(btn => {
-        // ID'yi her zaman slash olmadan al
-        const postId = (btn.dataset.postId || window.location.pathname).replace(/\/$/, ""); 
+        // ID'yi her zaman decode edilmiş ve slashsız al
+        const rawId = btn.dataset.postId || window.location.pathname;
+        const postId = decodeURIComponent(rawId).replace(/\/$/, ""); 
+        
         if (localStorage.getItem('liked_' + postId)) {
             btn.classList.add('is-liked');
             if (btn.classList.contains('interaction-btn')) btn.classList.add('liked');
@@ -210,13 +212,13 @@ async function fetchGlobalLikes() {
             }
         });
         const data = await response.json();
-        const currentPath = window.location.pathname.replace(/\/$/, "");
+        const currentPath = decodeURIComponent(window.location.pathname).replace(/\/$/, "");
 
         if (data && Array.isArray(data)) {
-            // Önce tüm beğenileri normalize edilmiş ID'lere göre toplayalım
+            // Önce tüm beğenileri normalize ve decode edilmiş ID'lere göre toplayalım
             const consolidatedLikes = {};
             data.forEach(item => {
-                const normalizedId = item.post_id.replace(/\/$/, "");
+                const normalizedId = decodeURIComponent(item.post_id).replace(/\/$/, "");
                 consolidatedLikes[normalizedId] = (consolidatedLikes[normalizedId] || 0) + (parseInt(item.count) || 0);
             });
 
@@ -247,7 +249,7 @@ function _SUPABASE_URL() { return `${_0x4a[2]}${_0x4a[0]}.${_0x4a[1]}`; }
 function _SUPABASE_KEY() { return `${_0x9b[0]}.${_0x9b[1]}.${_0x9b[2]}`; }
 
 async function updateLikeInDB(postId) {
-    const cleanId = postId.replace(/\/$/, ""); 
+    const cleanId = decodeURIComponent(postId).replace(/\/$/, ""); 
     
     try {
         const headers = { 
