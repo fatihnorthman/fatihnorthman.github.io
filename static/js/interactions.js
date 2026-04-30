@@ -164,6 +164,9 @@ async function initInteractions() {
     if (commentForm) {
         commentForm.onsubmit = async (e) => {
             e.preventDefault();
+            const honeypot = document.getElementById('comment-honeypot').value;
+            if (honeypot) return; // Bot detected
+
             const name = document.getElementById('comment-name').value;
             const content = document.getElementById('comment-text').value;
             const postId = window.location.pathname;
