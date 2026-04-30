@@ -149,13 +149,22 @@ async function initInteractions() {
     fetchGlobalLikes();
     likeButtons.forEach(btn => {
         const postId = btn.dataset.postId || window.location.pathname;
-        if (localStorage.getItem('liked_' + postId)) btn.classList.add('is-liked');
+        if (localStorage.getItem('liked_' + postId)) {
+            btn.classList.add('is-liked');
+            if (btn.classList.contains('interaction-btn')) btn.classList.add('liked');
+        }
         btn.onclick = async (e) => {
             e.preventDefault(); e.stopPropagation();
             if (localStorage.getItem('liked_' + postId)) return;
+            
+            // UI'ı anında güncelle (Optimistic Update)
             const countElem = btn.querySelector('.count') || btn.querySelector('#like-count');
-            countElem.innerText = (parseInt(countElem.innerText) || 0) + 1;
+            if (countElem) {
+                countElem.innerText = (parseInt(countElem.innerText) || 0) + 1;
+            }
             btn.classList.add('is-liked');
+            if (btn.classList.contains('interaction-btn')) btn.classList.add('liked');
+            
             localStorage.setItem('liked_' + postId, 'true');
             await updateLikeInDB(postId);
         };
@@ -192,18 +201,27 @@ function initScrollReveal() {
 
 async function fetchGlobalLikes() {
     try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/likes`, {
-            headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
+        const response = await fetch(`${_SUPABASE_URL()}/rest/v1/likes`, {
+            headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` }
         });
         const data = await response.json();
         if (data && Array.isArray(data)) {
             data.forEach(item => {
-                const targets = document.querySelectorAll(`[data-post-id="${item.post_id}"] .count, [data-post-id="${item.post_id}"]#like-count`);
-                targets.forEach(el => { el.innerText = item.count; });
+                // Hem ana sayfa hem de yazı içi seçicileri hedefle
+                const countElements = document.querySelectorAll(`[data-post-id="${item.post_id}"] .count, #like-count`);
+                countElements.forEach(el => {
+                    // Eğer yazı içindeysek sadece o yazıya ait id'yi güncelle
+                    if (el.id === 'like-count' && window.location.pathname !== item.post_id) return;
+                    el.innerText = item.count;
+                });
             });
         }
-    } catch (e) {}
+    } catch (e) { console.error("Like fetch error:", e); }
 }
+
+// Yardımcı fonksiyonlar (şifreli keyleri korumak için)
+function _SUPABASE_URL() { return `${_0x4a[2]}${_0x4a[0]}.${_0x4a[1]}`; }
+function _SUPABASE_KEY() { return `${_0x9b[0]}.${_0x9b[1]}.${_0x9b[2]}`; }
 
 async function updateLikeInDB(postId) {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/likes?post_id=eq.${postId}`, {
