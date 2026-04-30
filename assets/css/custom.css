@@ -1807,40 +1807,40 @@ h3:hover .hanchor { opacity: 1; }
   /* ── Post Interaction Hub (Like & Share) ──────────────── */
   .post-interaction-hub {
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 30px 0;
+    justify-content: flex-start;
+    gap: 12px;
+    margin: 25px 0;
     flex-wrap: wrap;
   }
 
   .interaction-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 8px 16px;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    min-width: 140px;
+    min-width: auto; /* Sabit genişlik kaldırıldı */
   }
 
   .interaction-card:hover {
     border-color: var(--accent);
-    background: rgba(229, 57, 53, 0.05);
+    background: rgba(229, 57, 53, 0.08);
     transform: translateY(-2px);
   }
 
   .interaction-btn.like-btn {
-    gap: 12px;
+    gap: 10px;
   }
 
   .like-btn .icon {
-    font-size: 1.6rem; /* Devasa boyuttan daha zarif bir boyuta çekildi */
-    color: #555;
+    font-size: 1.3rem; /* Daha da küçültüldü */
+    color: #666;
   }
 
   .like-btn .count {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
   }
 
