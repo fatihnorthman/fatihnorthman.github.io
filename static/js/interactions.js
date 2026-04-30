@@ -148,28 +148,26 @@ async function initInteractions() {
     const commentForm = document.getElementById('comment-form');
     fetchGlobalLikes();
     likeButtons.forEach(btn => {
-        // ID'yi her zaman decode edilmiş ve slashsız al
         const rawId = btn.dataset.postId || window.location.pathname;
-        const postId = decodeURIComponent(rawId).replace(/\/$/, ""); 
+        const cleanId = decodeURIComponent(rawId).replace(/\/$/, ""); 
         
-        if (localStorage.getItem('liked_' + postId)) {
+        if (localStorage.getItem('liked_' + cleanId)) {
             btn.classList.add('is-liked');
             if (btn.classList.contains('interaction-btn')) btn.classList.add('liked');
         }
         btn.onclick = async (e) => {
             e.preventDefault(); e.stopPropagation();
-            if (localStorage.getItem('liked_' + postId)) return;
+            if (localStorage.getItem('liked_' + cleanId)) return;
             
             const countElem = btn.querySelector('.count') || btn.querySelector('#like-count');
             if (countElem) {
-                // UI'ı anında yükselt
                 countElem.innerText = (parseInt(countElem.innerText) || 0) + 1;
             }
             btn.classList.add('is-liked');
             if (btn.classList.contains('interaction-btn')) btn.classList.add('liked');
             
-            localStorage.setItem('liked_' + postId, 'true');
-            await updateLikeInDB(postId);
+            localStorage.setItem('liked_' + cleanId, 'true');
+            await updateLikeInDB(rawId); // Veritabanına orjinal (encoded) ID'yi gönder
         };
     });
     if (document.getElementById('comments-list')) fetchComments(window.location.pathname);
@@ -222,21 +220,23 @@ async function fetchGlobalLikes() {
                 consolidatedLikes[normalizedId] = (consolidatedLikes[normalizedId] || 0) + (parseInt(item.count) || 0);
             });
 
-            // Şimdi bu toplamları arayüze basalım
+            // Şimdi sayfadaki tüm butonları tara ve eşleşenleri güncelle
             Object.keys(consolidatedLikes).forEach(normalizedId => {
                 const totalCount = consolidatedLikes[normalizedId];
-                const countElements = document.querySelectorAll(`[data-post-id="${normalizedId}"], [data-post-id="${normalizedId}/"], #like-count`);
                 
-                countElements.forEach(el => {
-                    if (el.id === 'like-count' && currentPath !== normalizedId) return;
+                // Sayfadaki tüm potansiyel butonları bul
+                const allPotential = document.querySelectorAll('.like-btn, .stat-card, #like-count');
+                allPotential.forEach(el => {
+                    const elRawId = el.dataset.postId || (el.id === 'like-count' ? window.location.pathname : null);
+                    if (!elRawId) return;
                     
-                    const countSpan = el.querySelector('.count') || (el.id === 'like-count' ? el : null);
-                    if (!countSpan) return;
-
-                    const localCount = parseInt(countSpan.innerText) || 0;
-                    // Eğer veritabanı toplamı yerel sayıdan büyük veya eşitse güncelle
-                    if (totalCount >= localCount) {
-                        countSpan.innerText = totalCount;
+                    const elCleanId = decodeURIComponent(elRawId).replace(/\/$/, "");
+                    if (elCleanId === normalizedId) {
+                        const countSpan = el.querySelector('.count') || (el.id === 'like-count' ? el : null);
+                        if (countSpan) {
+                            const localCount = parseInt(countSpan.innerText) || 0;
+                            if (totalCount >= localCount) countSpan.innerText = totalCount;
+                        }
                     }
                 });
             });
@@ -248,8 +248,11 @@ async function fetchGlobalLikes() {
 function _SUPABASE_URL() { return `${_0x4a[2]}${_0x4a[0]}.${_0x4a[1]}`; }
 function _SUPABASE_KEY() { return `${_0x9b[0]}.${_0x9b[1]}.${_0x9b[2]}`; }
 
-async function updateLikeInDB(postId) {
-    const cleanId = decodeURIComponent(postId).replace(/\/$/, ""); 
+async function updateLikeInDB(rawPostId) {
+    // ID varyasyonlarını yakalamak için decode edilmiş halini hazırlayalım
+    const cleanIdForQuery = decodeURIComponent(rawPostId).replace(/\/$/, "");
+    // Yazarken Hugo'nun standart encoded halini kullanalım
+    const standardId = rawPostId.replace(/\/$/, "");
     
     try {
         const headers = { 
@@ -260,32 +263,33 @@ async function updateLikeInDB(postId) {
             "Cache-Control": "no-cache"
         };
         
-        // Mevcut en taze sayıyı çek
-        const getRes = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?post_id=eq.${cleanId}`, {
-            headers: { 
-                "apikey": _SUPABASE_KEY(), 
-                "Authorization": `Bearer ${_SUPABASE_KEY()}`,
-                "Cache-Control": "no-cache"
-            }
+        // Önce veritabanındaki TÜM kayıtları çekip bu yazıya ait olanları toplayalım
+        const getRes = await fetch(`${_SUPABASE_URL()}/rest/v1/likes`, {
+            headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}`, "Cache-Control": "no-cache" }
         });
-        const getData = await getRes.json();
-        const currentCount = (getData && getData[0]) ? (parseInt(getData[0].count) || 0) : 0;
-        const newCount = currentCount + 1;
+        const data = await getRes.json();
+        let currentTotal = 0;
+        if (data && Array.isArray(data)) {
+            data.forEach(item => {
+                if (decodeURIComponent(item.post_id).replace(/\/$/, "") === cleanIdForQuery) {
+                    currentTotal += (parseInt(item.count) || 0);
+                }
+            });
+        }
+        const newCount = currentTotal + 1;
 
-        // Veritabanına kesin emir gönder
+        // On Conflict Do Update: Hugo'nun standart ID'si üzerine yaz
         const res = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?on_conflict=post_id`, {
             method: 'POST',
             headers: headers,
-            body: JSON.stringify({ post_id: cleanId, count: newCount })
+            body: JSON.stringify({ post_id: standardId, count: newCount })
         });
 
         if (res.ok) {
-            console.log("DB Persistence Success! New count saved:", newCount);
-            // 2 saniye bekle ve tüm arayüzü tazele
+            console.log("DB Persistence Success! Combined Count:", newCount);
             setTimeout(fetchGlobalLikes, 2000); 
         } else {
-            const errorText = await res.text();
-            console.error("DB Update Failed:", res.status, errorText);
+            console.error("DB Update Failed:", res.status);
         }
     } catch (e) {
         console.error("Critical Like Sync Error:", e);
