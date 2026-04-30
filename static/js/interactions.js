@@ -209,8 +209,11 @@ async function fetchGlobalLikes() {
                 "Cache-Control": "no-cache" // Önbelleği parametre eklemeden kırmanın en temiz yolu
             }
         });
-            // Önce tüm beğenileri normalize, decode ve temizlenmiş ID'lere göre toplayalım
-            const consolidatedLikes = {};
+        const data = await response.json();
+        
+        // Önce tüm beğenileri normalize, decode ve temizlenmiş ID'lere göre toplayalım
+        const consolidatedLikes = {};
+        if (data && Array.isArray(data)) {
             data.forEach(item => {
                 // Her türlü kodlamayı çöz, slashları at, küçük harfe çevir
                 const normalizedId = decodeURIComponent(item.post_id).toLowerCase().replace(/\/$/, "").split('/').pop();
