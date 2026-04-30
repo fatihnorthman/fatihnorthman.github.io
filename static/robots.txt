@@ -1,0 +1,31 @@
+# fatihnorthman.com - Robots.txt
+# Optimized for Google & Privacy-First Security
+
+User-agent: *
+# Tüm yararlı içeriklere izin ver
+Allow: /
+Allow: /index.xml
+Allow: /sitemap.xml
+
+# Yinelenen içerik ve SEO kirliliğini engelle
+Disallow: /tags/
+Disallow: /categories/
+Disallow: /search/
+Disallow: /cgi-bin/
+Disallow: /private/
+
+# Agresif ve veri toplayan botları engelle (Güvenlik Önlemi)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+# Tarama hızı optimizasyonu
+Crawl-delay: 1
+
+# Site Haritası
+Sitemap: https://fatihnorthman.github.io/sitemap.xml
