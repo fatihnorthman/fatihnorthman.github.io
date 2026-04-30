@@ -1897,3 +1897,56 @@ h3:hover .hanchor { opacity: 1; }
   }
 }
 
+
+/* ── Final Responsive & Mobile Cleanup ────────────────────── */
+@media screen and (max-width: 768px) {
+    /* Masaüstü header menülerini HER KOŞULDA gizle */
+    header .menu, 
+    .header .menu, 
+    .menu--desktop, 
+    nav.menu,
+    .header__inner nav {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        position: absolute !important;
+        left: -9999px !important;
+    }
+
+    /* Post Kartları Arası Mesafe */
+    .post.on-list {
+        margin-bottom: 60px !important;
+        padding: 0 10px !important;
+    }
+
+    /* Post Kartı İç Boşlukları */
+    .post-card-inner {
+        padding: 35px 20px !important;
+        border-radius: 20px !important;
+    }
+
+    .post-title {
+        margin: 20px 0 !important;
+        line-height: 1.3 !important;
+        font-size: 1.7rem !important;
+    }
+
+    .post-content {
+        margin-bottom: 30px !important;
+        line-height: 1.7 !important;
+        font-size: 1.1rem !important;
+    }
+
+    /* Alt Navigasyon Barı İyileştirmesi */
+    .mobile-nav {
+        display: flex !important; /* Her sayfada zorla göster */
+    }
+    
+    .nav-icon {
+        width: 24px;
+        height: 24px;
+        stroke: var(--accent);
+        filter: drop-shadow(0 0 5px rgba(229, 57, 53, 0.4));
+    }
+}

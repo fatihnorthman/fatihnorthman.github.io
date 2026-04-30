@@ -43,11 +43,6 @@ enableEmoji = true
   weight = 1
 
 [[menu.main]]
-  name = "Yazılar"
-  url = "/posts"
-  weight = 2
-
-[[menu.main]]
   name = "Hakkımda"
   url = "/about"
   weight = 3
