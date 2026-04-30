@@ -22,6 +22,26 @@
 
   <div class="preloader-overlay"></div>
 
+  <!-- Mobile Bottom Navigation -->
+  <nav class="mobile-nav">
+    <a href="/" class="mobile-nav__item">
+      <span class="icon">🏠</span>
+      <span class="label">Ana Sayfa</span>
+    </a>
+    <a href="/posts" class="mobile-nav__item">
+      <span class="icon">📝</span>
+      <span class="label">Yazılar</span>
+    </a>
+    <a href="/about" class="mobile-nav__item">
+      <span class="icon">👤</span>
+      <span class="label">Hakkımda</span>
+    </a>
+    <a href="/tags" class="mobile-nav__item">
+      <span class="icon">🏷️</span>
+      <span class="label">Etiketler</span>
+    </a>
+  </nav>
+
 {{ $container := cond ($.Site.Params.FullWidthTheme | default false) "container full" (cond ($.Site.Params.CenterTheme | default false) "container center" "container") }}
 
 <div class="{{- $container -}}{{- cond ($.Site.Params.oneHeadingSize | default false) " headings--one-size" "" }}">
