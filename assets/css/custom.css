@@ -138,8 +138,12 @@ hr {
 }
 
 .header-svg-logo {
-  height: 64px;
-  width: auto;
+  height: 192px !important;
+  width: auto !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
   filter: drop-shadow(0 0 12px rgba(229, 57, 53, 0.15));
   transition: transform 0.3s var(--ease), filter 0.3s var(--ease);
 }
