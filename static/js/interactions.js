@@ -11,7 +11,57 @@ function startEngine() {
     init3DTilt();
     initClickRipple();
     initCustomCursor();
+    initMouseTrail();
 }
+
+function initMouseTrail() {
+    const canvas = document.getElementById('trail-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let points = [];
+
+    const resize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', resize);
+    resize();
+
+    document.addEventListener('mousemove', (e) => {
+        points.push({ x: e.clientX, y: e.clientY, age: 0 });
+    });
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.beginPath();
+        ctx.strokeStyle = '#e53935';
+        ctx.lineWidth = 2;
+        ctx.lineJoin = 'round';
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#e53935';
+
+        for (let i = 0; i < points.length; i++) {
+            const point = points[i];
+            point.age += 1;
+            
+            if (i === 0) {
+                ctx.moveTo(point.x, point.y);
+            } else {
+                ctx.lineTo(point.x, point.y);
+            }
+
+            if (point.age > 40) {
+                points.splice(i, 1);
+                i--;
+            }
+        }
+        ctx.stroke();
+        requestAnimationFrame(animate);
+    }
+    animate();
+}
+
 
 function initCustomCursor() {
     const cursor = document.querySelector('.custom-cursor');

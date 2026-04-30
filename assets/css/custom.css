@@ -2177,3 +2177,14 @@ html, body {
   * { cursor: none !important; }
   .custom-cursor { display: block; }
 }
+
+/* ── Mouse Trail Canvas ──────────────────────────────────── */
+#trail-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* Tıklamalara engel olma */
+  z-index: 9999998;
+}
