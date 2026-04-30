@@ -215,19 +215,23 @@ async function fetchGlobalLikes() {
         const consolidatedLikes = {};
         if (data && Array.isArray(data)) {
             data.forEach(item => {
-                // Her türlü kodlamayı çöz, slashları at, küçük harfe çevir
-                const normalizedId = decodeURIComponent(item.post_id).toLowerCase().replace(/\/$/, "").split('/').pop();
+                // Boş parçaları filtreleyerek en sondaki dolu parçayı (yazı ismini) al
+                const parts = decodeURIComponent(item.post_id).toLowerCase().split('/').filter(p => p);
+                const normalizedId = parts.length > 0 ? parts.pop() : "home";
                 consolidatedLikes[normalizedId] = (consolidatedLikes[normalizedId] || 0) + (parseInt(item.count) || 0);
             });
 
-            const currentPathClean = decodeURIComponent(window.location.pathname).toLowerCase().replace(/\/$/, "").split('/').pop();
+            const currentParts = decodeURIComponent(window.location.pathname).toLowerCase().split('/').filter(p => p);
+            const currentPathClean = currentParts.length > 0 ? currentParts.pop() : "home";
 
             // Şimdi sayfadaki tüm butonları tara ve eşleşenleri güncelle
             const allPotential = document.querySelectorAll('.like-btn, .stat-card, #like-count, .count');
             allPotential.forEach(el => {
-                // Elementin kendi ID'sini veya bulunduğu sayfanın ID'sini al
-                let elRawId = el.dataset.postId || (el.closest('[data-post-id]') ? el.closest('[data-post-id]').dataset.postId : window.location.pathname);
-                const elCleanId = decodeURIComponent(elRawId).toLowerCase().replace(/\/$/, "").split('/').pop();
+                let elRawId = el.dataset.postId || (el.id === 'like-count' ? window.location.pathname : null);
+                if (!elRawId) return;
+                
+                const elParts = decodeURIComponent(elRawId).toLowerCase().split('/').filter(p => p);
+                const elCleanId = elParts.length > 0 ? elParts.pop() : "home";
                 
                 const totalCount = consolidatedLikes[elCleanId];
                 if (totalCount !== undefined) {
@@ -247,9 +251,8 @@ function _SUPABASE_URL() { return `${_0x4a[2]}${_0x4a[0]}.${_0x4a[1]}`; }
 function _SUPABASE_KEY() { return `${_0x9b[0]}.${_0x9b[1]}.${_0x9b[2]}`; }
 
 async function updateLikeInDB(rawPostId) {
-    // ID varyasyonlarını yakalamak için decode edilmiş halini hazırlayalım
-    const cleanIdForQuery = decodeURIComponent(rawPostId).replace(/\/$/, "");
-    // Yazarken Hugo'nun standart encoded halini kullanalım
+    const rawParts = decodeURIComponent(rawPostId).toLowerCase().split('/').filter(p => p);
+    const cleanIdForQuery = rawParts.length > 0 ? rawParts.pop() : "home";
     const standardId = rawPostId.replace(/\/$/, "");
     
     try {
