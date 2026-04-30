@@ -224,22 +224,34 @@ function _SUPABASE_URL() { return `${_0x4a[2]}${_0x4a[0]}.${_0x4a[1]}`; }
 function _SUPABASE_KEY() { return `${_0x9b[0]}.${_0x9b[1]}.${_0x9b[2]}`; }
 
 async function updateLikeInDB(postId) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/likes?post_id=eq.${postId}`, {
-        headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
-    });
-    const data = await res.json();
-    if (data.length > 0) {
-        await fetch(`${SUPABASE_URL}/rest/v1/likes?post_id=eq.${postId}`, {
-            method: 'PATCH',
-            headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json", "Prefer": "return=minimal" },
-            body: JSON.stringify({ count: (data[0].count || 0) + 1 })
-        });
-    } else {
-        await fetch(`${SUPABASE_URL}/rest/v1/likes`, {
-            method: 'POST',
-            headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json", "Prefer": "return=minimal" },
-            body: JSON.stringify({ post_id: postId, count: 1 })
-        });
+    try {
+        const url = `${_SUPABASE_URL()}/rest/v1/likes?post_id=eq.${postId}`;
+        const headers = { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` };
+        
+        const res = await fetch(url, { headers });
+        const data = await res.json();
+        
+        if (data && data.length > 0) {
+            // Mevcut kaydı güncelle (+1 yap)
+            const newCount = (parseInt(data[0].count) || 0) + 1;
+            await fetch(url, {
+                method: 'PATCH',
+                headers: { ...headers, "Content-Type": "application/json", "Prefer": "return=minimal" },
+                body: JSON.stringify({ count: newCount })
+            });
+        } else {
+            // Yeni kayıt oluştur
+            await fetch(`${_SUPABASE_URL()}/rest/v1/likes`, {
+                method: 'POST',
+                headers: { ...headers, "Content-Type": "application/json", "Prefer": "return=minimal" },
+                body: JSON.stringify({ post_id: postId, count: 1 })
+            });
+        }
+        
+        // Güncelleme sonrası tüm cihazlardaki sayıları tazele
+        setTimeout(fetchGlobalLikes, 500); 
+    } catch (e) {
+        console.error("DB Update Error:", e);
     }
 }
 
