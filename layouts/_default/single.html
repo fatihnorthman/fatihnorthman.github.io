@@ -77,5 +77,16 @@
   {{ if not (.Params.hideComments | default false) }}
     {{ partial "comments.html" . }}
   {{ end }}
+
+  <!-- Multiplex Content Recommendation Ads -->
+  <div class="multiplex-ad-container" style="margin-top: 50px; border-top: 1px solid rgba(229, 57, 53, 0.2); padding-top: 20px;">
+    <h3 style="color: var(--accent); font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase;">Sizin İçin Seçtiklerimiz</h3>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-format="autorelaxed"
+         data-ad-client="ca-pub-1926124607497508"
+         data-ad-slot="6671018036"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
 </article>
 {{ end }}
