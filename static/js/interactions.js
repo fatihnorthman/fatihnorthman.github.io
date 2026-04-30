@@ -229,20 +229,34 @@ async function fetchComments(postId) {
     const data = await res.json();
     const list = document.getElementById('comments-list');
     if (data && Array.isArray(data) && data.length > 0) {
-        list.innerHTML = data.map(c => `
-            <div class="comment-card">
-                <div class="comment-header">
-                    <div class="comment-avatar">${(c.name || 'AN').substring(0,2).toUpperCase()}</div>
-                    <div class="comment-info">
-                        <span class="comment-author">${c.name}</span>
-                        <span class="comment-date">${new Date(c.created_at).toLocaleDateString('tr-TR')}</span>
+        list.innerHTML = data.map(c => {
+            const safeName = escapeHTML(c.name);
+            const safeContent = escapeHTML(c.content);
+            const initials = safeName.substring(0,2).toUpperCase();
+            const safeDate = new Date(c.created_at).toLocaleDateString('tr-TR');
+            
+            return `
+                <div class="comment-card">
+                    <div class="comment-header">
+                        <div class="comment-avatar">${initials}</div>
+                        <div class="comment-info">
+                            <span class="comment-author">${safeName}</span>
+                            <span class="comment-date">${safeDate}</span>
+                        </div>
                     </div>
+                    <div class="comment-body">${safeContent}</div>
                 </div>
-                <div class="comment-body">${c.content}</div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
 }
+
+function escapeHTML(str) {
+    const p = document.createElement('p');
+    p.textContent = str;
+    return p.innerHTML;
+}
+
 
 async function submitComment(postId, name, content) {
     await fetch(`${SUPABASE_URL}/rest/v1/comments`, {
