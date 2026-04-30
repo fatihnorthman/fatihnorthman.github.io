@@ -2076,3 +2076,35 @@ html, body {
     word-break: break-word !important;
   }
 }
+
+/* ── Global Anti-Overflow Constitution ───────────────────── */
+/* Bu kurallar mevcut ve GELECEKTEKİ tüm postları koruma altına alır */
+@media screen and (max-width: 768px) {
+  /* 1. Tüm içerik elementlerini ekran sınırına hapset */
+  .post-content, .post-content *, .container, .content {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-wrap: anywhere !important; /* En agresif kelime kırma */
+  }
+
+  /* 2. Tablo ve Kod Blokları: Sayfayı itmez, kendi içinde kayar */
+  table, pre, code, .highlight, .highlight > div {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* 3. Görsel ve Medya: Her zaman ekrana sığar */
+  img, video, iframe, embed, object {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* 4. Sayfanın genel kaymasını yasakla */
+  html, body {
+    position: relative !important;
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+}
