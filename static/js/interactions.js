@@ -19,6 +19,7 @@ function initMouseTrail() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let points = [];
+    let isDrawing = false;
 
     const resize = () => {
         canvas.width = window.innerWidth;
@@ -27,18 +28,27 @@ function initMouseTrail() {
     window.addEventListener('resize', resize);
     resize();
 
+    document.addEventListener('mousedown', (e) => {
+        if (e.button === 0) isDrawing = true;
+    });
+
+    document.addEventListener('mouseup', () => isDrawing = false);
+
     document.addEventListener('mousemove', (e) => {
-        points.push({ x: e.clientX, y: e.clientY, age: 0 });
+        if (isDrawing) {
+            points.push({ x: e.clientX, y: e.clientY, age: 0 });
+        }
     });
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         ctx.beginPath();
-        ctx.strokeStyle = '#e53935';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(229, 57, 53, 0.4)'; /* Daha zarif ve şeffaf */
+        ctx.lineWidth = 1.5;
         ctx.lineJoin = 'round';
-        ctx.shadowBlur = 10;
+        ctx.lineCap = 'round';
+        ctx.shadowBlur = 8;
         ctx.shadowColor = '#e53935';
 
         for (let i = 0; i < points.length; i++) {
@@ -51,7 +61,7 @@ function initMouseTrail() {
                 ctx.lineTo(point.x, point.y);
             }
 
-            if (point.age > 40) {
+            if (point.age > 30) { /* Daha hızlı sönümlenme */
                 points.splice(i, 1);
                 i--;
             }
@@ -61,6 +71,7 @@ function initMouseTrail() {
     }
     animate();
 }
+
 
 
 function initCustomCursor() {
