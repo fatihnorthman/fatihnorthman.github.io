@@ -1131,6 +1131,69 @@ h3:hover .hanchor { opacity: 1; }
   margin: 48px 0;
 }
 
+/* ── Masaüstü: Interaction Hub Kompakt Stili ──────────────── */
+.post-interaction-hub {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 32px 0;
+  flex-wrap: wrap;
+}
+
+.interaction-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.interaction-card:hover {
+  border-color: var(--accent);
+  background: rgba(229,57,53,0.08);
+  transform: translateY(-2px);
+}
+
+.interaction-btn {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0;
+}
+
+.interaction-btn .icon {
+  font-size: 1rem;
+  color: #666;
+  transition: all 0.25s ease;
+}
+
+.interaction-btn.liked .icon,
+.interaction-btn.is-liked .icon {
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent);
+}
+
+.interaction-btn .count {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.share-card svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
 .action-btn {
   background: var(--bg-surface);
   border: 1px solid var(--border);
