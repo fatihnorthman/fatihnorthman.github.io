@@ -33,11 +33,11 @@ function init3DTilt() {
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             
-            // Böleni 30'dan 60'a çıkararak hareketi iyice yumuşattım
-            const rotateX = (y - centerY) / 60; 
-            const rotateY = (centerX - x) / 60;
+            // Böleni 150 yaparak hareketi mikro seviyeye indirdim
+            const rotateX = (y - centerY) / 150; 
+            const rotateY = (centerX - x) / 150;
             
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.005)`;
         });
         
         container.addEventListener('mouseleave', () => {
