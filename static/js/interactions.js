@@ -202,7 +202,8 @@ function initScrollReveal() {
 
 async function fetchGlobalLikes() {
     try {
-        const response = await fetch(`${_SUPABASE_URL()}/rest/v1/likes`, {
+        // Önbelleği kırmak için timestamp ekliyoruz
+        const response = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?t=${Date.now()}`, {
             headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` }
         });
         const data = await response.json();
@@ -250,11 +251,11 @@ async function updateLikeInDB(postId) {
             "apikey": _SUPABASE_KEY(), 
             "Authorization": `Bearer ${_SUPABASE_KEY()}`,
             "Content-Type": "application/json",
-            "Prefer": "resolution=merge-duplicates" // UPSERT Mantığı (Varsa Güncelle, Yoksa Ekle)
+            "Prefer": "resolution=merge-duplicates"
         };
         
-        // Önce mevcut sayıyı alalım (en güvenli yol)
-        const getRes = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?post_id=eq.${cleanId}`, {
+        // Önce EN GÜNCEL sayıyı çekelim (Cache buster ile)
+        const getRes = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?post_id=eq.${cleanId}&t=${Date.now()}`, {
             headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` }
         });
         const getData = await getRes.json();
