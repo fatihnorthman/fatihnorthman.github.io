@@ -1950,3 +1950,25 @@ h3:hover .hanchor { opacity: 1; }
         filter: drop-shadow(0 0 5px rgba(229, 57, 53, 0.4));
     }
 }
+
+/* ── Performance & Speed Optimizations ────────────────────── */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  image-rendering: -webkit-optimize-contrast;
+  content-visibility: auto; /* Ekran dışında kalan görselleri yüklemez */
+}
+
+.post.on-list, .post-card-inner, .mobile-nav {
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform: translateZ(0); /* Donanım hızlandırma (GPU) */
+}
+
+/* Scroll reveal geçişini daha seri yap */
+.post.on-list {
+  transition-duration: 0.5s !important;
+}
