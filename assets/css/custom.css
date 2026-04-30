@@ -1822,59 +1822,78 @@ h3:hover .hanchor { opacity: 1; }
   display: none; /* Masaüstünde gizli */
 }
 
-@media screen and (max-width: 680px) {
-  /* Masaüstü menüsünü mobilde gizle */
-  .header .menu {
+@media screen and (max-width: 768px) {
+  /* Masaüstü menüsünü mobilde KESİN olarak gizle */
+  header .menu, 
+  .header .menu, 
+  .menu--desktop,
+  nav.menu {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 
   .mobile-nav {
     display: flex;
     position: fixed;
-    bottom: 20px;
+    bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
-    max-width: 400px;
-    background: rgba(20, 20, 30, 0.85);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(229, 57, 53, 0.3);
+    max-width: 420px;
+    background: rgba(15, 15, 20, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(229, 57, 53, 0.4);
     border-radius: 24px;
-    padding: 10px 15px;
+    padding: 12px 10px;
     justify-content: space-around;
     align-items: center;
-    z-index: 9999;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8), 
+                0 0 20px rgba(229, 57, 53, 0.2);
   }
 
   .mobile-nav__item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     text-decoration: none;
-    color: #a0a0a0;
-    transition: all 0.3s ease;
+    color: #888;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     flex: 1;
   }
 
-  .mobile-nav__item .icon {
-    font-size: 1.2rem;
+  .nav-icon {
+    width: 22px;
+    height: 22px;
+    stroke: #888;
+    transition: all 0.3s ease;
   }
 
   .mobile-nav__item .label {
-    font-size: 0.7rem;
-    font-weight: 500;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
-  .mobile-nav__item:hover, .mobile-nav__item.active {
-    color: var(--accent);
+  .mobile-nav__item:hover .nav-icon, 
+  .mobile-nav__item.active .nav-icon {
+    stroke: var(--accent);
+    filter: drop-shadow(0 0 8px var(--accent));
     transform: translateY(-2px);
   }
 
-  /* Alt boşluk ayarı (menü içeriği kapatmasın diye) */
+  .mobile-nav__item:hover .label,
+  .mobile-nav__item.active .label {
+    color: var(--accent);
+  }
+
   body {
-    padding-bottom: 100px;
+    padding-bottom: 110px;
   }
 }
+
