@@ -148,7 +148,8 @@ async function initInteractions() {
     const commentForm = document.getElementById('comment-form');
     fetchGlobalLikes();
     likeButtons.forEach(btn => {
-        const postId = btn.dataset.postId || window.location.pathname;
+        // ID'yi her zaman slash olmadan al
+        const postId = (btn.dataset.postId || window.location.pathname).replace(/\/$/, ""); 
         if (localStorage.getItem('liked_' + postId)) {
             btn.classList.add('is-liked');
             if (btn.classList.contains('interaction-btn')) btn.classList.add('liked');
@@ -157,9 +158,9 @@ async function initInteractions() {
             e.preventDefault(); e.stopPropagation();
             if (localStorage.getItem('liked_' + postId)) return;
             
-            // UI'ı anında güncelle (Optimistic Update)
             const countElem = btn.querySelector('.count') || btn.querySelector('#like-count');
             if (countElem) {
+                // UI'ı anında yükselt
                 countElem.innerText = (parseInt(countElem.innerText) || 0) + 1;
             }
             btn.classList.add('is-liked');
@@ -205,14 +206,32 @@ async function fetchGlobalLikes() {
             headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` }
         });
         const data = await response.json();
+        const currentPath = window.location.pathname.replace(/\/$/, "");
+
         if (data && Array.isArray(data)) {
+            // Önce tüm beğenileri normalize edilmiş ID'lere göre toplayalım
+            const consolidatedLikes = {};
             data.forEach(item => {
-                // Hem ana sayfa hem de yazı içi seçicileri hedefle
-                const countElements = document.querySelectorAll(`[data-post-id="${item.post_id}"] .count, #like-count`);
+                const normalizedId = item.post_id.replace(/\/$/, "");
+                consolidatedLikes[normalizedId] = (consolidatedLikes[normalizedId] || 0) + (parseInt(item.count) || 0);
+            });
+
+            // Şimdi bu toplamları arayüze basalım
+            Object.keys(consolidatedLikes).forEach(normalizedId => {
+                const totalCount = consolidatedLikes[normalizedId];
+                const countElements = document.querySelectorAll(`[data-post-id="${normalizedId}"], [data-post-id="${normalizedId}/"], #like-count`);
+                
                 countElements.forEach(el => {
-                    // Eğer yazı içindeysek sadece o yazıya ait id'yi güncelle
-                    if (el.id === 'like-count' && window.location.pathname !== item.post_id) return;
-                    el.innerText = item.count;
+                    if (el.id === 'like-count' && currentPath !== normalizedId) return;
+                    
+                    const countSpan = el.querySelector('.count') || (el.id === 'like-count' ? el : null);
+                    if (!countSpan) return;
+
+                    const localCount = parseInt(countSpan.innerText) || 0;
+                    // Eğer veritabanı toplamı yerel sayıdan büyük veya eşitse güncelle
+                    if (totalCount >= localCount) {
+                        countSpan.innerText = totalCount;
+                    }
                 });
             });
         }
@@ -251,7 +270,7 @@ async function updateLikeInDB(postId) {
 
         if (res.ok) {
             console.log("Success! New count:", newCount);
-            setTimeout(fetchGlobalLikes, 500);
+            setTimeout(fetchGlobalLikes, 1500);
         } else {
             console.error("Update failed with status:", res.status);
         }
@@ -261,8 +280,8 @@ async function updateLikeInDB(postId) {
 }
 
 async function fetchComments(postId) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/comments?post_id=eq.${postId}&order=created_at.desc`, {
-        headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
+    const res = await fetch(`${_SUPABASE_URL()}/rest/v1/comments?post_id=eq.${postId}&order=created_at.desc`, {
+        headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}` }
     });
     const data = await res.json();
     const list = document.getElementById('comments-list');
@@ -297,9 +316,9 @@ function escapeHTML(str) {
 
 
 async function submitComment(postId, name, content) {
-    await fetch(`${SUPABASE_URL}/rest/v1/comments`, {
+    await fetch(`${_SUPABASE_URL()}/rest/v1/comments`, {
         method: 'POST',
-        headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json", "Prefer": "return=minimal" },
+        headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}`, "Content-Type": "application/json", "Prefer": "return=minimal" },
         body: JSON.stringify({ post_id: postId, name, content })
     });
 }
