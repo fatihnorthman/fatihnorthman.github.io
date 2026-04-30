@@ -202,11 +202,13 @@ function initScrollReveal() {
 
 async function fetchGlobalLikes() {
     try {
-        const response = await fetch(`${_SUPABASE_URL()}/rest/v1/likes`, {
+        // Parametre çakışmasını önlemek için select=* yanına cache buster ekliyoruz
+        const response = await fetch(`${_SUPABASE_URL()}/rest/v1/likes?select=*&_cache=${Date.now()}`, {
             headers: { 
                 "apikey": _SUPABASE_KEY(), 
                 "Authorization": `Bearer ${_SUPABASE_KEY()}`,
-                "Cache-Control": "no-cache" // Önbelleği parametre eklemeden kırmanın en temiz yolu
+                "Cache-Control": "no-cache",
+                "Pragma": "no-cache"
             }
         });
         const data = await response.json();
@@ -225,20 +227,21 @@ async function fetchGlobalLikes() {
             const currentPathClean = currentParts.length > 0 ? currentParts.pop() : "home";
 
             // Şimdi sayfadaki tüm butonları tara ve eşleşenleri güncelle
-            const allPotential = document.querySelectorAll('.like-btn, .stat-card, #like-count, .count');
+            const allPotential = document.querySelectorAll('.like-btn, .stat-card, #like-count, .count, [data-post-id]');
             allPotential.forEach(el => {
-                let elRawId = el.dataset.postId || (el.id === 'like-count' ? window.location.pathname : null);
+                let elRawId = el.dataset.postId || (el.id === 'like-count' ? window.location.pathname : "");
                 if (!elRawId) return;
                 
-                const elParts = decodeURIComponent(elRawId).toLowerCase().split('/').filter(p => p);
-                const elCleanId = elParts.length > 0 ? elParts.pop() : "home";
+                const elDecoded = decodeURIComponent(elRawId).toLowerCase();
+                const elSlug = elDecoded.split('/').filter(p => p).pop() || "home";
                 
-                const totalCount = consolidatedLikes[elCleanId];
+                // Hem tam linke hem de sadece isme (slug) bak
+                const totalCount = consolidatedLikes[elSlug] || consolidatedLikes[elDecoded];
+                
                 if (totalCount !== undefined) {
                     const countSpan = el.classList.contains('count') ? el : (el.querySelector('.count') || (el.id === 'like-count' ? el : null));
                     if (countSpan) {
-                        const localCount = parseInt(countSpan.innerText) || 0;
-                        if (totalCount >= localCount) countSpan.innerText = totalCount;
+                        countSpan.innerText = totalCount;
                     }
                 }
             });
@@ -288,7 +291,13 @@ async function updateLikeInDB(rawPostId) {
 
         if (res.ok) {
             console.log("DB Persistence Success! Combined Count:", newCount);
-            setTimeout(fetchGlobalLikes, 2000); 
+            // Mobilde geri bildirim için butonu parlat
+            const btn = document.querySelector(`[data-post-id="${rawPostId}"], #like-button`);
+            if (btn) {
+                btn.style.boxShadow = "0 0 30px var(--accent)";
+                setTimeout(() => { btn.style.boxShadow = ""; }, 1000);
+            }
+            setTimeout(fetchGlobalLikes, 1500); 
         } else {
             console.error("DB Update Failed:", res.status);
         }
