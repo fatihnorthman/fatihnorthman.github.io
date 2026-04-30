@@ -263,11 +263,11 @@ hr {
   display: none !important;
 }
 
-/* ── Post Cards (List View) ─────────────────────────────────── */
+/* ── Post Cards (Social Media Style) ────────────────────────── */
 .posts {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
 }
 
 .post.on-list {
@@ -275,30 +275,60 @@ hr {
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  animation: slideUp 0.5s var(--ease) both;
+  animation: slideUp 0.8s var(--ease) both;
   transition: var(--transition);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .post.on-list:hover {
   transform: translateY(-5px);
   border-color: var(--accent-border);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  background: rgba(22, 22, 42, 0.8);
 }
 
-.post.on-list::after {
-  content: '';
+/* Post Header / Social Feel */
+.post.on-list::before {
+  content: 'FN';
   position: absolute;
-  top: 0; left: 0;
-  width: 4px;
-  height: 0;
-  background: var(--accent);
-  transition: var(--transition);
+  top: 32px;
+  left: 32px;
+  width: 40px;
+  height: 40px;
+  background: var(--accent-glow);
+  border: 1px solid var(--accent-border);
+  border-radius: 50%;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8rem;
 }
 
-.post.on-list:hover::after {
-  height: 100%;
+.post.on-list .post-title,
+.post.on-list .post-meta,
+.post.on-list .post-content,
+.post.on-list .post-tags,
+.post.on-list .read-more {
+  margin-left: 56px !important;
+}
+
+.post.on-list .post-title {
+  font-size: 1.4rem !important;
+  margin-bottom: 8px !important;
+}
+
+.post.on-list .post-meta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 20px !important;
+  display: flex;
+  gap: 12px;
 }
 
 @keyframes slideUp {
