@@ -132,9 +132,27 @@ hr {
 .header__logo .logo,
 .header__logo a {
   display: flex !important;
+  flex-direction: column !important;
   align-items: center;
+  justify-content: center;
   text-decoration: none !important;
   border: none !important;
+  gap: 10px;
+}
+
+.logo-signature {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  transition: var(--transition);
+}
+
+.header__logo a:hover .logo-signature {
+  color: #fff;
+  text-shadow: 0 0 10px rgba(229, 57, 53, 0.3);
 }
 
 .header-svg-logo {
