@@ -302,14 +302,12 @@ async function fetchGlobalCommentCounts() {
             if (slug) counts[slug] = (counts[slug] || 0) + 1;
         });
 
-        // Ana sayfadaki yorum kartlarını güncelle
+        // Tüm yorum kartlarını güncelle — eşleşme olsun olmasın 0 yaz
         document.querySelectorAll('.comment-count-card').forEach(card => {
             const rawId = card.dataset.postId || '';
             const slug = decodeURIComponent(rawId).toLowerCase().split('/').filter(p => p).pop();
-            if (slug && counts[slug] !== undefined) {
-                const countEl = card.querySelector('.count');
-                if (countEl) countEl.innerText = counts[slug];
-            }
+            const countEl = card.querySelector('.count');
+            if (countEl) countEl.innerText = (slug && counts[slug]) ? counts[slug] : 0;
         });
     } catch (e) { console.error("Comment count fetch error:", e); }
 }
