@@ -44,12 +44,17 @@ function init3DTilt() {
         const card = container.querySelector('.post-card-inner');
         if (!card) return;
         container.addEventListener('mousemove', (e) => {
+            // Eğer fare bir butonun veya linkin üzerindeyse kartı sabitle
+            if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.stat-card')) {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1.02)`;
+                return;
+            }
+
             const rect = container.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-            // Böleni 300 yaparak hareketi mikro-mikro seviyeye indirdim
             const rotateX = (y - centerY) / 300; 
             const rotateY = (centerX - x) / 300;
             card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.002)`;
