@@ -31,16 +31,8 @@ function initMouseTrail() {
     window.addEventListener('resize', resize);
     resize();
 
-    document.addEventListener('mousedown', (e) => {
-        if (e.button === 0) isDrawing = true;
-    });
-
-    document.addEventListener('mouseup', () => isDrawing = false);
-
     document.addEventListener('mousemove', (e) => {
-        if (isDrawing) {
-            points.push({ x: e.clientX, y: e.clientY, age: 0 });
-        }
+        points.push({ x: e.clientX, y: e.clientY, age: 0 });
     });
 
     function animate() {
