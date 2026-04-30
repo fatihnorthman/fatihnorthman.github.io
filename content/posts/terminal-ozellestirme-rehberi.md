@@ -3,7 +3,6 @@ title: "Adım Adım Terminal ve Kabuk Özelleştirme Rehberi"
 date: 2026-04-30T15:47:00+03:00
 draft: false
 description: "Modern bir Linux deneyimi için Ghostty terminali, Fish kabuğu ve Fastfetch ile uçbirim dünyasını en baştan tasarlayın."
-cover: "/terminal_customization_cover.png"
 tags: ["Linux", "Terminal", "Ghostty", "Fish Shell", "Fastfetch", "Customization"]
 ---
 

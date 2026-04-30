@@ -1,0 +1,13 @@
+{{ define "main" }}
+<div class="privacy-page">
+  <div class="privacy-hero">
+    <div class="privacy-hero-icon">🔐</div>
+    <h1 class="privacy-title">{{ .Title }}</h1>
+    <p class="privacy-subtitle">Son güncelleme: {{ .Date.Format "02 January 2006" }}</p>
+  </div>
+
+  <div class="privacy-content">
+    {{ .Content }}
+  </div>
+</div>
+{{ end }}

@@ -53,3 +53,8 @@ paginate = 10
   name = "Etiketler"
   url = "/tags"
   weight = 4
+
+[[menu.footer]]
+  name = "Gizlilik Politikası"
+  url = "/privacy-policy"
+  weight = 1
