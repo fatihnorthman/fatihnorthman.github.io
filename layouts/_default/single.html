@@ -22,9 +22,11 @@
     {{- if and (.Param "readingTime") (eq (.Param "readingTime") true) -}}
       <span class="post-reading-time">· {{ .ReadingTime }} dk okuma</span>
     {{- end -}}
+    {{ if ne .Params.comments false }}
     <a href="#comments-section" class="scroll-to-comments">
       <span class="icon">💬</span> Yorumlara Git
     </a>
+    {{ end }}
   </div>
 
   {{ if .Params.tags }}
@@ -53,7 +55,9 @@
     {{- end -}}
   </div>
 
+  {{ if ne .Params.comments false }}
   {{ partial "post-interactions.html" . }}
+  {{ end }}
 
   {{ if eq .Type $.Site.Params.contentTypeName }}
     {{ partial "posts_pagination.html" . }}

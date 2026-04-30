@@ -2,6 +2,7 @@
 title = "Hakkımda"
 date = "2026-04-30"
 layout = "about"
+comments = false
 +++
 
 Merhaba! Ben **Muhammet Fatih Şahan** — sistem yönetimi ve altyapı mimarisi üzerine çalışan, Linux dünyasına ve otomasyona tutkulu bir mühendisim.
