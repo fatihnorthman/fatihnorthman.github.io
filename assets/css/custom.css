@@ -129,16 +129,19 @@ hr {
 
 /* ── Header ─────────────────────────────────────────────────── */
 .header {
-  padding: 24px 0 !important;
-  border-bottom: 1px solid rgba(229, 57, 53, 0.15) !important;
-  margin-bottom: 56px !important;
+  padding: 12px 32px !important;
+  border: 1px solid rgba(229, 57, 53, 0.15) !important;
+  border-radius: 20px;
+  margin: 16px auto 40px !important;
+  max-width: calc(var(--max-width) + 80px);
+  width: 95%;
   position: sticky;
-  top: 0;
+  top: 16px;
   z-index: 100;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  background: rgba(13, 13, 23, 0.8) !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(229, 57, 53, 0.1);
+  background: rgba(13, 13, 23, 0.75) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(229, 57, 53, 0.05);
   animation: fadeIn 0.8s var(--ease);
 }
 
