@@ -1920,12 +1920,13 @@ h3:hover .hanchor { opacity: 1; }
   }
 
   .post-card-inner {
-    padding: 30px 20px !important;
-    border: none !important; /* Kenarlıkları kaldır */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; /* Sadece alt çizgi */
-    background: transparent !important; /* Arka planı temizle */
-    border-radius: 0 !important;
-    box-shadow: none !important;
+    padding: 20px !important; /* Standart iç boşluk */
+    border: 1px solid rgba(255, 255, 255, 0.08) !important; /* Hafif çerçeve */
+    background: rgba(255, 255, 255, 0.02) !important; /* Çok hafif arka plan */
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+    margin: 0 10px !important; /* Kenarlardan biraz boşluk */
+    overflow: hidden; /* Dışarı taşmaları engelle */
   }
 
   /* Başlık ve İçerik */
@@ -1943,17 +1944,21 @@ h3:hover .hanchor { opacity: 1; }
     margin-bottom: 25px !important;
   }
 
-  /* Footer: Daha ince ve şık */
+  /* Footer: Kartın içinde, derli toplu */
   .post-footer {
-    border-top: none !important;
-    padding-top: 10px !important;
-    flex-direction: row !important; /* Mobilde tekrar yan yana */
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding-top: 20px !important;
+    margin-top: 15px !important;
+    flex-direction: row !important;
     justify-content: space-between;
     align-items: center;
+    width: 100% !important;
   }
 
   .post-card-stats {
-    gap: 15px !important;
+    gap: 12px !important;
+    display: flex !important;
+    align-items: center !important;
   }
 
   .stat-card {
@@ -2137,13 +2142,15 @@ html, body {
     transition: transform 0.5s ease;
 }
 
-.post on-list:hover .post-card-image img {
+.post.on-list:hover .post-card-image img {
     transform: scale(1.05);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     .post-card-image {
-        height: 200px;
+        width: calc(100% + 40px) !important;
+        margin: -20px -20px 20px -20px !important;
+        height: 180px !important;
     }
 }
 
