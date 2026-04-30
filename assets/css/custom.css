@@ -1552,3 +1552,21 @@ h3:hover .hanchor { opacity: 1; }
   display: inline-block;
 }
 
+
+/* ── Post Avatar Image Styling ─────────────────────────────── */
+.post-avatar {
+  overflow: hidden;
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border);
+}
+
+.post-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  padding: 4px; /* Logoyu kenarlardan hafifçe ayırmak için */
+}
+
+.post.on-list .post-header {
+  margin-bottom: 20px;
+}

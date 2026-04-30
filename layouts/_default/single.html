@@ -1,5 +1,15 @@
 {{ define "main" }}
 <article class="post">
+  <div class="post-header">
+    <div class="post-avatar">
+      <img src="/logo.svg" alt="Fatih Northman Logo">
+    </div>
+    <div class="post-user-info">
+      <span class="post-username">Fatih Northman</span>
+      <span class="post-handle">@fatihnorthman</span>
+    </div>
+  </div>
+
   <h1 class="post-title">
     <a href="{{ .Permalink }}">{{ .Title | markdownify }}</a>
   </h1>
@@ -7,17 +17,14 @@
     {{- if .Date -}}
       <time class="post-date">
         {{- partial "post-date" . -}}
-        {{- if and $.Site.Params.showLastUpdated .Lastmod -}}
-          &nbsp;{{- partial "post-lastmod" . -}}
-        {{- end -}}
       </time>
     {{- end -}}
-    {{- with .Params.Author -}}
-      <span class="post-author">{{ . }}</span>
-    {{- end -}}
     {{- if and (.Param "readingTime") (eq (.Param "readingTime") true) -}}
-      <span class="post-reading-time">{{ .ReadingTime }} {{ $.Site.Params.minuteReadingTime | default "min read" }} ({{ .WordCount }} {{ $.Site.Params.words | default "words" }})</span>
+      <span class="post-reading-time">· {{ .ReadingTime }} dk okuma</span>
     {{- end -}}
+    <a href="#comments-section" class="scroll-to-comments">
+      <span class="icon">💬</span> Yorumlara Git
+    </a>
   </div>
 
   {{ if .Params.tags }}
