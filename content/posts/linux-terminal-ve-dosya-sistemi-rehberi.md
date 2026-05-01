@@ -82,3 +82,4 @@ Linux'ta program kurmak için internetten `.exe` indirmezsiniz. Merkezi bir depo
 Terminal, hata yapmaktan korkmamanız gereken bir yerdir. Yanlış bir komut yazdığınızda sistem genellikle sizi uyarır. Terminali kullanmaya başladıkça, grafik arayüzlerin (GUI) aslında ne kadar kısıtlayıcı olduğunu fark edeceksiniz.
 
 Bu rehber sadece başlangıçtı. Linux bir denizdir ve terminal sizin bu denizdeki pusulanızdır. Pusulayı kullanmayı öğrendiğinizde, sisteminizin gerçek hakimi siz olacaksınız. Siyah ekranın gücü artık ellerinizde.
+ 
