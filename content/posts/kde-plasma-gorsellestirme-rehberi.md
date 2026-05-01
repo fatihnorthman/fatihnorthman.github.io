@@ -114,3 +114,4 @@ KDE Plasma kurulu bir sistem üzerinde:
 Karşınıza binlerce tema çıkacak. Bir tanesini seçin, indirin, uygulayın. Masaüstünüz artık sizindir.
 
 Özelleştirme bir ayrıcalık değil, bir haktır. Linux'ta bu hakkı kullanmak hiç bu kadar kolay olmamıştı.
+ 

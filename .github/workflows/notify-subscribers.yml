@@ -143,9 +143,15 @@ jobs:
               
               msg = MIMEMultipart('alternative')
               msg['Subject'] = f'Yeni yazi: {title}'
-              msg['From'] = f"Fatih Sahan <{gmail_user}>"
+              msg['From'] = f"Cyber-Red <{gmail_user}>"
               msg['To'] = email_addr
               
+              # --- Spam Filtresi İyileştirmeleri ---
+              msg['List-Unsubscribe'] = f'<https://fatihnorthman.github.io/>'
+              msg['Precedence'] = 'list'
+              msg['X-Auto-Response-Suppress'] = 'OOF, AutoReply'
+              # ------------------------------------
+
               part = MIMEText(html, 'html')
               msg.attach(part)
               
