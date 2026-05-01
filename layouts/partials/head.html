@@ -28,13 +28,17 @@
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
 <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.subtitle }}{{ end }}{{ end }}">
-<meta property="og:image" content="{{ .Site.BaseURL }}logo.png">
+<meta property="og:image" content="{{ if .Params.image }}{{ .Site.BaseURL }}{{ .Params.image | strings.TrimPrefix "/" }}{{ else }}{{ .Site.BaseURL }}logo.png{{ end }}">
 
 {{- /* Twitter Cards */ -}}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
 <meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.subtitle }}{{ end }}{{ end }}">
-<meta name="twitter:image" content="{{ .Site.BaseURL }}logo.png">
+<meta name="twitter:image" content="{{ if .Params.image }}{{ .Site.BaseURL }}{{ .Params.image | strings.TrimPrefix "/" }}{{ else }}{{ .Site.BaseURL }}logo.png{{ end }}">
+
+{{- /* Font Preconnect */ -}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 {{- /* JSON-LD Structured Data */ -}}
 <script type="application/ld+json">
@@ -61,7 +65,8 @@
       "url": "{{ .Site.BaseURL }}logo.png"
     }
   },
-  "datePublished": "{{ .Date.Format "2006-01-02" }}"
+  "datePublished": "{{ .Date.Format "2006-01-02" }}",
+  "dateModified": "{{ if .Lastmod }}{{ .Lastmod.Format "2006-01-02" }}{{ else }}{{ .Date.Format "2006-01-02" }}{{ end }}"
 }
 </script>
 
