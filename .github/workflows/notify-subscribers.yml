@@ -72,13 +72,14 @@ jobs:
           gmail_user = os.environ.get('GMAIL_EMAIL', '').strip()
           gmail_pwd  = os.environ.get('GMAIL_PASSWORD', '').strip()
           
-          # Hugo uyumlu slugify fonksiyonu (Türkçe karakter destekli)
+          # Hugo uyumlu slugify fonksiyonu (Türkçe karakterleri KORUR)
           def slugify(text):
-              tr_map = str.maketrans("ığüşöçİĞÜŞÖÇ ", "igusocigusoc-")
-              text = text.lower().translate(tr_map)
               import re
-              text = re.sub(r'[^a-z0-9-]', '', text)
-              text = re.sub(r'-+', '-', text)
+              text = text.lower().strip()
+              text = text.replace(" ", "-")
+              # Sadece özel karakterleri kaldır, harfleri (Türkçe dahil) tut
+              text = re.sub(r'[^\w\s-]', '', text)
+              text = re.sub(r'[-\s]+', '-', text)
               return text.strip('-')
 
           title  = os.environ.get('POST_TITLE', '')
@@ -86,9 +87,11 @@ jobs:
           date   = os.environ.get('POST_DATE', '')
           tags   = os.environ.get('POST_TAGS', '')
           
-          # URL'yi başlık üzerinden Hugo uyumlu oluştur
+          # URL'yi başlık üzerinden Hugo uyumlu oluştur (Türkçe karakterli)
+          from urllib.parse import quote
           slug = slugify(title)
-          url = f"https://fatihnorthman.github.io/{slug}/"
+          # GitHub Pages UTF-8 karakterli URL'leri destekler, ancak quote etmek en güvenlisidir
+          url = f"https://fatihnorthman.github.io/{quote(slug)}/"
 
           # Etiketleri formatla
           tag_html = ""
