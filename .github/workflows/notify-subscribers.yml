@@ -98,7 +98,7 @@ jobs:
           if tags:
               tag_list = tags.split()
               for t in tag_list:
-                  tag_html += f'<span style="color:#e53935;margin-right:8px;">#{t}</span> '
+                  tag_html += f'<span style="color:#ffc107;margin-right:8px;">#{t}</span> '
 
           debug_out = f"Supabase URL: {sb_url}\nPost Title: {title}\nSlug: {slug}\nTarget URL: {url}\n"
           
