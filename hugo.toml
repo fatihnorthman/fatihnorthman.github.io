@@ -9,7 +9,6 @@ removePathAccents = true
   posts = "/:title/"
 
 [params]
-
   logoText = "~/ northman"
   contentTypeName = "posts"
   themeColor = "red"
@@ -20,8 +19,6 @@ removePathAccents = true
   words = "kelime"
   Toc = false
   TocTitle = "İçindekiler"
-
-  # Social / Contact
   github = "fatihnorthman"
   email = "sahanfatih2798@gmail.com"
 
