@@ -157,8 +157,8 @@ jobs:
               sys.exit(1)
 
           html = html.replace('{{POST_TITLE}}', title) \
-                     .replace('{{POST_DESC}}',  desc)  \
-                     .replace('{{POST_DATE}}',  date)  \
+                     .replace('{{POST_DESC}}',  description)  \
+                     .replace('{{POST_DATE}}',  date_str)  \
                      .replace('{{POST_TAGS}}',  tag_html) \
                      .replace('{{POST_URL}}',   url)
 
