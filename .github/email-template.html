@@ -3,134 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>{{POST_TITLE}}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
     
-    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
-    img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
-    table { border-collapse: collapse !important; }
-    body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
-
+    body { margin: 0; padding: 0; background-color: #0d0d17; font-family: 'Inter', -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+    table { border-collapse: collapse; }
+    a { text-decoration: none; }
+    
     @media screen and (max-width: 600px) {
-      .content-padding { padding: 24px 20px !important; }
-      .header-padding { padding: 24px 20px 0 !important; }
+      .container { padding: 30px 12px !important; }
+      .post-card { padding: 24px !important; }
+      .post-title { font-size: 1.45rem !important; }
     }
   </style>
 </head>
-<body style="margin:0;padding:0;background-color:#0d0d17;font-family:'Inter', -apple-system, system-ui, sans-serif;">
+<body style="margin:0;padding:0;background-color:#0d0d17;">
 
-  <div style="display:none;max-height:0;overflow:hidden;color:#0d0d17;font-size:1px;">
-    Yeni yazı: {{POST_TITLE}} — Cyber-Red Blog üzerinden okuyun.&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
-  </div>
-
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0d0d17;padding:40px 16px;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#0d0d17;">
     <tr>
-      <td align="center">
-        <!-- Main Card -->
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" 
-               style="max-width:600px;background-color:#121220;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+      <td align="center" class="container" style="padding: 60px 20px;">
+        
+        <!-- North Protocol Social Card -->
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" 
+               style="max-width: 580px; background-color: #121220; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
           
-          <!-- Gradient Top Bar -->
           <tr>
-            <td style="background:linear-gradient(90deg, #e53935 0%, #c62828 100%);height:3px;padding:0;"></td>
-          </tr>
-
-          <!-- Header -->
-          <tr>
-            <td class="header-padding" style="padding:32px 40px 0;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+            <td class="post-card" style="padding: 30px;">
+              
+              <!-- Feed Header -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td>
-                    <span style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:14px;color:#e53935;font-weight:700;letter-spacing:0.05em;">
-                      ~/ fatihnorthman
-                    </span>
+                  <td width="48" style="vertical-align: top;">
+                    <div style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(229, 57, 53, 0.3); background: rgba(229, 57, 53, 0.05); padding: 2px;">
+                      <img src="https://fatihnorthman.github.io/logo.svg" alt="Fatih Northman" width="44" height="44" style="border-radius: 50%; display: block; background: #0d0d17;">
+                    </div>
                   </td>
-                  <td align="right">
-                    <span style="display:inline-block;padding:4px 12px;background:rgba(229,57,53,0.1);border:1px solid rgba(229,57,53,0.2);border-radius:100px;font-family:'JetBrains Mono', monospace;font-size:11px;color:#ef5350;">
-                      SYSLOG::NEW_POST
-                    </span>
+                  <td style="padding-left: 14px; vertical-align: middle;">
+                    <div style="color: #ffffff; font-weight: 700; font-size: 16px; line-height: 1.2; letter-spacing: -0.01em;">Fatih Northman</div>
+                    <div style="color: #8888a0; font-size: 13px; font-family: 'JetBrains Mono', monospace; margin-top: 2px;">@fatihnorthman</div>
+                  </td>
+                  <td align="right" style="vertical-align: middle;">
+                    <div style="background: rgba(229, 57, 53, 0.1); border: 1px solid rgba(229, 57, 53, 0.2); border-radius: 100px; padding: 4px 12px; color: #ef5350; font-size: 10px; font-weight: 700; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em;">
+                      NEW_POST
+                    </div>
                   </td>
                 </tr>
               </table>
-            </td>
-          </tr>
 
-          <!-- Divider -->
-          <tr>
-            <td style="padding:24px 40px 0;">
-              <div style="height:1px;background:linear-gradient(90deg, rgba(229,57,53,0.3) 0%, transparent 100%);"></div>
-            </td>
-          </tr>
+              <!-- Post Title -->
+              <div style="margin-top: 28px;">
+                <a href="{{POST_URL}}" style="text-decoration: none;">
+                  <h1 class="post-title" style="margin: 0; color: #ffffff; font-size: 1.8rem; font-weight: 700; line-height: 1.35; letter-spacing: -0.025em;">
+                    {{POST_TITLE}}
+                  </h1>
+                </a>
+              </div>
 
-          <!-- Content -->
-          <tr>
-            <td class="content-padding" style="padding:32px 40px;">
-              <p style="margin:0 0 12px;font-family:'JetBrains Mono', monospace;font-size:11px;color:#8888a0;text-transform:uppercase;letter-spacing:0.15em;">
-                BLOG BÜLTENİ
-              </p>
-              <h1 style="margin:0 0 20px;font-size:26px;font-weight:700;color:#ffffff;line-height:1.3;letter-spacing:-0.01em;">
-                {{POST_TITLE}}
-              </h1>
-              <p style="margin:0 0 32px;font-size:16px;color:#a8a8c0;line-height:1.8;">
+              <!-- Content Body -->
+              <div style="margin-top: 18px; color: #ccc; font-size: 16px; line-height: 1.8; font-family: 'Inter', sans-serif;">
                 {{POST_DESC}}
-              </p>
+              </div>
 
-              <!-- CTA -->
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <!-- Social Feed Stats (Site Style) -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
                 <tr>
-                  <td style="border-radius:8px;background:#e53935;">
-                    <a href="{{POST_URL}}" style="display:inline-block;padding:14px 32px;font-size:15px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:8px;">
-                      Yazıyı Görüntüle &nbsp;→
+                  <td>
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <!-- Like Stat -->
+                        <td style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 8px 14px; color: #dcdce8; font-size: 13px; font-weight: 600;">
+                          <span style="color: #e53935; margin-right: 6px; font-size: 14px;">❤</span> 0 <span style="color: #666680; font-weight: 400; font-size: 11px; margin-left: 4px;">BEĞENİ</span>
+                        </td>
+                        <td width="10"></td>
+                        <!-- Comment Stat -->
+                        <td style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 8px 14px; color: #dcdce8; font-size: 13px; font-weight: 600;">
+                          <span style="margin-right: 6px; font-size: 14px;">💬</span> 0 <span style="color: #666680; font-weight: 400; font-size: 11px; margin-left: 4px;">YORUM</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td align="right">
+                    <a href="{{POST_URL}}" style="display: inline-block; background: #e53935; color: #ffffff; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; text-decoration: none; box-shadow: 0 4px 15px rgba(229, 57, 53, 0.3);">
+                      Yazıyı Oku →
                     </a>
                   </td>
                 </tr>
               </table>
+
             </td>
           </tr>
-
-          <!-- Terminal Section -->
+          
+          <!-- Site Accent Bar -->
           <tr>
-            <td style="padding:0 40px 40px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0e0e1c;border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
-                <tr>
-                  <td style="padding:16px 20px;">
-                    <p style="margin:0;font-family:'JetBrains Mono', monospace;font-size:13px;line-height:1.6;">
-                      <span style="color:#e53935;">$</span> <span style="color:#666680;">git log -1 --pretty=format:"%s"</span><br>
-                      <span style="color:#dcdce8;">"{{POST_TITLE}}"</span><br>
-                      <span style="color:#e53935;">$</span> <span style="color:#666680;">status</span> <span style="color:#4caf50;">[deployed]</span>
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="padding:40px;background-color:#0e0e1c;border-top:1px solid rgba(255,255,255,0.05);">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td align="center" style="font-size:12px;color:#666680;line-height:1.8;">
-                    <p style="margin:0 0 12px;">
-                      Bu e-postayı <a href="https://fatihnorthman.github.io" style="color:#8888a0;text-decoration:none;font-weight:600;">fatihnorthman.github.io</a> bültenine abone olduğunuz için alıyorsunuz.
-                    </p>
-                    <p style="margin:0 0 24px;">
-                      &copy; 2024 Cyber-Red | North Protocol
-                    </p>
-                    <p style="margin:0;">
-                      <a href="mailto:fatihnorthman.blog@gmail.com?subject=Abonelik%20Iptali" style="color:#e53935;text-decoration:none;font-weight:600;">Abonelikten Çık</a>
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </td>
+            <td style="height: 3px; background: linear-gradient(90deg, #e53935 0%, #c62828 50%, #e53935 100%);"></td>
           </tr>
         </table>
+
+        <!-- Branding & Unsubscribe -->
+        <div style="margin-top: 40px; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; color: #e53935; font-size: 13px; font-weight: 700; margin-bottom: 12px; letter-spacing: 0.1em;">
+            NORTH PROTOCOL // ARCHITECT EDITION
+          </div>
+          <p style="color: #666680; font-size: 12px; margin: 0 0 10px; line-height: 1.6;">
+            Bu e-posta <a href="https://fatihnorthman.github.io" style="color: #a8a8c0; text-decoration: none; border-bottom: 1px solid #333;">fatihnorthman.github.io</a> bültenine abone olduğunuz için gönderilmiştir.
+          </p>
+          <p style="color: #666680; font-size: 12px; margin: 0;">
+            <a href="mailto:fatihnorthman.blog@gmail.com?subject=Unsubscribe" style="color: #e53935; text-decoration: none; font-weight: 600;">Abonelikten Ayrıl</a>
+          </p>
+        </div>
+
       </td>
     </tr>
   </table>
+
 </body>
 </html>
