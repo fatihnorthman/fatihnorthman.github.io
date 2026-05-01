@@ -83,12 +83,20 @@ jobs:
                      .replace('{{POST_TAGS}}',  tag_html) \
                      .replace('{{POST_URL}}',   url)
 
-          # 4. Aboneleri çek ve gönder
+          # 4. Aboneleri çek
           sb_url = 'https://xusjivptdjytbcobarxh.supabase.co'
           sb_key = os.environ.get('SUPABASE_SERVICE_KEY', '').strip()
-          req = urllib.request.Request(f"{sb_url}/rest/v1/subscribers?select=email&is_active=eq.true", headers={"apikey": sb_key, "Authorization": f"Bearer {sb_key}"})
-          with urllib.request.urlopen(req) as response:
-              subscribers = json.loads(response.read().decode())
+          
+          try:
+              req = urllib.request.Request(f"{sb_url}/rest/v1/subscribers?select=email&is_active=eq.true", headers={"apikey": sb_key, "Authorization": f"Bearer {sb_key}"})
+              with urllib.request.urlopen(req) as response:
+                  subscribers = json.loads(response.read().decode())
+          except urllib.error.HTTPError as e:
+              print(f"Supabase Hatası ({e.code}): {e.read().decode()}")
+              exit(1)
+          except Exception as e:
+              print(f"Genel Hata: {str(e)}")
+              exit(1)
 
           gmail_user = os.environ.get('GMAIL_EMAIL', '').strip()
           gmail_pwd = os.environ.get('GMAIL_PASSWORD', '').strip()
