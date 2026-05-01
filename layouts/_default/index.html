@@ -15,8 +15,39 @@
       <a href="https://github.com/fatihnorthman" class="hero__secondary" target="_blank" rel="noopener">
         GitHub ↗
       </a>
+      <button class="hero__subscribe-btn" id="open-subscribe-modal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Abone Ol
+      </button>
     </div>
   </div>
+
+  <!-- Subscribe Modal -->
+  <div id="subscribe-modal" class="subscribe-modal" role="dialog" aria-modal="true" aria-label="Abone ol">
+    <div class="subscribe-modal__backdrop" id="close-modal-backdrop"></div>
+    <div class="subscribe-modal__box">
+      <button class="subscribe-modal__close" id="close-subscribe-modal" aria-label="Kapat">✕</button>
+      <div class="subscribe-modal__icon">✉</div>
+      <h2 class="subscribe-modal__title">Yeni yazılardan haberdar ol</h2>
+      <p class="subscribe-modal__desc">Yeni bir yazı yayınlandığında doğrudan e-posta kutuna gelsin. Spam yok, sadece içerik.</p>
+      <form id="subscribe-form" class="subscribe-form" novalidate>
+        <input type="text" id="sub-name" placeholder="Adın" required maxlength="60" autocomplete="name">
+        <input type="email" id="sub-email" placeholder="E-posta adresin" required maxlength="120" autocomplete="email">
+        <!-- Honeypot -->
+        <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+        <button type="submit" class="subscribe-submit" id="subscribe-submit-btn">
+          <span class="submit-text">Abone Ol</span>
+          <span class="submit-loading" style="display:none">Kaydediliyor...</span>
+        </button>
+      </form>
+      <div id="subscribe-success" class="subscribe-success" style="display:none">
+        <div class="success-icon">✓</div>
+        <p>Abone oldun! Yeni yazılardan haberdar edileceksin.</p>
+      </div>
+      <div id="subscribe-error" class="subscribe-error" style="display:none"></div>
+    </div>
+  </div>
+
 
   {{ if .Content }}
     <div class="index-content">
