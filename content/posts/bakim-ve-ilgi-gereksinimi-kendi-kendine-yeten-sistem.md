@@ -1,6 +1,6 @@
 ---
 title: "Bakım ve İlgi Gereksinimi: Kendi Kendine Yeten Sistem"
-date: 2026-05-01T09:00:00
+date: 2026-05-01T12:55:00
 description: "İşletim sistemlerine yönelik algımız, genellikle onlara sürekli bakım yapmamız gerektiği yönündedir. Linux, bu 'bağımlı sistem' paradigmasını yıkarak kendi kendine yeten bir altyapı sunar."
 tags: ["linux", "felsefe", "sistem-yonetimi", "bakim", "stabilite", "teknoloji"]
 ---
