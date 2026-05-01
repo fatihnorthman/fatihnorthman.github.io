@@ -51,14 +51,10 @@ jobs:
           GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          POST_TITLE: ${{ steps.meta.outputs.title }}
-          POST_DESC: ${{ steps.meta.outputs.desc }}
-          POST_DATE: ${{ steps.meta.outputs.date }}
-          POST_TAGS: ${{ steps.meta.outputs.tags }}
-          POST_URL: ${{ steps.meta.outputs.url }}
+          POST_FILE: ${{ steps.check.outputs.post_file }}
         run: |
           python3 << 'PYEOF'
-          import json, urllib.request, urllib.error, os, sys
+          import json, urllib.request, urllib.error, os, sys, re, urllib.parse
           import smtplib
           from email.mime.text import MIMEText
           from email.mime.multipart import MIMEMultipart
