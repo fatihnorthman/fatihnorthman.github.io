@@ -18,7 +18,7 @@ jobs:
       - name: Check for new posts
         id: check
         run: |
-          NEW_POSTS=$(git diff --name-only HEAD~1 HEAD -- 'content/posts/*.md' | grep -v '_index.md' || true)
+          NEW_POSTS=$(git diff --name-only --diff-filter=d HEAD~1 HEAD -- 'content/posts/*.md' | grep -v '_index.md' || true)
           echo "new_posts=$NEW_POSTS" >> $GITHUB_OUTPUT
           if [ -n "$NEW_POSTS" ]; then
             echo "has_new=true" >> $GITHUB_OUTPUT
