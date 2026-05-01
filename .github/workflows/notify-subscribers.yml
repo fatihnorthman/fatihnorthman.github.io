@@ -87,18 +87,23 @@ jobs:
           tags_match = re.search(r'^tags:\s*\[(.*?)\]', content, re.MULTILINE)
           tags = tags_match.group(1).replace('"', '').replace("'", "") if tags_match else ""
 
-          # Hugo uyumlu en güvenli Slugify (ASCII)
-          def hugo_slugify(text):
-              text = text.lower().strip()
-              # Türkçe karakter haritası
-              tr_map = str.maketrans("çğıöşüİI", "cgiosuii")
-              text = text.translate(tr_map)
-              # Boşlukları tire yap, özel karakterleri (alfanümerik hariç) sil
-              text = re.sub(r'\s+', '-', text)
-              text = re.sub(r'[^\w-]', '', text)
-              return text.strip('-')
+          # Front-matter'dan slug'ı çek (varsa el ile girilen slug önceliklidir)
+          slug_match = re.search(r'^slug:\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
+          if slug_match:
+              slug = slug_match.group(1).strip()
+          else:
+              # Hugo uyumlu en güvenli Slugify (ASCII)
+              def hugo_slugify(text):
+                  text = text.lower().strip()
+                  # Türkçe karakter haritası
+                  tr_map = str.maketrans("çğıöşüİI", "cgiosuii")
+                  text = text.translate(tr_map)
+                  # Boşlukları tire yap, özel karakterleri (alfanümerik hariç) sil
+                  text = re.sub(r'\s+', '-', text)
+                  text = re.sub(r'[^\w-]', '', text)
+                  return text.strip('-')
+              slug = hugo_slugify(title)
 
-          slug = hugo_slugify(title)
           url = f"https://fatihnorthman.github.io/{slug}/"
 
           # Etiketleri formatla
