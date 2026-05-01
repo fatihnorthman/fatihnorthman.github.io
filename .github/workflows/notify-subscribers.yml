@@ -87,15 +87,17 @@ jobs:
           tags_match = re.search(r'^tags:\s*\[(.*?)\]', content, re.MULTILINE)
           tags = tags_match.group(1).replace('"', '').replace("'", "") if tags_match else ""
 
-          # Hugo uyumlu Slugify (Türkçe karakterleri koruyan ve URL-encode eden versiyon)
+          # Hugo uyumlu Slugify (Türkçe karakterleri KORUR)
           def hugo_slugify(text):
+              # Python'ın lower()'ı 'İ'yi 'i̇' (iki karakter) yapar, Hugo ise 'i' yapar.
+              # Bu yüzden önce manuel müdahale:
+              text = text.replace('İ', 'i').replace('I', 'ı')
               text = text.lower().strip()
-              # Boşlukları tireye çevir
+              # Boşlukları ve özel karakterleri temizle
+              text = text.replace(':', '').replace(',', '').replace('.', '').replace('!', '').replace('?', '')
+              # Boşlukları tire yap
               text = re.sub(r'\s+', '-', text)
-              # Geçersiz karakterleri kaldır (tire ve alfanümerik/TR karakterler hariç)
-              # Hugo TR karakterleri korur, özel işaretleri siler.
-              text = re.sub(r'[^\w\s-]', '', text)
-              text = text.replace(' ', '-')
+              # Sadece harfler, rakamlar ve tireleri tut
               return urllib.parse.quote(text)
 
           slug = hugo_slugify(title)
