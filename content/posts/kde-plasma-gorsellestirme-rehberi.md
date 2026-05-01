@@ -115,3 +115,4 @@ Karşınıza binlerce tema çıkacak. Bir tanesini seçin, indirin, uygulayın. 
 
 Özelleştirme bir ayrıcalık değil, bir haktır. Linux'ta bu hakkı kullanmak hiç bu kadar kolay olmamıştı.
  
+ 

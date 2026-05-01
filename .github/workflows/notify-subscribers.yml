@@ -143,7 +143,7 @@ jobs:
               
               msg = MIMEMultipart('alternative')
               msg['Subject'] = f'Yeni yazi: {title}'
-              msg['From'] = f"Cyber-Red <{gmail_user}>"
+              msg['From'] = f"Fatih Northman <{gmail_user}>"
               msg['To'] = email_addr
               
               # --- Spam Filtresi İyileştirmeleri ---
