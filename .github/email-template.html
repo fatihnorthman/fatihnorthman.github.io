@@ -7,14 +7,14 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
     
-    body { margin: 0; padding: 0; background-color: #0d0d17; font-family: 'Inter', -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+    body { margin: 0; padding: 0; background-color: #0d0d17; font-family: 'Inter', -apple-system, sans-serif; -webkit-font-smoothing: antialiased; color: #dcdce8; }
     table { border-collapse: collapse; }
     a { text-decoration: none; }
     
     @media screen and (max-width: 600px) {
       .container { padding: 30px 12px !important; }
       .post-card { padding: 24px !important; }
-      .post-title { font-size: 1.45rem !important; }
+      .post-title { font-size: 1.5rem !important; }
     }
   </style>
 </head>
@@ -24,67 +24,71 @@
     <tr>
       <td align="center" class="container" style="padding: 60px 20px;">
         
-        <!-- North Protocol Social Card -->
+        <!-- Post Card Inner (Exact North Protocol Styles) -->
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" 
-               style="max-width: 580px; background-color: #121220; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+               style="max-width: 620px; background-color: #121220; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
           
           <tr>
             <td class="post-card" style="padding: 30px;">
               
-              <!-- Feed Header -->
+              <!-- Post Header (Avatar + Info) -->
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td width="48" style="vertical-align: top;">
-                    <div style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(229, 57, 53, 0.3); background: rgba(229, 57, 53, 0.05); padding: 2px;">
-                      <img src="https://fatihnorthman.github.io/logo.svg" alt="Fatih Northman" width="44" height="44" style="border-radius: 50%; display: block; background: #0d0d17;">
+                  <td width="46" style="vertical-align: top;">
+                    <div style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(229, 57, 53, 0.3); background: rgba(229, 57, 53, 0.05); padding: 2px; overflow: hidden;">
+                      <img src="https://fatihnorthman.github.io/logo.svg" alt="F" width="44" height="44" style="border-radius: 50%; display: block;">
                     </div>
                   </td>
                   <td style="padding-left: 14px; vertical-align: middle;">
-                    <div style="color: #ffffff; font-weight: 700; font-size: 16px; line-height: 1.2; letter-spacing: -0.01em;">Fatih Northman</div>
-                    <div style="color: #8888a0; font-size: 13px; font-family: 'JetBrains Mono', monospace; margin-top: 2px;">@fatihnorthman</div>
-                  </td>
-                  <td align="right" style="vertical-align: middle;">
-                    <div style="background: rgba(229, 57, 53, 0.1); border: 1px solid rgba(229, 57, 53, 0.2); border-radius: 100px; padding: 4px 12px; color: #ef5350; font-size: 10px; font-weight: 700; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em;">
-                      NEW_POST
-                    </div>
+                    <div style="color: #ffffff; font-weight: 700; font-size: 16px; line-height: 1.2;">Fatih Northman</div>
+                    <div style="color: #8888a0; font-size: 13px; font-family: 'JetBrains Mono', monospace;">@fatihnorthman</div>
                   </td>
                 </tr>
               </table>
 
-              <!-- Post Title -->
-              <div style="margin-top: 28px;">
-                <a href="{{POST_URL}}" style="text-decoration: none;">
-                  <h1 class="post-title" style="margin: 0; color: #ffffff; font-size: 1.8rem; font-weight: 700; line-height: 1.35; letter-spacing: -0.025em;">
+              <!-- Post Title (H2 Style) -->
+              <div style="margin-top: 24px;">
+                <a href="{{POST_URL}}" style="color: #ffffff; text-decoration: none;">
+                  <h2 class="post-title" style="margin: 0; font-size: 1.7rem; font-weight: 700; line-height: 1.3; color: #ffffff;">
                     {{POST_TITLE}}
-                  </h1>
+                  </h2>
                 </a>
               </div>
 
-              <!-- Content Body -->
-              <div style="margin-top: 18px; color: #ccc; font-size: 16px; line-height: 1.8; font-family: 'Inter', sans-serif;">
+              <!-- Post Meta (Date) -->
+              <div style="margin-top: 10px; color: #8888a0; font-size: 13px; font-family: 'Inter', sans-serif;">
+                {{POST_DATE}}
+              </div>
+
+              <!-- Post Content (Description) -->
+              <div style="margin-top: 20px; color: #a8a8c0; font-size: 16px; line-height: 1.8;">
                 {{POST_DESC}}
               </div>
 
-              <!-- Social Feed Stats (Site Style) -->
+              <!-- Post Tags -->
+              <div style="margin-top: 24px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.6;">
+                {{POST_TAGS}}
+              </div>
+
+              <!-- Post Footer (Stats + Button) -->
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
                 <tr>
                   <td>
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                       <tr>
-                        <!-- Like Stat -->
-                        <td style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 8px 14px; color: #dcdce8; font-size: 13px; font-weight: 600;">
-                          <span style="color: #e53935; margin-right: 6px; font-size: 14px;">❤</span> 0 <span style="color: #666680; font-weight: 400; font-size: 11px; margin-left: 4px;">BEĞENİ</span>
+                        <!-- Mock Stats -->
+                        <td style="padding: 8px 12px; background: rgba(255, 255, 255, 0.04); border-radius: 8px; color: #dcdce8; font-size: 13px; font-weight: 600;">
+                          <span style="color: #e53935; margin-right: 5px;">❤</span> 0 <span style="color: #666680; font-weight: 400; font-size: 11px; margin-left: 3px;">Beğeni</span>
                         </td>
-                        <td width="10"></td>
-                        <!-- Comment Stat -->
-                        <td style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 8px 14px; color: #dcdce8; font-size: 13px; font-weight: 600;">
-                          <span style="margin-right: 6px; font-size: 14px;">💬</span> 0 <span style="color: #666680; font-weight: 400; font-size: 11px; margin-left: 4px;">YORUM</span>
+                        <td width="8"></td>
+                        <td style="padding: 8px 12px; background: rgba(255, 255, 255, 0.04); border-radius: 8px; color: #dcdce8; font-size: 13px; font-weight: 600;">
+                          <span style="margin-right: 5px;">💬</span> 0 <span style="color: #666680; font-weight: 400; font-size: 11px; margin-left: 3px;">Yorum</span>
                         </td>
                       </tr>
                     </table>
                   </td>
                   <td align="right">
-                    <a href="{{POST_URL}}" style="display: inline-block; background: #e53935; color: #ffffff; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; text-decoration: none; box-shadow: 0 4px 15px rgba(229, 57, 53, 0.3);">
+                    <a href="{{POST_URL}}" style="display: inline-block; background: #e53935; color: #ffffff; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; text-decoration: none;">
                       Yazıyı Oku →
                     </a>
                   </td>
@@ -93,23 +97,18 @@
 
             </td>
           </tr>
-          
-          <!-- Site Accent Bar -->
-          <tr>
-            <td style="height: 3px; background: linear-gradient(90deg, #e53935 0%, #c62828 50%, #e53935 100%);"></td>
-          </tr>
         </table>
 
-        <!-- Branding & Unsubscribe -->
+        <!-- Footer Info -->
         <div style="margin-top: 40px; text-align: center;">
           <div style="font-family: 'JetBrains Mono', monospace; color: #e53935; font-size: 13px; font-weight: 700; margin-bottom: 12px; letter-spacing: 0.1em;">
-            NORTH PROTOCOL // ARCHITECT EDITION
+            NORTH PROTOCOL // SYSLOG
           </div>
-          <p style="color: #666680; font-size: 12px; margin: 0 0 10px; line-height: 1.6;">
-            Bu e-posta <a href="https://fatihnorthman.github.io" style="color: #a8a8c0; text-decoration: none; border-bottom: 1px solid #333;">fatihnorthman.github.io</a> bültenine abone olduğunuz için gönderilmiştir.
+          <p style="color: #666680; font-size: 12px; margin: 0 0 10px;">
+            <a href="https://fatihnorthman.github.io" style="color: #a8a8c0; text-decoration: none;">fatihnorthman.github.io</a> bültenine abone olduğunuz için bu maili aldınız.
           </p>
           <p style="color: #666680; font-size: 12px; margin: 0;">
-            <a href="mailto:fatihnorthman.blog@gmail.com?subject=Unsubscribe" style="color: #e53935; text-decoration: none; font-weight: 600;">Abonelikten Ayrıl</a>
+            <a href="mailto:fatihnorthman.blog@gmail.com?subject=Abonelik%20Iptali" style="color: #e53935; text-decoration: none;">Abonelikten Çık</a>
           </p>
         </div>
 
