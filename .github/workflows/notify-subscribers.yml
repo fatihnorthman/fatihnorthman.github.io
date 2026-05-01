@@ -44,6 +44,15 @@ jobs:
 
       - name: Send emails to subscribers
         if: steps.check.outputs.has_new == 'true'
+        env:
+          GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          POST_TITLE: ${{ steps.meta.outputs.title }}
+          POST_DESC: ${{ steps.meta.outputs.desc }}
+          POST_URL: ${{ steps.meta.outputs.url }}
+        run: |
+          python3 << 'PYEOF'
           import json, urllib.request, urllib.error, os, sys
           import smtplib
           from email.mime.text import MIMEText
