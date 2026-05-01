@@ -1,67 +1,80 @@
-# 🕵️‍♂️ Cyber-Red: North Protocol Bülten ve Otomasyon Kılavuzu
+# 🕵️‍♂️ NORTH PROTOCOL: Sistem Operasyon ve Otomasyon Protokolü
 
-Bu belge, Cyber-Red blog altyapısında kullanılan otomatik bülten gönderimi, içerik sıralaması ve URL yönetimi sisteminin nasıl çalıştığını anlatır. Bu sistem, "Infrastructure Architect" vizyonuyla, manuel müdahaleyi asgariye indirmek üzere tasarlanmıştır.
+Bu doküman, Cyber-Red blog altyapısının (Hugo) ve bülten otomasyonunun (GitHub Actions) teknik anayasasıdır. **Herhangi bir yapay zeka (AI) veya insan operatör, bu dokümanı okuyarak sistemi hatasız yönetebilir.**
 
 ---
 
-## 1. Yeni Yazı Paylaşımı ve Sıralama 🕒
+## 1. Mimari Genel Bakış
+Sistem, içerik paylaşımı ve bülten gönderimini tek bir `git push` işlemiyle birleştirir.
+- **Statik Site:** Hugo (Terminal Teması)
+- **Bülten Tetikleyici:** GitHub Actions (`.github/workflows/notify-subscribers.yml`)
+- **İşlemci:** Python 3.x (Akıllı Tarih Tespiti ve SMTP Gönderimi)
+- **Veri Katmanı:** Supabase REST API (Abone Listesi)
+- **Gönderim Katmanı:** Gmail SMTP_SSL (Port 465)
 
-Sistem artık tamamen **tarih tabanlı (date-based)** sıralama kullanmaktadır. `weight` parametresine ihtiyaç duyulmaz.
+---
 
-### En Üstte Görünme Kuralı
-Bir yazının ana sayfanın en başında (zirvede) yer alması için, içindeki `date` alanının diğer tüm yazılardan daha "yeni" (ileri bir saatte) olması gerekir.
+## 2. İçerik ve Front-Matter Standartları
+Tüm yeni yazılar `content/posts/` dizini altında `.md` uzantısıyla oluşturulmalıdır.
 
-**Örnek Front-Matter:**
+### ⚠️ Kritik Kurallar:
+1.  **Format:** Kesinlikle **TOML** (`+++`) kullanılmalıdır. (YAML `---` kullanılmamalıdır).
+2.  **Sıralama (Date):** `weight` parametresi kullanılmaz. Sıralama tamamen `date` alanına bağlıdır.
+3.  **Zirve Kuralı:** Bir yazının ana sayfada en üstte çıkması için `date` değeri, mevcut diğer tüm yazılardan daha yeni olmalıdır.
+4.  **URL (Slug):** `hugo.toml` ayarı gereği linkler `slug` parametresinden üretilir. 404 hatasını önlemek için `slug` alanı her zaman **ASCII** (İngilizce karakter, küçük harf, tireli) olmalıdır.
+
+**Örnek Standart Blok:**
 ```toml
 +++
-title = "Yazı Başlığı"
-date = "2026-05-01T13:00:00"  # Saat ve saniye hassasiyeti önemlidir
-slug = "yazi-basligi-ascii"    # ASCII karakterler kullanın (ç, ş, ı kullanmayın)
-description = "Kısa özet..."
-tags = ["linux", "rehber"]
+title = "Teknik Başlık"
+date = "2026-05-01T10:15:00"  # ISO 8601 Format (Zaman dilimi notuna bakın)
+slug = "teknik-baslik-ascii"   # Sadece küçük harf, rakam ve tire
+description = "E-posta ve SEO için kısa özet."
+tags = ["etiket1", "etiket2"]
 +++
 ```
 
-*Not: Gelecek bir tarihe yazı kurarsanız, Hugo bu yazıyı belirtilen saat gelene kadar ana sayfada gizler. Yayında anında görünmesi için "şu anki" veya "az önce"ki bir saati kullanın.*
+---
+
+## 3. Bülten Otomasyon Mantığı
+GitHub Action tetiklendiğinde çalışan Python betiği şu algoritmayı izler:
+
+### A. Akıllı Yazı Seçimi (Smart Detection)
+Sistem, `git diff` çıktılarına güvenmez. `content/posts/*.md` içindeki tüm dosyaları tarar, her birinin içindeki `date` değerini okur ve **Tarihi en yeni olan dosyayı** bülten konusu olarak seçer.
+
+### B. Meta-Veri Çekme (Regex)
+Betik, dosya içeriğinden başlık, açıklama ve slug bilgilerini esnek Regex kalıplarıyla çeker. Hem `key = "value"` hem de `key: value` yapılarını destekler.
+
+### C. Şablon Enjeksiyonu
+`.github/email-template.html` dosyası okunur ve aşağıdaki placeholder'lar gerçek verilerle değiştirilir:
+- `{{POST_TITLE}}`
+- `{{POST_DESC}}`
+- `{{POST_DATE}}`
+- `{{POST_TAGS}}`
+- `{{POST_URL}}`
 
 ---
 
-## 2. Otomatik Bülten Sistemi (Newsletter Pipeline) ✉️
+## 4. Hata Önleme ve Troubleshooting (Operatör Notları)
 
-Bülten sistemi, her `git push` işleminden sonra `.github/workflows/notify-subscribers.yml` üzerinden tetiklenir.
+### 🚨 Gelecek Zaman Tuzağı (Future Post)
+Hugo, sunucu saati (UTC) bazında gelecekte olan yazıları ana sayfada göstermez. 
+- **Hata:** Yazı sitede görünmüyor ama bülten gitti.
+- **Sebep:** Yazı saati, sunucu (UTC) saatinden ileridedir.
+- **Çözüm:** `date` değerini sunucu saatinden (genellikle TR saati - 3 saat) en az 5-10 dakika geriye setleyin.
 
-### Akıllı Tarih Seçici (Smart Date Detection)
-Sistem, hangi dosyanın değiştiğine bakmaksızın `content/posts/` klasöründeki tüm `.md` dosyalarını tarar ve içindeki `date` alanı **en güncel** olan dosyayı bülten konusu olarak seçer. Bu sayede:
-- Birden fazla dosya güncellendiğinde hata almazsınız.
-- Her zaman en güncel içeriğiniz abonelere ulaşır.
-
-### Supabase Entegrasyonu
-Aboneler, Supabase veritabanındaki `subscribers` tablosundan çekilir. Sistem oldukça esnektir; tablo yapısındaki ufak değişikliklerden etkilenmeyecek şekilde "kurşun geçirmez" (bulletproof) hale getirilmiştir.
-
----
-
-## 3. Temiz URL ve 404 Koruması 🔗
-
-404 hatalarını ve karmaşık URL yapılarını önlemek için şu kurallar uygulanmıştır:
-
-1.  **Slug Önceliği:** `hugo.toml` içinde permalink yapısı `/:slug/` olarak ayarlanmıştır. Yazılarınızda mutlaka ASCII (İngilizce karakter) bir `slug` tanımlayın.
-2.  **Otomatik Temizlik:** Eğer `slug` tanımlanmazsa, Hugo `removePathAccents = true` ayarı sayesinde başlığı temizlemeye çalışır. Ancak manuel `slug` her zaman en güvenli yoldur.
+### 🚨 404 Hatası
+- **Sebep:** `slug` alanında Türkçe karakter (`ı, ş, ç, ğ, ü, ö`) kullanımı.
+- **Çözüm:** `slug` alanını her zaman `icin`, `asmak`, `ozellik` gibi temiz ASCII karakterlerle doldurun.
 
 ---
 
-## 4. E-Posta Tasarımı (Cyber-Amber) 🎨
-
-Bülten tasarımı `.github/email-template.html` dosyasında yer alır. 
-- **Renk Paleti:** Sitenin kimliğiyle uyumlu Cyber-Amber (Turuncu-Sarı) paleti kullanılmıştır.
-- **Değişkenler:** Şablon içindeki `{{POST_TITLE}}`, `{{POST_URL}}` gibi alanlar bülten gönderilirken otomatik olarak doldurulur.
-
----
-
-## 5. Teknik Bakım Notları 🛠️
-
-- **Secrets:** GitHub depo ayarlarında (Settings > Secrets) `GMAIL_EMAIL`, `GMAIL_PASSWORD`, `SUPABASE_URL` ve `SUPABASE_SERVICE_KEY` tanımlı olmalıdır.
-- **Hata Günlükleri:** Gönderim sırasında bir sorun oluşursa, GitHub Actions sekmesindeki loglardan detaylı hata mesajlarını görebilirsiniz.
+## 5. Yapay Zeka (AI) Operatörüne Talimatlar
+Sistemi yöneten bir yapay zeka iseniz:
+1.  Yeni yazı eklemeden önce mevcut en yeni yazının `date` değerini kontrol edin.
+2.  Yeni yazının `date` değerini, mevcut olandan daha büyük ama sunucu (UTC) saatinden küçük olacak şekilde ayarlayın.
+3.  Dosyayı push etmeden önce `hugo --minify` komutuyla (eğer ortam uygunsa) build kontrolü yapın ve `index.html` içinde yazının en üstte olduğunu teyit edin.
+4.  Bülten gönderimi için `git push` yaptıktan sonra GitHub Actions loglarını izleyerek Supabase veya SMTP hatası olup olmadığını denetleyin.
 
 ---
-
-**Sistem Mimarı Notu:** Bu altyapı, teknolojiyle olan ilişkinizi "bakıcılıktan", gerçek bir "kullanıcı deneyimine" terfi ettirmek için tasarlanmıştır. Sistem kendi kendine yeter, siz sadece üretmeye odaklanın. 🕵️‍♂️🔥
+*Sistem Mimarisi: Cyber-Red / Northman Architect* 🕵️‍♂️🔥
