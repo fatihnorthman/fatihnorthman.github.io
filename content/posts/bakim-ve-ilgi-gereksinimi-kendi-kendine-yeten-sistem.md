@@ -1,7 +1,6 @@
 +++
 title = "Bakım ve İlgi Gereksinimi: Kendi Kendine Yeten Sistem"
 date = "2026-05-01"
-weight = 3
 slug = "bakim-ve-ilgi-gereksinimi-kendi-kendine-yeten-sistem"
 description = "İşletim sistemlerine yönelik algımız, genellikle onlara sürekli bakım yapmamız gerektiği yönündedir. Linux, bu 'bağımlı sistem' paradigmasını yıkarak kendi kendine yeten bir altyapı sunar."
 tags = ["linux", "felsefe", "sistem-yonetimi", "bakim", "stabilite", "teknoloji"]
