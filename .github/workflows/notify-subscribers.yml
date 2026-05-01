@@ -31,15 +31,24 @@ jobs:
           from email.mime.text import MIMEText
           from email.mime.multipart import MIMEMultipart
 
-          # 1. En yeni dosyayı bul (En son değiştirilen)
+          # 1. En yeni dosyayı bul (İçerikteki 'date' alanına göre)
           files = glob.glob('content/posts/*.md')
           files = [f for f in files if '_index.md' not in f]
           if not files:
-              print("İşlenecek yazı bulunamadı.")
+              print("Yazı bulunamadı.")
               exit(0)
-              
-          post_file = max(files, key=os.path.getmtime)
-          print(f"İşleniyor: {post_file}")
+          
+          def extract_date(filepath):
+              try:
+                  with open(filepath, 'r', encoding='utf-8') as f:
+                      c = f.read()
+                      m = re.search(r'date\s*[:=]\s*["\']?(.*?)["\']?$', c, re.MULTILINE)
+                      return m.group(1).strip() if m else "1970-01-01"
+              except: return "1970-01-01"
+
+          post_file = max(files, key=extract_date)
+          print(f"Bülten için seçilen en yeni dosya: {post_file}")
+          
           with open(post_file, 'r', encoding='utf-8') as f:
               content = f.read()
 

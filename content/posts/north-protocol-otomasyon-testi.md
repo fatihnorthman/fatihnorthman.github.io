@@ -15,3 +15,4 @@ Bu yazı, Cyber-Red blog altyapısının geçirdiği büyük dönüşümün son 
 Sistem şu an tam operasyonel durumdadır. Bu kontrol yazısının ana sayfanın en üstünde görünmesi ve bültenin hatasız iletilmesi, operasyonun başarıyla tamamlandığının kanıtıdır. 
 
 Cyber-Red altyapısı artık yeni paylaşımlar için hazır ve sarsılmaz bir temeldedir.
+ 
