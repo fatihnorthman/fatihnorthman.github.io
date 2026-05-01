@@ -1,0 +1,45 @@
+{{ $paginator := .Paginator }}
+{{ if gt $paginator.TotalPages 1 }}
+<nav class="pagination-nav" aria-label="Sayfa navigasyonu">
+  <div class="pagination-info">
+    <span class="pagination-label">Sayfa {{ $paginator.PageNumber }} / {{ $paginator.TotalPages }}</span>
+    <span class="pagination-total">— Toplam {{ $paginator.TotalNumberOfElements }} yazı</span>
+  </div>
+
+  <div class="pagination-controls">
+    {{ if $paginator.HasPrev }}
+      <a href="{{ $paginator.Prev.URL }}" class="pagination-btn prev" aria-label="Önceki sayfa">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Yeni Yazılar
+      </a>
+    {{ else }}
+      <span class="pagination-btn disabled">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Yeni Yazılar
+      </span>
+    {{ end }}
+
+    <div class="pagination-pages">
+      {{ range $paginator.Pagers }}
+        {{ if eq . $paginator }}
+          <span class="pagination-page active">{{ .PageNumber }}</span>
+        {{ else }}
+          <a href="{{ .URL }}" class="pagination-page">{{ .PageNumber }}</a>
+        {{ end }}
+      {{ end }}
+    </div>
+
+    {{ if $paginator.HasNext }}
+      <a href="{{ $paginator.Next.URL }}" class="pagination-btn next" aria-label="Sonraki sayfa">
+        Eski Yazılar
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+    {{ else }}
+      <span class="pagination-btn disabled">
+        Eski Yazılar
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </span>
+    {{ end }}
+  </div>
+</nav>
+{{ end }}
