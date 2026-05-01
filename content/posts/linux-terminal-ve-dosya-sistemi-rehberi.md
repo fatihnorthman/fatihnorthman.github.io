@@ -1,7 +1,7 @@
 +++
 title = "Linux Terminal ve Dosya Sistemi Rehberi: Siyah Ekranın Gizemini Çözmek"
 date = "2026-05-01"
-weight = 1
+weight = 2
 slug = "linux-terminal-ve-dosya-sistemi-rehberi"
 description = "Linux dünyasına adım atanlar için terminal komutlarından dosya sistemi hiyerarşisine (FHS) kadar her şeyi kapsayan, kapsamlı ve detaylı bir rehber."
 tags = ["linux", "terminal", "rehber", "fhs", "dosya-sistemi", "yeni-baslayanlar"]
