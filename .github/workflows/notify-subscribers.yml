@@ -90,7 +90,6 @@ jobs:
           # Hugo uyumlu Slugify (Türkçe karakterleri KORUR)
           def hugo_slugify(text):
               # Python'ın lower()'ı 'İ'yi 'i̇' (iki karakter) yapar, Hugo ise 'i' yapar.
-              # Bu yüzden önce manuel müdahale:
               text = text.replace('İ', 'i').replace('I', 'ı')
               text = text.lower().strip()
               # Boşlukları ve özel karakterleri temizle
@@ -98,7 +97,7 @@ jobs:
               # Boşlukları tire yap
               text = re.sub(r'\s+', '-', text)
               # Sadece harfler, rakamlar ve tireleri tut
-              return urllib.parse.quote(text)
+              return text
 
           slug = hugo_slugify(title)
           url = f"https://fatihnorthman.github.io/{slug}/"
