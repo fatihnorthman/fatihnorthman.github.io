@@ -44,23 +44,20 @@ jobs:
 
       - name: Send emails to subscribers
         if: steps.check.outputs.has_new == 'true'
-        env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          POST_TITLE: ${{ steps.meta.outputs.title }}
-          POST_DESC: ${{ steps.meta.outputs.desc }}
-          POST_URL: ${{ steps.meta.outputs.url }}
-        run: |
-          python3 << 'PYEOF'
           import json, urllib.request, urllib.error, os, sys
+          import smtplib
+          from email.mime.text import MIMEText
+          from email.mime.multipart import MIMEMultipart
 
           print("=== DEBUG BİLGİLERİ BAŞLANGICI ===")
           
-          # URL'yi koda gömdük (Secret'taki yazım hatasını aşmak için)
+          # URL'yi koda gömdük
           sb_url = 'https://xusjivptdjytbcobarxh.supabase.co'
 
           sb_key = os.environ.get('SUPABASE_SERVICE_KEY', '').strip()
-          rs_key = os.environ.get('RESEND_API_KEY', '').strip()
+          gmail_user = os.environ.get('GMAIL_EMAIL', '').strip()
+          gmail_pwd  = os.environ.get('GMAIL_PASSWORD', '').strip()
+          
           title  = os.environ.get('POST_TITLE', '')
           desc   = os.environ.get('POST_DESC', '')
           url    = os.environ.get('POST_URL', '')
@@ -69,6 +66,11 @@ jobs:
           
           if not sb_url or not sb_key:
               debug_out += "HATA: SUPABASE_URL veya SUPABASE_SERVICE_KEY eksik!\n"
+              print(debug_out)
+              sys.exit(1)
+              
+          if not gmail_user or not gmail_pwd:
+              debug_out += "HATA: GMAIL_EMAIL veya GMAIL_PASSWORD eksik!\n"
               print(debug_out)
               sys.exit(1)
 
@@ -89,7 +91,6 @@ jobs:
               with urllib.request.urlopen(req) as resp:
                   data = json.loads(resp.read().decode('utf-8'))
                   debug_out += f"Supabase Başarılı: {len(data)} kayıt döndü.\n"
-                  debug_out += f"Veri: {data}\n"
           except urllib.error.HTTPError as e:
               debug_out += f"Supabase HTTP Hatası: {e.code} - {e.read().decode('utf-8')}\n"
           except Exception as e:
@@ -113,39 +114,43 @@ jobs:
                      .replace('{{POST_DESC}}',  desc)  \
                      .replace('{{POST_URL}}',   url)
 
+          debug_out += "Gmail SMTP sunucusuna bağlanılıyor...\n"
+          
+          try:
+              server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+              server.login(gmail_user, gmail_pwd)
+              debug_out += "Gmail bağlantısı başarılı!\n"
+          except Exception as e:
+              debug_out += f"Gmail giriş hatası: {e}\n"
+              print(debug_out)
+              sys.exit(1)
+
           # E-postaları gönder
           sent = 0
           for sub in data:
-              email = sub.get('email', '').strip()
-              if not email:
+              email_addr = sub.get('email', '').strip()
+              if not email_addr:
                   continue
               
-              payload = {
-                  'from': 'Fatih Sahan <onboarding@resend.dev>',
-                  'to': [email],
-                  'subject': f'Yeni yazi: {title}',
-                  'html': html
-              }
+              msg = MIMEMultipart('alternative')
+              msg['Subject'] = f'Yeni yazi: {title}'
+              msg['From'] = f"Fatih Sahan <{gmail_user}>"
+              msg['To'] = email_addr
               
-              send_req = urllib.request.Request(
-                  'https://api.resend.com/emails',
-                  data=json.dumps(payload).encode('utf-8'),
-                  headers={
-                      'Authorization': f'Bearer {rs_key}',
-                      'Content-Type': 'application/json',
-                      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-                  }
-              )
+              part = MIMEText(html, 'html')
+              msg.attach(part)
               
               try:
-                  with urllib.request.urlopen(send_req) as resp:
-                      result = json.loads(resp.read().decode('utf-8'))
-                      debug_out += f"Gönderildi -> {email} | id: {result.get('id', '?')}\n"
-                      sent += 1
-              except urllib.error.HTTPError as e:
-                  debug_out += f"Resend HATA {e.code} -> {email}: {e.read().decode('utf-8')}\n"
+                  server.sendmail(gmail_user, email_addr, msg.as_string())
+                  debug_out += f"Gönderildi -> {email_addr}\n"
+                  sent += 1
               except Exception as e:
-                  debug_out += f"Resend BAĞLANTI HATASI -> {email}: {e}\n"
+                  debug_out += f"SMTP Gönderim HATASI -> {email_addr}: {e}\n"
+
+          try:
+              server.quit()
+          except:
+              pass
 
           debug_out += f"--- İŞLEM TAMAM ---\n"
           debug_out += f"{sent}/{len(data)} kişiye başarıyla mail gönderildi.\n"
