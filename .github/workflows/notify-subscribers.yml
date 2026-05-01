@@ -54,7 +54,7 @@ jobs:
           python3 << 'PYEOF'
           import json, urllib.request, urllib.error, os, sys
 
-          print("=== DEBUG BİLGİLERİ ===")
+          print("=== DEBUG BİLGİLERİ BAŞLANGICI ===")
           
           # URL'yi koda gömdük (Secret'taki yazım hatasını aşmak için)
           sb_url = 'https://xusjivptdjytbcobarxh.supabase.co'
@@ -69,7 +69,7 @@ jobs:
           
           if not sb_url or not sb_key:
               debug_out += "HATA: SUPABASE_URL veya SUPABASE_SERVICE_KEY eksik!\n"
-              with open('debug-log.txt', 'w') as f: f.write(debug_out)
+              print(debug_out)
               sys.exit(1)
 
           # Supabase'den aboneleri çek
@@ -88,7 +88,7 @@ jobs:
           try:
               with urllib.request.urlopen(req) as resp:
                   data = json.loads(resp.read().decode('utf-8'))
-                  debug_out += f"Supabase Başarılı: {len(data)} kayıt.\n"
+                  debug_out += f"Supabase Başarılı: {len(data)} kayıt döndü.\n"
                   debug_out += f"Veri: {data}\n"
           except urllib.error.HTTPError as e:
               debug_out += f"Supabase HTTP Hatası: {e.code} - {e.read().decode('utf-8')}\n"
@@ -97,7 +97,7 @@ jobs:
 
           if not data or not isinstance(data, list) or len(data) == 0:
               debug_out += "Abone bulunamadı veya geçersiz yanıt iptal ediliyor.\n"
-              with open('debug-log.txt', 'w') as f: f.write(debug_out)
+              print(debug_out)
               sys.exit(0)
 
           # Şablonu oku
@@ -106,7 +106,7 @@ jobs:
                   html = f.read()
           except Exception as e:
               debug_out += f"Şablon okuma hatası: {e}\n"
-              with open('debug-log.txt', 'w') as f: f.write(debug_out)
+              print(debug_out)
               sys.exit(1)
 
           html = html.replace('{{POST_TITLE}}', title) \
@@ -150,14 +150,5 @@ jobs:
           debug_out += f"--- İŞLEM TAMAM ---\n"
           debug_out += f"{sent}/{len(data)} kişiye başarıyla mail gönderildi.\n"
           
-          with open('debug-log.txt', 'w') as f:
-              f.write(debug_out)
+          print(debug_out)
           PYEOF
-
-      - name: Commit Debug Log
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add debug-log.txt
-          git commit -m "Auto: Update debug-log.txt" || echo "No changes"
-          git push || echo "Push failed"
