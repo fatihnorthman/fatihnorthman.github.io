@@ -2,9 +2,8 @@ name: Notify Subscribers on New Post
 
 on:
   push:
-    branches: [main]
     paths:
-      - 'content/posts/**.md'
+      - 'content/posts/*.md'
 
 jobs:
   notify:
@@ -13,218 +12,98 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
-      - name: Check for new posts
-        id: check
-        run: |
-          NEW_POSTS=$(git diff --name-only --diff-filter=d HEAD~1 HEAD -- 'content/posts/*.md' | grep -v '_index.md' || true)
-          echo "new_posts=$NEW_POSTS" >> $GITHUB_OUTPUT
-          if [ -n "$NEW_POSTS" ]; then
-            echo "has_new=true" >> $GITHUB_OUTPUT
-            # İlk yeni postu al
-            FIRST=$(echo "$NEW_POSTS" | head -1)
-            echo "post_file=$FIRST" >> $GITHUB_OUTPUT
-          else
-            echo "has_new=false" >> $GITHUB_OUTPUT
-          fi
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-      - name: Extract post metadata
-        if: steps.check.outputs.has_new == 'true'
-        id: meta
-        run: |
-          FILE="${{ steps.check.outputs.post_file }}"
-          TITLE=$(grep '^title' "$FILE" | head -1 | sed 's/title = //;s/["\x27]//g' | xargs)
-          DESC=$(grep '^description' "$FILE" | head -1 | sed 's/description = //;s/["\x27]//g' | xargs)
-          DATE=$(grep '^date' "$FILE" | head -1 | sed 's/date = //;s/["\x27]//g' | cut -d'T' -f1 | xargs)
-          TAGS=$(grep '^tags' "$FILE" | head -1 | sed 's/tags = //;s/[\[\]"\x27]//g' | sed 's/,/ /g' | xargs)
-          SLUG=$(basename "$FILE" .md)
-          URL="https://fatihnorthman.github.io/${SLUG}/"
-          echo "title=$TITLE" >> $GITHUB_OUTPUT
-          echo "desc=$DESC"   >> $GITHUB_OUTPUT
-          echo "date=$DATE"   >> $GITHUB_OUTPUT
-          echo "tags=$TAGS"   >> $GITHUB_OUTPUT
-          echo "url=$URL"     >> $GITHUB_OUTPUT
-      - name: Send emails to subscribers
-        if: steps.check.outputs.has_new == 'true'
+      - name: Send Newsletter
         env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          POST_FILE: ${{ steps.check.outputs.post_file }}
         run: |
           python3 << 'PYEOF'
-          import json, urllib.request, urllib.error, os, sys, re, urllib.parse
-          import smtplib
+          import os, re, json, urllib.request, smtplib, urllib.parse, glob, time
           from email.mime.text import MIMEText
           from email.mime.multipart import MIMEMultipart
 
-          print("=== DEBUG BİLGİLERİ BAŞLANGICI ===")
-          
-          # URL'yi koda gömdük
-          sb_url = 'https://xusjivptdjytbcobarxh.supabase.co'
-
-          sb_key = os.environ.get('SUPABASE_SERVICE_KEY', '').strip()
-          gmail_user = os.environ.get('GMAIL_EMAIL', '').strip()
-          gmail_pwd  = os.environ.get('GMAIL_PASSWORD', '').strip()
-          
-          # Hugo uyumlu slugify fonksiyonu (Türkçe karakterleri KORUR)
-        run: |
-          python3 << 'PYEOF'
-          import os, re, json, urllib.request, smtplib, urllib.parse, glob
-          
-          # content/posts klasöründeki tüm .md dosyalarını bul
+          # 1. En yeni dosyayı bul
           files = glob.glob('content/posts/*.md')
+          files = [f for f in files if '_index.md' not in f]
           if not files:
-              print("İşlenecek dosya bulunamadı.")
+              print("Yazı bulunamadı.")
               exit(0)
               
-          # En son değiştirilen dosyayı seç (Kalıcı Çözüm)
           post_file = max(files, key=os.path.getmtime)
-          print(f"Bülten için seçilen dosya: {post_file}")
           
+          # Dosya çok eskiyse (örn: 10 dakikadan eski) gönderme (Opsiyonel Güvenlik)
+          # if time.time() - os.path.getmtime(post_file) > 600:
+          #     print(f"Dosya ({post_file}) yeni değil, bülten atlanıyor.")
+          #     exit(0)
+
+          print(f"İşleniyor: {post_file}")
           with open(post_file, 'r', encoding='utf-8') as f:
               content = f.read()
 
-          # Front-matter'dan verileri daha sağlam çek (Regex ile)
-          title_match = re.search(r'^title:\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
+          # 2. Meta verileri çek
+          title_match = re.search(r'title\s*=\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
+          if not title_match: title_match = re.search(r'^title:\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
           title = title_match.group(1) if title_match else "Yeni Yazı"
-          
-          desc_match = re.search(r'^description:\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
-          description = desc_match.group(1) if desc_match else ""
-          
-          date_match = re.search(r'^date:\s*(.*?)$', content, re.MULTILINE)
-          date_str = date_match.group(1).split('T')[0] if date_match else "2026-05-01"
-          
-          tags_match = re.search(r'^tags:\s*\[(.*?)\]', content, re.MULTILINE)
-          tags = tags_match.group(1).replace('"', '').replace("'", "") if tags_match else ""
 
-          # Front-matter'dan slug'ı çek (varsa el ile girilen slug önceliklidir)
-          slug_match = re.search(r'^slug:\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
-          if slug_match:
-              slug = slug_match.group(1).strip()
-          else:
-              # Hugo uyumlu en güvenli Slugify (ASCII)
-              def hugo_slugify(text):
-                  text = text.lower().strip()
-                  # Türkçe karakter haritası
-                  tr_map = str.maketrans("çğıöşüİI", "cgiosuii")
-                  text = text.translate(tr_map)
-                  # Boşlukları tire yap, özel karakterleri (alfanümerik hariç) sil
-                  text = re.sub(r'\s+', '-', text)
-                  text = re.sub(r'[^\w-]', '', text)
-                  return text.strip('-')
-              slug = hugo_slugify(title)
+          desc_match = re.search(r'description\s*=\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
+          if not desc_match: desc_match = re.search(r'^description:\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
+          description = desc_match.group(1) if desc_match else ""
+
+          date_match = re.search(r'date\s*=\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
+          if not date_match: date_match = re.search(r'^date:\s*(.*?)$', content, re.MULTILINE)
+          date_str = date_match.group(1).replace('"', '').replace("'", "").split('T')[0] if date_match else "2026-05-01"
+
+          slug_match = re.search(r'slug\s*=\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
+          if not slug_match: slug_match = re.search(r'^slug:\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
+          slug = slug_match.group(1).strip() if slug_match else urllib.parse.quote(title.lower().replace(' ', '-'))
+
+          tags_match = re.search(r'tags\s*=\s*\[(.*?)\]', content, re.MULTILINE)
+          tags = tags_match.group(1).replace('"', '').replace("'", "") if tags_match else ""
 
           url = f"https://fatihnorthman.github.io/{slug}/"
 
-          # Etiketleri formatla
-          tag_html = ""
-          if tags:
-              tag_list = [t.strip() for t in tags.split(',')]
-              for t in tag_list:
-                  tag_html += f'<span style="color:#ffc107;margin-right:8px;">#{t}</span> '
+          # 3. Şablonu hazırla
+          with open('.github/email-template.html', 'r', encoding='utf-8') as f:
+              html = f.read()
 
-          debug_out = f"Title: {title}\nURL: {url}\nSlug: {slug}\n"
+          tag_html = "".join([f'<span style="color:#ffc107;margin-right:8px;">#{t.strip()}</span> ' for t in tags.split(',') if t.strip()])
           
-          if not sb_url or not sb_key:
-              debug_out += "HATA: SUPABASE_URL veya SUPABASE_SERVICE_KEY eksik!\n"
-              print(debug_out)
-              sys.exit(1)
-              
-          if not gmail_user or not gmail_pwd:
-              debug_out += "HATA: GMAIL_EMAIL veya GMAIL_PASSWORD eksik!\n"
-              print(debug_out)
-              sys.exit(1)
-
-          # Supabase'den aboneleri çek
-          req_url = f"{sb_url}/rest/v1/subscribers?select=name,email"
-          debug_out += f"İstek atılıyor: {req_url}\n"
-          
-          req = urllib.request.Request(
-              req_url,
-              headers={
-                  "apikey": sb_key,
-                  "Authorization": f"Bearer {sb_key}"
-              }
-          )
-
-          data = None
-          try:
-              with urllib.request.urlopen(req) as resp:
-                  data = json.loads(resp.read().decode('utf-8'))
-                  debug_out += f"Supabase Başarılı: {len(data)} kayıt döndü.\n"
-          except urllib.error.HTTPError as e:
-              debug_out += f"Supabase HTTP Hatası: {e.code} - {e.read().decode('utf-8')}\n"
-          except Exception as e:
-              debug_out += f"Supabase Bağlantı Hatası: {e}\n"
-
-          if not data or not isinstance(data, list) or len(data) == 0:
-              debug_out += "Abone bulunamadı veya geçersiz yanıt iptal ediliyor.\n"
-              print(debug_out)
-              sys.exit(0)
-
-          # Şablonu oku
-          try:
-              with open('.github/email-template.html', 'r', encoding='utf-8') as f:
-                  html = f.read()
-          except Exception as e:
-              debug_out += f"Şablon okuma hatası: {e}\n"
-              print(debug_out)
-              sys.exit(1)
-
           html = html.replace('{{POST_TITLE}}', title) \
-                     .replace('{{POST_DESC}}',  description)  \
-                     .replace('{{POST_DATE}}',  date_str)  \
+                     .replace('{{POST_DESC}}',  description) \
+                     .replace('{{POST_DATE}}',  date_str) \
                      .replace('{{POST_TAGS}}',  tag_html) \
                      .replace('{{POST_URL}}',   url)
 
-          debug_out += "Gmail SMTP sunucusuna bağlanılıyor...\n"
-          
-          try:
-              server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-              server.login(gmail_user, gmail_pwd)
-              debug_out += "Gmail bağlantısı başarılı!\n"
-          except Exception as e:
-              debug_out += f"Gmail giriş hatası: {e}\n"
-              print(debug_out)
-              sys.exit(1)
+          # 4. Aboneleri çek ve gönder
+          sb_url = 'https://xusjivptdjytbcobarxh.supabase.co'
+          sb_key = os.environ.get('SUPABASE_SERVICE_KEY', '').strip()
+          req = urllib.request.Request(f"{sb_url}/rest/v1/subscribers?select=email&is_active=eq.true", headers={"apikey": sb_key, "Authorization": f"Bearer {sb_key}"})
+          with urllib.request.urlopen(req) as response:
+              subscribers = json.loads(response.read().decode())
 
-          # E-postaları gönder
-          sent = 0
-          for sub in data:
-              email_addr = sub.get('email', '').strip()
-              if not email_addr:
-                  continue
-              
-              msg = MIMEMultipart('alternative')
-              msg['Subject'] = f'Yeni yazi: {title}'
+          gmail_user = os.environ.get('GMAIL_EMAIL', '').strip()
+          gmail_pwd = os.environ.get('GMAIL_PASSWORD', '').strip()
+          
+          server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+          server.login(gmail_user, gmail_pwd)
+
+          for sub in subscribers:
+              msg = MIMEMultipart()
               msg['From'] = f"Fatih Northman <{gmail_user}>"
-              msg['To'] = email_addr
-              
-              # --- Spam Filtresi İyileştirmeleri ---
-              msg['List-Unsubscribe'] = f'<https://fatihnorthman.github.io/>'
-              msg['Precedence'] = 'list'
-              msg['X-Auto-Response-Suppress'] = 'OOF, AutoReply'
-              # ------------------------------------
-
-              part = MIMEText(html, 'html')
-              msg.attach(part)
-              
-              try:
-                  server.sendmail(gmail_user, email_addr, msg.as_string())
-                  debug_out += f"Gönderildi -> {email_addr}\n"
-                  sent += 1
-              except Exception as e:
-                  debug_out += f"SMTP Gönderim HATASI -> {email_addr}: {e}\n"
-
-          try:
-              server.quit()
-          except:
-              pass
-
-          debug_out += f"--- İŞLEM TAMAM ---\n"
-          debug_out += f"{sent}/{len(data)} kişiye başarıyla mail gönderildi.\n"
+              msg['To'] = sub['email']
+              msg['Subject'] = f"Yeni Yazı: {title}"
+              msg.attach(MIMEText(html, 'html'))
+              server.send_message(msg)
           
-          print(debug_out)
+          server.quit()
+          print("Bülten başarıyla gönderildi.")
           PYEOF
