@@ -52,50 +52,72 @@ jobs:
           POST_DESC: ${{ steps.meta.outputs.desc }}
           POST_URL: ${{ steps.meta.outputs.url }}
         run: |
+          echo "=== DEBUG ==="
+          echo "Title: $POST_TITLE"
+          echo "URL:   $POST_URL"
+
           # Abone listesini çek
-          SUBSCRIBERS=$(curl -s "${SUPABASE_URL}/rest/v1/subscribers?select=name,email" \
+          SUBSCRIBERS=$(curl -s \
             -H "apikey: ${SUPABASE_SERVICE_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}")
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+            "${SUPABASE_URL}/rest/v1/subscribers?select=name,email")
 
-          echo "Subscribers: $SUBSCRIBERS"
+          echo "Supabase yaniti: $SUBSCRIBERS"
 
-          # Her aboneye mail gönder
-          echo "$SUBSCRIBERS" | python3 -c "
-          import sys, json, urllib.request, urllib.error, os
+          python3 << 'PYEOF'
+          import json, urllib.request, urllib.error, os, sys
 
-          data = json.load(sys.stdin)
-          if not data:
-              print('No subscribers found.')
+          raw = os.popen('echo $SUBSCRIBERS 2>/dev/null').read().strip()
+
+          # Supabase yaniti environment variable uzerinden al
+          supabase_url = os.environ.get('SUPABASE_URL','')
+          service_key  = os.environ.get('SUPABASE_SERVICE_KEY','')
+
+          import urllib.request as req_lib
+          r = req_lib.Request(
+              f"{supabase_url}/rest/v1/subscribers?select=name,email",
+              headers={
+                  "apikey": service_key,
+                  "Authorization": f"Bearer {service_key}"
+              }
+          )
+          try:
+              with req_lib.urlopen(r) as resp:
+                  data = json.loads(resp.read().decode())
+          except Exception as e:
+              print(f"Supabase hatasi: {e}")
+              sys.exit(1)
+
+          print(f"Abone sayisi: {len(data)}")
+
+          if not isinstance(data, list) or len(data) == 0:
+              print("Abone yok veya gecersiz yanit:", data)
               sys.exit(0)
 
-          api_key   = os.environ['RESEND_API_KEY']
-          title     = os.environ['POST_TITLE']
-          desc      = os.environ['POST_DESC']
-          url       = os.environ['POST_URL']
+          api_key = os.environ['RESEND_API_KEY']
+          title   = os.environ['POST_TITLE']
+          desc    = os.environ['POST_DESC']
+          url     = os.environ['POST_URL']
 
-          # Şablonu oku ve placeholder'ları doldur
           with open('.github/email-template.html', 'r', encoding='utf-8') as f:
-              html_template = f.read()
+              tmpl = f.read()
 
-          html = html_template \
-              .replace('{{POST_TITLE}}', title) \
-              .replace('{{POST_DESC}}',  desc) \
-              .replace('{{POST_URL}}',   url)
+          html = tmpl.replace('{{POST_TITLE}}', title) \
+                     .replace('{{POST_DESC}}',  desc)  \
+                     .replace('{{POST_URL}}',   url)
 
           sent = 0
           for sub in data:
-              email = sub.get('email', '')
+              email = sub.get('email','')
               if not email:
                   continue
-
               payload = {
-                  'from': 'Fatih Şahan <onboarding@resend.dev>',
+                  'from': 'Fatih Sahan <onboarding@resend.dev>',
                   'to': [email],
-                  'subject': f'Yeni yazı: {title}',
+                  'subject': f'Yeni yazi: {title}',
                   'html': html
               }
-
-              req = urllib.request.Request(
+              request = req_lib.Request(
                   'https://api.resend.com/emails',
                   data=json.dumps(payload).encode(),
                   headers={
@@ -104,11 +126,15 @@ jobs:
                   }
               )
               try:
-                  with urllib.request.urlopen(req) as r:
-                      print(f'Sent to {email}: {r.status}')
+                  with req_lib.urlopen(request) as resp:
+                      result = json.loads(resp.read().decode())
+                      print(f"Gonderildi -> {email} | id:{result.get('id','?')}")
                       sent += 1
-              except urllib.error.HTTPError as e:
-                  print(f'Failed {email}: {e.code} {e.read().decode()}')
+              except req_lib.HTTPError as e:
+                  err = e.read().decode()
+                  print(f"HATA {e.code} -> {email}: {err}")
+              except Exception as e:
+                  print(f"HATA -> {email}: {e}")
 
-          print(f'Done. Sent {sent}/{len(data)} emails.')
-          "
+          print(f"Sonuc: {sent}/{len(data)} mail gonderildi.")
+          PYEOF
