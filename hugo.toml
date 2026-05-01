@@ -6,7 +6,7 @@ paginate = 8
 removePathAccents = true
 
 [permalinks]
-  posts = "/:title/"
+  posts = "/:slug/"
 
 [params]
   logoText = "~/ northman"
