@@ -52,90 +52,105 @@ jobs:
           POST_DESC: ${{ steps.meta.outputs.desc }}
           POST_URL: ${{ steps.meta.outputs.url }}
         run: |
-          echo "=== DEBUG ==="
-          echo "Title: $POST_TITLE"
-          echo "URL:   $POST_URL"
-
-          # Abone listesini çek
-          SUBSCRIBERS=$(curl -s \
-            -H "apikey: ${SUPABASE_SERVICE_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
-            "${SUPABASE_URL}/rest/v1/subscribers?select=name,email")
-
-          echo "Supabase yaniti: $SUBSCRIBERS"
-
           python3 << 'PYEOF'
           import json, urllib.request, urllib.error, os, sys
 
-          raw = os.popen('echo $SUBSCRIBERS 2>/dev/null').read().strip()
+          print("=== DEBUG BİLGİLERİ ===")
+          
+          # URL'leri temizle (boşlukları sil, https:// yoksa ekle)
+          sb_url = os.environ.get('SUPABASE_URL', '').strip()
+          if sb_url and not sb_url.startswith('http'):
+              sb_url = 'https://' + sb_url
+          if sb_url.endswith('/'):
+              sb_url = sb_url[:-1]
 
-          # Supabase yaniti environment variable uzerinden al
-          supabase_url = os.environ.get('SUPABASE_URL','')
-          service_key  = os.environ.get('SUPABASE_SERVICE_KEY','')
+          sb_key = os.environ.get('SUPABASE_SERVICE_KEY', '').strip()
+          rs_key = os.environ.get('RESEND_API_KEY', '').strip()
+          title  = os.environ.get('POST_TITLE', '')
+          desc   = os.environ.get('POST_DESC', '')
+          url    = os.environ.get('POST_URL', '')
 
-          import urllib.request as req_lib
-          r = req_lib.Request(
-              f"{supabase_url}/rest/v1/subscribers?select=name,email",
-              headers={
-                  "apikey": service_key,
-                  "Authorization": f"Bearer {service_key}"
-              }
-          )
-          try:
-              with req_lib.urlopen(r) as resp:
-                  data = json.loads(resp.read().decode())
-          except Exception as e:
-              print(f"Supabase hatasi: {e}")
+          print(f"Supabase URL: {sb_url}")
+          print(f"Post Title: {title}")
+          
+          if not sb_url or not sb_key:
+              print("HATA: SUPABASE_URL veya SUPABASE_SERVICE_KEY eksik!")
               sys.exit(1)
 
-          print(f"Abone sayisi: {len(data)}")
+          # Supabase'den aboneleri çek
+          req_url = f"{sb_url}/rest/v1/subscribers?select=name,email"
+          print(f"İstek atılıyor: {req_url}")
+          
+          req = urllib.request.Request(
+              req_url,
+              headers={
+                  "apikey": sb_key,
+                  "Authorization": f"Bearer {sb_key}"
+              }
+          )
+
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  data = json.loads(resp.read().decode('utf-8'))
+          except urllib.error.HTTPError as e:
+              print(f"Supabase HTTP Hatası: {e.code} - {e.read().decode('utf-8')}")
+              sys.exit(1)
+          except Exception as e:
+              print(f"Supabase Bağlantı Hatası: {e}")
+              sys.exit(1)
+
+          print(f"Abone sayısı: {len(data)}")
 
           if not isinstance(data, list) or len(data) == 0:
-              print("Abone yok veya gecersiz yanit:", data)
+              print("Abone bulunamadı veya geçersiz yanıt:", data)
               sys.exit(0)
 
-          api_key = os.environ['RESEND_API_KEY']
-          title   = os.environ['POST_TITLE']
-          desc    = os.environ['POST_DESC']
-          url     = os.environ['POST_URL']
+          # Şablonu oku
+          try:
+              with open('.github/email-template.html', 'r', encoding='utf-8') as f:
+                  html = f.read()
+          except Exception as e:
+              print(f"Şablon okuma hatası: {e}")
+              sys.exit(1)
 
-          with open('.github/email-template.html', 'r', encoding='utf-8') as f:
-              tmpl = f.read()
-
-          html = tmpl.replace('{{POST_TITLE}}', title) \
+          html = html.replace('{{POST_TITLE}}', title) \
                      .replace('{{POST_DESC}}',  desc)  \
                      .replace('{{POST_URL}}',   url)
 
+          # E-postaları gönder
           sent = 0
           for sub in data:
-              email = sub.get('email','')
+              email = sub.get('email', '').strip()
               if not email:
                   continue
+              
               payload = {
                   'from': 'Fatih Sahan <onboarding@resend.dev>',
                   'to': [email],
                   'subject': f'Yeni yazi: {title}',
                   'html': html
               }
-              request = req_lib.Request(
+              
+              send_req = urllib.request.Request(
                   'https://api.resend.com/emails',
-                  data=json.dumps(payload).encode(),
+                  data=json.dumps(payload).encode('utf-8'),
                   headers={
-                      'Authorization': f'Bearer {api_key}',
+                      'Authorization': f'Bearer {rs_key}',
                       'Content-Type': 'application/json',
-                      'User-Agent': 'Mozilla/5.0 (Linux; x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
                   }
               )
+              
               try:
-                  with req_lib.urlopen(request) as resp:
-                      result = json.loads(resp.read().decode())
-                      print(f"Gonderildi -> {email} | id:{result.get('id','?')}")
+                  with urllib.request.urlopen(send_req) as resp:
+                      result = json.loads(resp.read().decode('utf-8'))
+                      print(f"Gönderildi -> {email} | id: {result.get('id', '?')}")
                       sent += 1
-              except req_lib.HTTPError as e:
-                  err = e.read().decode()
-                  print(f"HATA {e.code} -> {email}: {err}")
+              except urllib.error.HTTPError as e:
+                  print(f"Resend HATA {e.code} -> {email}: {e.read().decode('utf-8')}")
               except Exception as e:
-                  print(f"HATA -> {email}: {e}")
+                  print(f"Resend BAĞLANTI HATASI -> {email}: {e}")
 
-          print(f"Sonuc: {sent}/{len(data)} mail gonderildi.")
+          print(f"--- İŞLEM TAMAM ---")
+          print(f"{sent}/{len(data)} kişiye başarıyla mail gönderildi.")
           PYEOF
