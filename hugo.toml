@@ -12,6 +12,7 @@ paginate = 8
   logoText = "~/ northman"
   contentTypeName = "posts"
   themeColor = "red"
+  removePathAccents = true
   customCSS = ["css/custom.css"]
   showLastUpdated = false
   ReadMore = "Devamını Oku"

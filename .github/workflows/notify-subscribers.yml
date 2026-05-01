@@ -87,17 +87,16 @@ jobs:
           tags_match = re.search(r'^tags:\s*\[(.*?)\]', content, re.MULTILINE)
           tags = tags_match.group(1).replace('"', '').replace("'", "") if tags_match else ""
 
-          # Hugo uyumlu Slugify (Türkçe karakterleri KORUR)
+          # Hugo uyumlu en güvenli Slugify (ASCII)
           def hugo_slugify(text):
-              # Python'ın lower()'ı 'İ'yi 'i̇' (iki karakter) yapar, Hugo ise 'i' yapar.
-              text = text.replace('İ', 'i').replace('I', 'ı')
               text = text.lower().strip()
-              # Boşlukları ve özel karakterleri temizle
-              text = text.replace(':', '').replace(',', '').replace('.', '').replace('!', '').replace('?', '')
-              # Boşlukları tire yap
+              # Türkçe karakter haritası
+              tr_map = str.maketrans("çğıöşüİI", "cgiosuii")
+              text = text.translate(tr_map)
+              # Boşlukları tire yap, özel karakterleri (alfanümerik hariç) sil
               text = re.sub(r'\s+', '-', text)
-              # Sadece harfler, rakamlar ve tireleri tut
-              return text
+              text = re.sub(r'[^\w-]', '', text)
+              return text.strip('-')
 
           slug = hugo_slugify(title)
           url = f"https://fatihnorthman.github.io/{slug}/"
