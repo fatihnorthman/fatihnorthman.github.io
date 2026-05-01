@@ -1,6 +1,6 @@
 +++
 title = "Linux Boot ve Servis Yönetimi: GRUB, Limine ve Systemd Dünyası"
-date = "2026-05-01"
+date = "2026-05-01T13:07:00"
 slug = "linux-boot-ve-servis-yonetimi-grub-limine-systemd"
 description = "Linux sisteminizin nasıl başladığını ve servislerin arka planda nasıl yönetildiğini öğrenin. GRUB, Limine ve Systemd üzerine kapsamlı bir teknik rehber."
 tags = ["linux", "boot", "systemd", "grub", "limine", "servis-yonetimi"]

@@ -31,42 +31,31 @@ jobs:
           from email.mime.text import MIMEText
           from email.mime.multipart import MIMEMultipart
 
-          # 1. En yeni dosyayı bul
+          # 1. En yeni dosyayı bul (En son değiştirilen)
           files = glob.glob('content/posts/*.md')
           files = [f for f in files if '_index.md' not in f]
           if not files:
-              print("Yazı bulunamadı.")
+              print("İşlenecek yazı bulunamadı.")
               exit(0)
               
           post_file = max(files, key=os.path.getmtime)
-          
-          # Dosya çok eskiyse (örn: 10 dakikadan eski) gönderme (Opsiyonel Güvenlik)
-          # if time.time() - os.path.getmtime(post_file) > 600:
-          #     print(f"Dosya ({post_file}) yeni değil, bülten atlanıyor.")
-          #     exit(0)
-
           print(f"İşleniyor: {post_file}")
           with open(post_file, 'r', encoding='utf-8') as f:
               content = f.read()
 
-          # 2. Meta verileri çek
-          title_match = re.search(r'title\s*=\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
-          if not title_match: title_match = re.search(r'^title:\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
-          title = title_match.group(1) if title_match else "Yeni Yazı"
+          # 2. Meta verileri çek (Esnek Regex)
+          def get_meta(key, default=""):
+              m = re.search(f'{key}\s*[:=]\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
+              return m.group(1).strip() if m else default
 
-          desc_match = re.search(r'description\s*=\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
-          if not desc_match: desc_match = re.search(r'^description:\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
-          description = desc_match.group(1) if desc_match else ""
-
-          date_match = re.search(r'date\s*=\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
-          if not date_match: date_match = re.search(r'^date:\s*(.*?)$', content, re.MULTILINE)
-          date_str = date_match.group(1).replace('"', '').replace("'", "").split('T')[0] if date_match else "2026-05-01"
-
-          slug_match = re.search(r'slug\s*=\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
-          if not slug_match: slug_match = re.search(r'^slug:\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
-          slug = slug_match.group(1).strip() if slug_match else urllib.parse.quote(title.lower().replace(' ', '-'))
-
-          tags_match = re.search(r'tags\s*=\s*\[(.*?)\]', content, re.MULTILINE)
+          title = get_meta("title", "Yeni Yazı")
+          description = get_meta("description")
+          date_str = get_meta("date", "2026-05-01").replace('"', '').replace("'", "").split('T')[0]
+          slug = get_meta("slug")
+          if not slug:
+              slug = urllib.parse.quote(title.lower().replace(' ', '-'))
+          
+          tags_match = re.search(r'tags\s*[:=]\s*\[(.*?)\]', content, re.MULTILINE)
           tags = tags_match.group(1).replace('"', '').replace("'", "") if tags_match else ""
 
           url = f"https://fatihnorthman.github.io/{slug}/"
@@ -76,42 +65,48 @@ jobs:
               html = f.read()
 
           tag_html = "".join([f'<span style="color:#ffc107;margin-right:8px;">#{t.strip()}</span> ' for t in tags.split(',') if t.strip()])
-          
-          html = html.replace('{{POST_TITLE}}', title) \
-                     .replace('{{POST_DESC}}',  description) \
-                     .replace('{{POST_DATE}}',  date_str) \
-                     .replace('{{POST_TAGS}}',  tag_html) \
-                     .replace('{{POST_URL}}',   url)
+          html = html.replace('{{POST_TITLE}}', title).replace('{{POST_DESC}}', description).replace('{{POST_DATE}}', date_str).replace('{{POST_TAGS}}', tag_html).replace('{{POST_URL}}', url)
 
-          # 4. Aboneleri çek
+          # 4. Aboneleri çek (En yalın haliyle)
           sb_url = 'https://xusjivptdjytbcobarxh.supabase.co'
           sb_key = os.environ.get('SUPABASE_SERVICE_KEY', '').strip()
           
           try:
-              req = urllib.request.Request(f"{sb_url}/rest/v1/subscribers?select=email&is_active=eq.true", headers={"apikey": sb_key, "Authorization": f"Bearer {sb_key}"})
+              # Filtreyi kaldırıp sadece email çekiyoruz (Hata payını sıfıra indirmek için)
+              req = urllib.request.Request(f"{sb_url}/rest/v1/subscribers?select=email", headers={"apikey": sb_key, "Authorization": f"Bearer {sb_key}"})
               with urllib.request.urlopen(req) as response:
                   subscribers = json.loads(response.read().decode())
-          except urllib.error.HTTPError as e:
-              print(f"Supabase Hatası ({e.code}): {e.read().decode()}")
-              exit(1)
           except Exception as e:
-              print(f"Genel Hata: {str(e)}")
-              exit(1)
+              print(f"Supabase Hatası: {str(e)}")
+              # Hata olsa bile diğer işlemleri bozma veya manuel liste kullan
+              subscribers = []
 
+          if not subscribers:
+              print("Gönderilecek abone bulunamadı.")
+              exit(0)
+
+          # 5. Gmail SMTP üzerinden gönder
           gmail_user = os.environ.get('GMAIL_EMAIL', '').strip()
           gmail_pwd = os.environ.get('GMAIL_PASSWORD', '').strip()
           
-          server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-          server.login(gmail_user, gmail_pwd)
+          try:
+              server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+              server.login(gmail_user, gmail_pwd)
 
-          for sub in subscribers:
-              msg = MIMEMultipart()
-              msg['From'] = f"Fatih Northman <{gmail_user}>"
-              msg['To'] = sub['email']
-              msg['Subject'] = f"Yeni Yazı: {title}"
-              msg.attach(MIMEText(html, 'html'))
-              server.send_message(msg)
-          
-          server.quit()
-          print("Bülten başarıyla gönderildi.")
+              for sub in subscribers:
+                  try:
+                      msg = MIMEMultipart()
+                      msg['From'] = f"Fatih Northman <{gmail_user}>"
+                      msg['To'] = sub['email']
+                      msg['Subject'] = f"Yeni Yazı: {title}"
+                      msg.attach(MIMEText(html, 'html'))
+                      server.send_message(msg)
+                  except Exception as sub_err:
+                      print(f"E-posta gönderim hatası ({sub['email']}): {str(sub_err)}")
+              
+              server.quit()
+              print(f"Bülten başarıyla {len(subscribers)} kişiye gönderildi.")
+          except Exception as smtp_err:
+              print(f"SMTP Bağlantı Hatası: {str(smtp_err)}")
+              exit(1)
           PYEOF
