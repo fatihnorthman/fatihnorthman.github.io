@@ -1,9 +1,11 @@
----
-title: "Bakım ve İlgi Gereksinimi: Kendi Kendine Yeten Sistem"
-date: 2026-05-01T12:55:00
-description: "İşletim sistemlerine yönelik algımız, genellikle onlara sürekli bakım yapmamız gerektiği yönündedir. Linux, bu 'bağımlı sistem' paradigmasını yıkarak kendi kendine yeten bir altyapı sunar."
-tags: ["linux", "felsefe", "sistem-yonetimi", "bakim", "stabilite", "teknoloji"]
----
++++
+title = "Bakım ve İlgi Gereksinimi: Kendi Kendine Yeten Sistem"
+date = "2026-05-01"
+weight = 1
+slug = "bakim-ve-ilgi-gereksinimi-kendi-kendine-yeten-sistem"
+description = "İşletim sistemlerine yönelik algımız, genellikle onlara sürekli bakım yapmamız gerektiği yönündedir. Linux, bu 'bağımlı sistem' paradigmasını yıkarak kendi kendine yeten bir altyapı sunar."
+tags = ["linux", "felsefe", "sistem-yonetimi", "bakim", "stabilite", "teknoloji"]
++++
 
 Modern bilişim dünyasında kullanıcı ile işletim sistemi arasındaki ilişki, çoğu zaman asimetrik bir bağımlılık üzerine kuruludur. Standart ticari işletim sistemleri, kullanıcıdan sürekli ve kesintisiz bir ilgi talep eder. Bu sistemler, adeta her an gözetim altında tutulması gereken, bakımı aksatıldığında hırçınlaşan ve verimliliğini yitiren hassas birer yapı gibidir. Kayıt defteri (registry) temizliği, parçalanmış disklerin birleştirilmesi, bitmek bilmeyen zararlı yazılım taramaları ve kullanıcıyı çalışmaya ara vermeye zorlayan dayatılmış yeniden başlatmalar, bu bağımlılık ilişkisinin birer tezahürüdür. Kullanıcı, sistemin efendisi olmaktan ziyade, onun bitmek bilmeyen ihtiyaçlarını karşılayan bir bakıcıya dönüşür.
 
