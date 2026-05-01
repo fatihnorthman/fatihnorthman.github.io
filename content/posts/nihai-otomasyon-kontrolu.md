@@ -1,6 +1,6 @@
 +++
 title = "Nihai Otomasyon Kontrolü: Kusursuz Akış"
-date = "2026-05-01T10:15:00"
+date = "2026-05-01T10:10:00"
 slug = "nihai-otomasyon-kontrolu"
 description = "North Protocol bülten ve sıralama otomasyonunun son ve kesin doğrulaması. Bu yazı zirvedeyse ve mail kutunuzdaysa, operasyon başarıyla tamamlanmış demektir."
 tags = ["final", "check", "automation", "north-protocol"]
