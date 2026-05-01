@@ -1,6 +1,6 @@
 ---
 title: "Oyuncular İçin Sınırları Aşmak: MMORPG ve Proton Deneyimi"
-date: 2026-05-01T14:30:00
+date: 2026-05-01T11:00:00
 description: "Linux'ta oyun oynamak artık bir tercih değil, bir performans standardı. Steam Proton ile The Elder Scrolls Online gibi devasa evrenlerin Linux'taki pürüzsüz yolculuğunu ve teknik optimizasyonları inceliyoruz."
 tags: ["linux", "gaming", "proton", "mmorpg", "steam", "eso", "dxvk", "performans"]
 ---
