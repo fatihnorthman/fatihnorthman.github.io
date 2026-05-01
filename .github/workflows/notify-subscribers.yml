@@ -69,14 +69,20 @@ jobs:
           gmail_pwd  = os.environ.get('GMAIL_PASSWORD', '').strip()
           
           # Hugo uyumlu slugify fonksiyonu (Türkçe karakterleri KORUR)
-          # Çoklu dosya desteği
-          p_raw = os.environ.get('POST_FILE', '').strip()
-          p_list = [f.strip() for f in p_raw.split('\n') if f.strip().endswith('.md')]
-          if not p_list:
-              print("İşlenecek yeni yazı bulunamadı.")
-              exit(0)
+        run: |
+          python3 << 'PYEOF'
+          import os, re, json, urllib.request, smtplib, urllib.parse, glob
           
-          post_file = p_list[0]
+          # content/posts klasöründeki tüm .md dosyalarını bul
+          files = glob.glob('content/posts/*.md')
+          if not files:
+              print("İşlenecek dosya bulunamadı.")
+              exit(0)
+              
+          # En son değiştirilen dosyayı seç (Kalıcı Çözüm)
+          post_file = max(files, key=os.path.getmtime)
+          print(f"Bülten için seçilen dosya: {post_file}")
+          
           with open(post_file, 'r', encoding='utf-8') as f:
               content = f.read()
 
