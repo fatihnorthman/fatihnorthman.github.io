@@ -4,8 +4,8 @@
   // Anon key — sadece insert izni var (RLS ile korunuyor)
   const SUPABASE_ANON_KEY = (() => {
     const p = ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-               "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1c2ppdnB0ZGp5dGJjb2JhcnhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYwMTMxODMsImV4cCI6MjA2MTU4OTE4M30",
-               "zT_4nCtJb01LKAJVo4nAVi-q6kV-TDiJ9fC3mnBjCr4"];
+               "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1c2ppdnB0ZGp5dGJjb2JhcnhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NDQxNjIsImV4cCI6MjA5MzEyMDE2Mn0",
+               "IRKtH_4VOkJeQYTxuTAhGXL1KPS0NsNEP70iTdyZ_B4"];
     return p.join(".");
   })();
 
