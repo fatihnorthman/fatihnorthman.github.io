@@ -12,9 +12,9 @@
     a { text-decoration: none; }
     
     @media screen and (max-width: 600px) {
-      .container { padding: 40px 12px !important; }
+      .container { padding: 40px 14px !important; }
       .post-card { padding: 24px !important; }
-      .post-title { font-size: 1.55rem !important; }
+      .post-title { font-size: 1.5rem !important; }
     }
   </style>
 </head>
@@ -24,80 +24,85 @@
     <tr>
       <td align="center" class="container" style="padding: 60px 20px;">
         
-        <!-- Post Card (Exact Site Theme) -->
+        <!-- Main Card -->
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" 
-               style="max-width: 620px; background-color: #121220; border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 16px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);">
+               style="max-width: 600px; background-color: #121220; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.6);">
           
-          <!-- Gradient Line -->
+          <!-- Site Accent Line (Gradient) -->
           <tr>
-            <td style="background: linear-gradient(90deg, #e53935 0%, #ff6659 100%); height: 4px; padding: 0;"></td>
+            <td style="background: linear-gradient(90deg, #e53935 0%, #ff6659 100%); height: 3px; padding: 0;"></td>
           </tr>
 
           <tr>
-            <td class="post-card" style="padding: 36px 32px;">
+            <td class="post-card" style="padding: 32px 40px;">
               
-              <!-- Header -->
+              <!-- Author Header -->
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td width="48" style="vertical-align: top;">
-                    <div style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(229, 57, 53, 0.3); background: rgba(229, 57, 53, 0.05); padding: 2px;">
+                  <td width="46" style="vertical-align: top;">
+                    <div style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(229, 57, 53, 0.3); background: #0d0d17; padding: 2px;">
                       <img src="https://fatihnorthman.github.io/logo.svg" alt="F" width="44" height="44" style="border-radius: 50%; display: block;">
                     </div>
                   </td>
                   <td style="padding-left: 14px; vertical-align: middle;">
-                    <div style="color: #ffffff; font-weight: 700; font-size: 17px; line-height: 1.2;">Fatih Northman</div>
-                    <div style="color: #8888a0; font-size: 13px; font-family: 'JetBrains Mono', monospace; margin-top: 2px;">@fatihnorthman</div>
-                  </td>
-                  <td align="right" style="vertical-align: middle;">
-                    <div style="background: rgba(229, 57, 53, 0.12); border: 1px solid rgba(229, 57, 53, 0.3); border-radius: 100px; padding: 4px 14px; color: #e53935; font-size: 10px; font-weight: 700; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.1em;">
-                      NEW_POST
-                    </div>
+                    <div style="color: #ffffff; font-weight: 700; font-size: 16px;">Fatih Northman</div>
+                    <div style="color: #8888a0; font-size: 13px; font-family: 'JetBrains Mono', monospace;">@fatihnorthman</div>
                   </td>
                 </tr>
               </table>
 
-              <!-- Title -->
-              <div style="margin-top: 28px;">
+              <!-- Post Title -->
+              <div style="margin-top: 24px;">
                 <a href="{{POST_URL}}" style="color: #ffffff; text-decoration: none;">
-                  <h2 class="post-title" style="margin: 0; font-size: 1.8rem; font-weight: 700; line-height: 1.35; color: #ffffff; letter-spacing: -0.02em;">
+                  <h2 style="margin: 0; font-size: 1.8rem; font-weight: 700; line-height: 1.3; color: #ffffff;">
                     {{POST_TITLE}}
                   </h2>
                 </a>
               </div>
 
               <!-- Date -->
-              <div style="margin-top: 10px; color: #8888a0; font-size: 13px; font-family: 'JetBrains Mono', monospace;">
+              <div style="margin-top: 8px; color: #8888a0; font-size: 13px; font-family: 'JetBrains Mono', monospace;">
                 {{POST_DATE}}
               </div>
 
               <!-- Content -->
-              <div style="margin-top: 24px; color: #a8a8c0; font-size: 16px; line-height: 1.8;">
+              <div style="margin-top: 20px; color: #a8a8c0; font-size: 16px; line-height: 1.8;">
                 {{POST_DESC}}
               </div>
 
+              <!-- Code/Terminal Example (Monokai Style) -->
+              <div style="margin-top: 24px; background: #16162a; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 16px 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px;">
+                <div style="margin-bottom: 8px; color: #666680;">// terminal --status</div>
+                <div>
+                  <span style="color: #e53935;">$</span> <span style="color: #f8f8f2;">hugo server</span><br>
+                  <span style="color: #e6db74;">Web Server is available at</span> <span style="color: #ae81ff;">http://localhost:1313/</span><br>
+                  <span style="color: #e53935;">$</span> <span style="color: #f8f8f2;">git push</span> <span style="color: #a6e22e;">[success]</span>
+                </div>
+              </div>
+
               <!-- Tags -->
-              <div style="margin-top: 28px; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #e53935;">
+              <div style="margin-top: 24px; font-family: 'JetBrains Mono', monospace; font-size: 14px;">
                 {{POST_TAGS}}
               </div>
 
-              <!-- Footer -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 36px; padding-top: 28px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+              <!-- Action Bar -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
                 <tr>
                   <td>
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                       <tr>
-                        <td style="background: rgba(255, 255, 255, 0.04); border-radius: 10px; padding: 10px 16px; color: #dcdce8; font-size: 13px; font-weight: 600;">
-                          <span style="color: #e53935; margin-right: 6px;">❤</span> 0 <span style="color: #666680; font-weight: 400; font-size: 11px; margin-left: 4px;">BEĞENİ</span>
+                        <td style="padding: 8px 12px; background: rgba(255, 255, 255, 0.04); border-radius: 8px; color: #dcdce8; font-size: 12px;">
+                          <span style="color: #e53935;">❤</span> 0 <span style="color: #666680; margin-left: 4px;">BEĞENİ</span>
                         </td>
-                        <td width="10"></td>
-                        <td style="background: rgba(255, 255, 255, 0.04); border-radius: 10px; padding: 10px 16px; color: #dcdce8; font-size: 13px; font-weight: 600;">
-                          <span style="margin-right: 6px;">💬</span> 0 <span style="color: #666680; font-weight: 400; font-size: 11px; margin-left: 4px;">YORUM</span>
+                        <td width="8"></td>
+                        <td style="padding: 8px 12px; background: rgba(255, 255, 255, 0.04); border-radius: 8px; color: #dcdce8; font-size: 12px;">
+                          <span>💬</span> 0 <span style="color: #666680; margin-left: 4px;">YORUM</span>
                         </td>
                       </tr>
                     </table>
                   </td>
                   <td align="right">
-                    <a href="{{POST_URL}}" style="display: inline-block; background: linear-gradient(135deg, #e53935 0%, #ff6659 100%); color: #ffffff; padding: 12px 28px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; box-shadow: 0 10px 20px rgba(229, 57, 53, 0.2);">
+                    <a href="{{POST_URL}}" style="display: inline-block; background: linear-gradient(135deg, #e53935 0%, #ff6659 100%); color: #ffffff; padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; text-decoration: none;">
                       Yazıyı Oku →
                     </a>
                   </td>
@@ -108,16 +113,16 @@
           </tr>
         </table>
 
-        <!-- Footer Branding -->
+        <!-- Footer -->
         <div style="margin-top: 40px; text-align: center;">
-          <div style="font-family: 'JetBrains Mono', monospace; color: #e53935; font-size: 13px; font-weight: 700; margin-bottom: 12px; letter-spacing: 0.1em; opacity: 0.8;">
-            NORTH PROTOCOL // ARCHITECT EDITION
+          <div style="font-family: 'JetBrains Mono', monospace; color: #e53935; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 12px;">
+            NORTH PROTOCOL // SYSLOG
           </div>
-          <p style="color: #666680; font-size: 12px; margin: 0 0 12px;">
-            Sitemize <a href="https://fatihnorthman.github.io" style="color: #a8a8c0; text-decoration: none;">fatihnorthman.github.io</a> üzerinden abone olduğunuz için bu maili aldınız.
+          <p style="color: #666680; font-size: 12px; margin: 0 0 10px;">
+            Bültene abone olduğunuz için bu maili aldınız. <a href="https://fatihnorthman.github.io" style="color: #a8a8c0; text-decoration: none;">fatihnorthman.github.io</a>
           </p>
           <p style="color: #666680; font-size: 12px; margin: 0;">
-            <a href="mailto:fatihnorthman.blog@gmail.com?subject=Unsubscribe" style="color: #e53935; text-decoration: none; font-weight: 600;">Abonelikten Ayrıl</a>
+            <a href="mailto:fatihnorthman.blog@gmail.com?subject=Unsubscribe" style="color: #e53935; text-decoration: none;">Abonelikten Çık</a>
           </p>
         </div>
 

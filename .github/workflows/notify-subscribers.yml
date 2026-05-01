@@ -72,11 +72,23 @@ jobs:
           gmail_user = os.environ.get('GMAIL_EMAIL', '').strip()
           gmail_pwd  = os.environ.get('GMAIL_PASSWORD', '').strip()
           
+          # Hugo uyumlu slugify fonksiyonu (Türkçe karakter destekli)
+          def slugify(text):
+              tr_map = str.maketrans("ığüşöçİĞÜŞÖÇ ", "igusocigusoc-")
+              text = text.lower().translate(tr_map)
+              import re
+              text = re.sub(r'[^a-z0-9-]', '', text)
+              text = re.sub(r'-+', '-', text)
+              return text.strip('-')
+
           title  = os.environ.get('POST_TITLE', '')
           desc   = os.environ.get('POST_DESC', '')
           date   = os.environ.get('POST_DATE', '')
           tags   = os.environ.get('POST_TAGS', '')
-          url    = os.environ.get('POST_URL', '')
+          
+          # URL'yi başlık üzerinden Hugo uyumlu oluştur
+          slug = slugify(title)
+          url = f"https://fatihnorthman.github.io/{slug}/"
 
           # Etiketleri formatla
           tag_html = ""
@@ -85,7 +97,7 @@ jobs:
               for t in tag_list:
                   tag_html += f'<span style="color:#e53935;margin-right:8px;">#{t}</span> '
 
-          debug_out = f"Supabase URL: {sb_url}\nPost Title: {title}\n"
+          debug_out = f"Supabase URL: {sb_url}\nPost Title: {title}\nSlug: {slug}\nTarget URL: {url}\n"
           
           if not sb_url or not sb_key:
               debug_out += "HATA: SUPABASE_URL veya SUPABASE_SERVICE_KEY eksik!\n"
