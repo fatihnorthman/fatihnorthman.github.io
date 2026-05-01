@@ -65,16 +65,16 @@ jobs:
           desc   = os.environ.get('POST_DESC', '')
           url    = os.environ.get('POST_URL', '')
 
-          print(f"Supabase URL: {sb_url}")
-          print(f"Post Title: {title}")
+          debug_out = f"Supabase URL: {sb_url}\nPost Title: {title}\n"
           
           if not sb_url or not sb_key:
-              print("HATA: SUPABASE_URL veya SUPABASE_SERVICE_KEY eksik!")
+              debug_out += "HATA: SUPABASE_URL veya SUPABASE_SERVICE_KEY eksik!\n"
+              with open('debug-log.txt', 'w') as f: f.write(debug_out)
               sys.exit(1)
 
           # Supabase'den aboneleri çek
           req_url = f"{sb_url}/rest/v1/subscribers?select=name,email"
-          print(f"İstek atılıyor: {req_url}")
+          debug_out += f"İstek atılıyor: {req_url}\n"
           
           req = urllib.request.Request(
               req_url,
@@ -84,20 +84,20 @@ jobs:
               }
           )
 
+          data = None
           try:
               with urllib.request.urlopen(req) as resp:
                   data = json.loads(resp.read().decode('utf-8'))
+                  debug_out += f"Supabase Başarılı: {len(data)} kayıt.\n"
+                  debug_out += f"Veri: {data}\n"
           except urllib.error.HTTPError as e:
-              print(f"Supabase HTTP Hatası: {e.code} - {e.read().decode('utf-8')}")
-              sys.exit(1)
+              debug_out += f"Supabase HTTP Hatası: {e.code} - {e.read().decode('utf-8')}\n"
           except Exception as e:
-              print(f"Supabase Bağlantı Hatası: {e}")
-              sys.exit(1)
+              debug_out += f"Supabase Bağlantı Hatası: {e}\n"
 
-          print(f"Abone sayısı: {len(data)}")
-
-          if not isinstance(data, list) or len(data) == 0:
-              print("Abone bulunamadı veya geçersiz yanıt:", data)
+          if not data or not isinstance(data, list) or len(data) == 0:
+              debug_out += "Abone bulunamadı veya geçersiz yanıt iptal ediliyor.\n"
+              with open('debug-log.txt', 'w') as f: f.write(debug_out)
               sys.exit(0)
 
           # Şablonu oku
@@ -105,7 +105,8 @@ jobs:
               with open('.github/email-template.html', 'r', encoding='utf-8') as f:
                   html = f.read()
           except Exception as e:
-              print(f"Şablon okuma hatası: {e}")
+              debug_out += f"Şablon okuma hatası: {e}\n"
+              with open('debug-log.txt', 'w') as f: f.write(debug_out)
               sys.exit(1)
 
           html = html.replace('{{POST_TITLE}}', title) \
@@ -139,13 +140,24 @@ jobs:
               try:
                   with urllib.request.urlopen(send_req) as resp:
                       result = json.loads(resp.read().decode('utf-8'))
-                      print(f"Gönderildi -> {email} | id: {result.get('id', '?')}")
+                      debug_out += f"Gönderildi -> {email} | id: {result.get('id', '?')}\n"
                       sent += 1
               except urllib.error.HTTPError as e:
-                  print(f"Resend HATA {e.code} -> {email}: {e.read().decode('utf-8')}")
+                  debug_out += f"Resend HATA {e.code} -> {email}: {e.read().decode('utf-8')}\n"
               except Exception as e:
-                  print(f"Resend BAĞLANTI HATASI -> {email}: {e}")
+                  debug_out += f"Resend BAĞLANTI HATASI -> {email}: {e}\n"
 
-          print(f"--- İŞLEM TAMAM ---")
-          print(f"{sent}/{len(data)} kişiye başarıyla mail gönderildi.")
+          debug_out += f"--- İŞLEM TAMAM ---\n"
+          debug_out += f"{sent}/{len(data)} kişiye başarıyla mail gönderildi.\n"
+          
+          with open('debug-log.txt', 'w') as f:
+              f.write(debug_out)
           PYEOF
+
+      - name: Commit Debug Log
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add debug-log.txt
+          git commit -m "Auto: Update debug-log.txt" || echo "No changes"
+          git push || echo "Push failed"
