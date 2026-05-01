@@ -3,6 +3,7 @@ title = "Linux'ta Android Uygulamaları Çalıştırın: Waydroid Kurulum ve Kul
 date = "2026-05-01"
 description = "Waydroid nedir, nasıl kurulur? Ubuntu, Fedora, Arch, Debian ve daha fazlası için adım adım kurulum rehberi. Linux'ta Android uygulamalarını tam performansla çalıştırın."
 tags = ["linux", "waydroid", "android", "ubuntu", "arch", "fedora", "debian", "kurulum"]
+image = "/images/clean_desktop.jpeg"
 +++
 
 Telefonu masanın üstüne bırakıp bilgisayarda çalışmak isteyenler için uzun süredir beklenen bir çözüm geldi: **Waydroid**. Bir emülatör değil, doğrudan Linux çekirdeği üzerinde çalışan eksiksiz bir Android katmanı. Performansı gerçek bir Android cihazdan ayırt edilemez seviyede, kurulumu ise düşündüğünüzden çok daha kolay.
