@@ -7,6 +7,7 @@ categories: ["Yazılım"]
 image: "/images/winboat.png"
 author: "Fatih Northman"
 description: "Linux üzerinde Windows uygulamalarını gerçek bir Windows ortamında ama yerel bir pencere gibi çalıştırmanızı sağlayan Winboat yazılımını inceliyoruz."
+slug: "winboat-linux-windows-apps"
 ---
 
 Linux'a geçiş yapmayı düşünen veya halihazırda kullanan pek çok kişinin aklındaki en büyük engellerden biri şudur: **"Peki ya vazgeçemediğim o Windows uygulaması ne olacak?"** 
