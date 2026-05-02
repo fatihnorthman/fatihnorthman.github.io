@@ -77,6 +77,8 @@ function slugify(text) {
         .replace(/^-|-$/g, '');
 }
 
+let ALL_POSTS = []; // Global yazı listesi
+
 async function fetchPosts() {
     try {
         log("Yazı listesi talep ediliyor...");
@@ -94,31 +96,40 @@ async function fetchPosts() {
         }
         
         const files = await res.json();
-        const listContainer = document.getElementById("post-list");
-        listContainer.innerHTML = "";
-        
-        const mdFiles = files.filter(f => f.name.endsWith(".md"));
-        
-        if (mdFiles.length === 0) {
-            listContainer.innerHTML = '<div class="loading-msg">Hiç yazı bulunamadı.</div>';
-            log("UYARI: content/posts klasörü boş.");
-            return;
-        }
-
-        mdFiles.forEach(file => {
-            const item = document.createElement("div");
-            item.className = "post-list-item";
-            item.innerHTML = `
-                <span>${file.name}</span>
-                <button onclick="confirmDelete('${file.path}', '${file.sha}')" class="btn-sm-danger">İMH ET</button>
-            `;
-            listContainer.appendChild(item);
-        });
-        log(`BAŞARI: ${mdFiles.length} yazı yüklendi.`);
+        ALL_POSTS = files.filter(f => f.name.endsWith(".md"));
+        renderPostList(ALL_POSTS);
+        log(`BAŞARI: ${ALL_POSTS.length} yazı yüklendi.`);
     } catch (err) {
         log(`KRİTİK HATA: ${err.message}`);
         document.getElementById("post-list").innerHTML = `<div class="loading-msg" style="color:var(--red)">Hata: ${err.message}</div>`;
     }
+}
+
+function renderPostList(posts) {
+    const listContainer = document.getElementById("post-list");
+    listContainer.innerHTML = "";
+    
+    if (posts.length === 0) {
+        listContainer.innerHTML = '<div class="loading-msg">Yazı bulunamadı.</div>';
+        return;
+    }
+
+    posts.forEach(file => {
+        const displayName = file.name.replace(".md", "");
+        const item = document.createElement("div");
+        item.className = "post-list-item";
+        item.innerHTML = `
+            <div class="post-name" title="${file.name}">${displayName}</div>
+            <button onclick="confirmDelete('${file.path}', '${file.sha}')" class="btn-sm-danger">İMH ET</button>
+        `;
+        listContainer.appendChild(item);
+    });
+}
+
+function filterPosts() {
+    const query = document.getElementById("post-search").value.toLowerCase();
+    const filtered = ALL_POSTS.filter(p => p.name.toLowerCase().includes(query));
+    renderPostList(filtered);
 }
 
 async function confirmDelete(path, sha) {
