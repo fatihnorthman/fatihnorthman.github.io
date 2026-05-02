@@ -225,16 +225,26 @@ ${content}`;
 async function githubPut(path, contentBase64, message) {
     const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
     
-    // Önce dosya var mı kontrol et (varsa SHA lazım)
+    // 1. SHA Kontrolü (Dosya güncelleme için gerekli)
+    log(`SHA kontrol ediliyor: ${path}`);
     let sha = "";
     try {
-        const check = await fetch(url, { headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` } });
+        const check = await fetch(url, { 
+            headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` } 
+        });
         if (check.ok) {
             const data = await check.json();
             sha = data.sha;
+            log("Dosya mevcut, güncellenecek.");
+        } else if (check.status === 404) {
+            log("Yeni dosya oluşturulacak.");
         }
-    } catch (e) {}
+    } catch (e) {
+        log(`SHA uyarısı (İsteğe bağlı): ${e.message}`);
+    }
 
+    // 2. PUT İsteği
+    log(`GitHub'a veri gönderiliyor...`);
     const res = await fetch(url, {
         method: 'PUT',
         headers: {
@@ -250,7 +260,9 @@ async function githubPut(path, contentBase64, message) {
 
     if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.message);
+        throw new Error(error.message || `HTTP ${res.status}`);
     }
+    
+    log(`GitHub onayı alındı.`);
     return await res.json();
 }
