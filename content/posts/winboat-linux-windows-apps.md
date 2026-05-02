@@ -13,8 +13,6 @@ Linux'a geçiş yapmayı düşünen veya halihazırda kullanan pek çok kişinin
 
 Eskiden bu sorunun cevabı ya karmaşık Wine konfigürasyonları yapmak, sistemi yoran hantal sanal makineler (VM) kurmak ya da "Dual-Boot" zahmetine katlanmaktı. Ancak oyunun kuralları değişti. Karşınızda, Windows uygulamalarını Linux masaüstünüze adeta yerel (native) bir uygulamaymış gibi kusursuzca entegre eden yepyeni ve şık bir çözüm: **Winboat**.
 
-![Winboat Arayüzü](/images/winboat-preview.jpg)
-
 ## Winboat Nedir?
 
 Winboat, Linux üzerinde Windows uygulamalarını çalıştırmanızı sağlayan ücretsiz ve açık kaynaklı bir yazılımdır. Ancak onu Wine gibi "uyumluluk katmanlarından" ayıran çok temel bir fark vardır: **Winboat, arka planda gerçek bir Windows ortamı çalıştırır.**
