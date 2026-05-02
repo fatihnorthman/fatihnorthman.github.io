@@ -2,22 +2,32 @@ const REPO_OWNER = "fatihnorthman";
 const REPO_NAME = "fatihnorthman.github.io";
 let GITHUB_TOKEN = localStorage.getItem("gh_token") || "";
 
+// Global Hata Yakalayıcı
+window.onerror = function(msg, url, line) {
+    log(`KRİTİK SİSTEM HATASI: ${msg} (Satır: ${line})`);
+    return false;
+};
+
 // Başlangıç Kontrolü
+log("Sistem çekirdeği yükleniyor...");
 if (GITHUB_TOKEN) {
     document.getElementById("login-overlay").style.display = "none";
     document.getElementById("status").innerText = "SİSTEM ÇEVRİMİÇİ";
     document.getElementById("status").classList.add("online");
-    log("Sistem otomatik olarak yetkilendirildi.");
+    log("Sistem otomatik olarak yetkilendirildi. Veriler çekiliyor...");
+    setTimeout(fetchPosts, 500); 
 }
 
 function log(msg) {
     const consoleLogs = document.getElementById("console-logs");
+    if (!consoleLogs) return;
     const time = new Date().toLocaleTimeString();
     consoleLogs.innerHTML += `<br>> [${time}] ${msg}`;
     consoleLogs.scrollTop = consoleLogs.scrollHeight;
 }
 
 function authAdmin() {
+    log("Yetkilendirme tetiklendi...");
     const token = document.getElementById("gh-token").value.trim();
     if (token) {
         GITHUB_TOKEN = token;
@@ -25,7 +35,10 @@ function authAdmin() {
         document.getElementById("login-overlay").style.display = "none";
         document.getElementById("status").innerText = "SİSTEM ÇEVRİMÇİ";
         document.getElementById("status").classList.add("online");
-        log("Yetkilendirme başarılı.");
+        log("Anahtar kaydedildi. Yazı listesi isteniyor...");
+        fetchPosts(); 
+    } else {
+        log("HATA: Anahtar boş olamaz!");
     }
 }
 
@@ -62,6 +75,76 @@ function slugify(text) {
         .replace(/[^-a-z0-9]/g, '')
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '');
+}
+
+async function fetchPosts() {
+    try {
+        log("Yazı listesi talep ediliyor...");
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/content/posts`;
+        const res = await fetch(url, { 
+            headers: { 
+                "Authorization": `Bearer ${GITHUB_TOKEN}`,
+                "Accept": "application/vnd.github.v3+json"
+            } 
+        });
+        
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(`API Hatası (${res.status}): ${errorData.message}`);
+        }
+        
+        const files = await res.json();
+        const listContainer = document.getElementById("post-list");
+        listContainer.innerHTML = "";
+        
+        const mdFiles = files.filter(f => f.name.endsWith(".md"));
+        
+        if (mdFiles.length === 0) {
+            listContainer.innerHTML = '<div class="loading-msg">Hiç yazı bulunamadı.</div>';
+            log("UYARI: content/posts klasörü boş.");
+            return;
+        }
+
+        mdFiles.forEach(file => {
+            const item = document.createElement("div");
+            item.className = "post-list-item";
+            item.innerHTML = `
+                <span>${file.name}</span>
+                <button onclick="confirmDelete('${file.path}', '${file.sha}')" class="btn-sm-danger">İMH ET</button>
+            `;
+            listContainer.appendChild(item);
+        });
+        log(`BAŞARI: ${mdFiles.length} yazı yüklendi.`);
+    } catch (err) {
+        log(`KRİTİK HATA: ${err.message}`);
+        document.getElementById("post-list").innerHTML = `<div class="loading-msg" style="color:var(--red)">Hata: ${err.message}</div>`;
+    }
+}
+
+async function confirmDelete(path, sha) {
+    if (confirm(`KRİTİK UYARI: ${path} dosyası kalıcı olarak silinecek. Emin misiniz?`)) {
+        try {
+            log(`İmha protokolü başlatıldı: ${path}`);
+            const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+            const res = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    "Authorization": `Bearer ${GITHUB_TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: `System: Delete post ${path}`,
+                    sha: sha
+                })
+            });
+            
+            if (!res.ok) throw new Error("Dosya silinemedi.");
+            log(`BAŞARI: ${path} sistemden temizlendi.`);
+            fetchPosts(); // Listeyi yenile
+        } catch (err) {
+            log(`HATA: ${err.message}`);
+        }
+    }
 }
 
 async function publishPost() {
@@ -139,83 +222,13 @@ ${content}`;
     }
 }
 
-async function fetchPosts() {
-    try {
-        log("Yazı listesi talep ediliyor...");
-        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/content/posts`;
-        const res = await fetch(url, { 
-            headers: { 
-                "Authorization": `token ${GITHUB_TOKEN}`,
-                "Accept": "application/vnd.github.v3+json"
-            } 
-        });
-        
-        if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(`API Hatası (${res.status}): ${errorData.message}`);
-        }
-        
-        const files = await res.json();
-        const listContainer = document.getElementById("post-list");
-        listContainer.innerHTML = "";
-        
-        const mdFiles = files.filter(f => f.name.endsWith(".md"));
-        
-        if (mdFiles.length === 0) {
-            listContainer.innerHTML = '<div class="loading-msg">Hiç yazı bulunamadı.</div>';
-            log("UYARI: content/posts klasörü boş.");
-            return;
-        }
-
-        mdFiles.forEach(file => {
-            const item = document.createElement("div");
-            item.className = "post-list-item";
-            item.innerHTML = `
-                <span>${file.name}</span>
-                <button onclick="confirmDelete('${file.path}', '${file.sha}')" class="btn-sm-danger">İMH ET</button>
-            `;
-            listContainer.appendChild(item);
-        });
-        log(`BAŞARI: ${mdFiles.length} yazı yüklendi.`);
-    } catch (err) {
-        log(`KRİTİK HATA: ${err.message}`);
-        document.getElementById("post-list").innerHTML = `<div class="loading-msg" style="color:var(--red)">Hata: ${err.message}</div>`;
-    }
-}
-
-async function confirmDelete(path, sha) {
-    if (confirm(`KRİTİK UYARI: ${path} dosyası kalıcı olarak silinecek. Emin misiniz?`)) {
-        try {
-            log(`İmha protokolü başlatıldı: ${path}`);
-            const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
-            const res = await fetch(url, {
-                method: 'DELETE',
-                headers: {
-                    "Authorization": `token ${GITHUB_TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    message: `System: Delete post ${path}`,
-                    sha: sha
-                })
-            });
-            
-            if (!res.ok) throw new Error("Dosya silinemedi.");
-            log(`BAŞARI: ${path} sistemden temizlendi.`);
-            fetchPosts(); // Listeyi yenile
-        } catch (err) {
-            log(`HATA: ${err.message}`);
-        }
-    }
-}
-
 async function githubPut(path, contentBase64, message) {
     const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
     
     // Önce dosya var mı kontrol et (varsa SHA lazım)
     let sha = "";
     try {
-        const check = await fetch(url, { headers: { "Authorization": `token ${GITHUB_TOKEN}` } });
+        const check = await fetch(url, { headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` } });
         if (check.ok) {
             const data = await check.json();
             sha = data.sha;
@@ -225,7 +238,7 @@ async function githubPut(path, contentBase64, message) {
     const res = await fetch(url, {
         method: 'PUT',
         headers: {
-            "Authorization": `token ${GITHUB_TOKEN}`,
+            "Authorization": `Bearer ${GITHUB_TOKEN}`,
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
