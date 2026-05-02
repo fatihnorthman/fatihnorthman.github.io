@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.githubusercontent.com https://api.github.com; connect-src https://api.github.com;">
     <title>North Protocol | Admin Console</title>
     <link rel="stylesheet" href="admin.css">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
@@ -16,8 +17,11 @@
             <div class="login-box">
                 <div class="glitch-text" data-text="ACCESS RESTRICTED">ACCESS RESTRICTED</div>
                 <p class="subtitle">GitHub Personal Access Token Gerekli</p>
-                <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
-                <button onclick="authAdmin()" class="btn-primary">Sisteme Bağlan</button>
+                <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+                <div class="login-actions">
+                    <button onclick="authAdmin()" class="btn-primary">Sisteme Bağlan</button>
+                    <button onclick="toggleToken()" class="btn-sm">👁</button>
+                </div>
                 <a href="https://github.com/settings/tokens/new?scopes=repo&description=NorthProtocolAdmin" target="_blank" class="token-link">Token Nasıl Alınır?</a>
             </div>
         </div>

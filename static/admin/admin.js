@@ -1,6 +1,20 @@
 const REPO_OWNER = "fatihnorthman";
 const REPO_NAME = "fatihnorthman.github.io";
-let GITHUB_TOKEN = localStorage.getItem("gh_token") || "";
+let GITHUB_TOKEN = sessionStorage.getItem("gh_token") || "";
+let INACTIVITY_TIMER;
+
+// Inactivity Timeout (15 Dakika) - OWASP A01
+function resetInactivityTimer() {
+    clearTimeout(INACTIVITY_TIMER);
+    INACTIVITY_TIMER = setTimeout(() => {
+        log("Hareketsizlik nedeniyle oturum kapatıldı.");
+        logout();
+    }, 15 * 60 * 1000);
+}
+
+window.onload = resetInactivityTimer;
+window.onmousemove = resetInactivityTimer;
+window.onkeypress = resetInactivityTimer;
 
 // Global Hata Yakalayıcı
 window.onerror = function(msg, url, line) {
@@ -22,7 +36,10 @@ function log(msg) {
     const consoleLogs = document.getElementById("console-logs");
     if (!consoleLogs) return;
     const time = new Date().toLocaleTimeString();
-    consoleLogs.innerHTML += `<br>> [${time}] ${msg}`;
+    // Sanitized log entry
+    const div = document.createElement("div");
+    div.textContent = `> [${time}] ${msg}`;
+    consoleLogs.appendChild(div);
     consoleLogs.scrollTop = consoleLogs.scrollHeight;
 }
 
@@ -31,7 +48,7 @@ function authAdmin() {
     const token = document.getElementById("gh-token").value.trim();
     if (token) {
         GITHUB_TOKEN = token;
-        localStorage.setItem("gh_token", token);
+        sessionStorage.setItem("gh_token", token);
         document.getElementById("login-overlay").style.display = "none";
         document.getElementById("status").innerText = "SİSTEM ÇEVRİMÇİ";
         document.getElementById("status").classList.add("online");
@@ -42,8 +59,13 @@ function authAdmin() {
     }
 }
 
+function toggleToken() {
+    const input = document.getElementById("gh-token");
+    input.type = input.type === "password" ? "text" : "password";
+}
+
 function logout() {
-    localStorage.removeItem("gh_token");
+    sessionStorage.removeItem("gh_token");
     location.reload();
 }
 
@@ -55,7 +77,10 @@ document.getElementById("post-image").onchange = function(e) {
         reader.onload = function(event) {
             const preview = document.getElementById("image-preview");
             preview.style.display = "block";
-            preview.innerHTML = `<img src="${event.target.result}">`;
+            preview.innerHTML = ""; // Clear
+            const img = document.createElement("img");
+            img.src = event.target.result;
+            preview.appendChild(img);
             log(`Görsel hazır: ${file.name}`);
         };
         reader.readAsDataURL(file);
@@ -77,7 +102,7 @@ function slugify(text) {
         .replace(/^-|-$/g, '');
 }
 
-let ALL_POSTS = []; // Global yazı listesi
+let ALL_POSTS = []; 
 
 async function fetchPosts() {
     try {
@@ -101,7 +126,7 @@ async function fetchPosts() {
         log(`BAŞARI: ${ALL_POSTS.length} yazı yüklendi.`);
     } catch (err) {
         log(`KRİTİK HATA: ${err.message}`);
-        document.getElementById("post-list").innerHTML = `<div class="loading-msg" style="color:var(--red)">Hata: ${err.message}</div>`;
+        document.getElementById("post-list").innerText = `Hata: ${err.message}`;
     }
 }
 
@@ -110,7 +135,7 @@ function renderPostList(posts) {
     listContainer.innerHTML = "";
     
     if (posts.length === 0) {
-        listContainer.innerHTML = '<div class="loading-msg">Yazı bulunamadı.</div>';
+        listContainer.innerText = 'Yazı bulunamadı.';
         return;
     }
 
@@ -118,10 +143,19 @@ function renderPostList(posts) {
         const displayName = file.name.replace(".md", "");
         const item = document.createElement("div");
         item.className = "post-list-item";
-        item.innerHTML = `
-            <div class="post-name" title="${file.name}">${displayName}</div>
-            <button onclick="confirmDelete('${file.path}', '${file.sha}')" class="btn-sm-danger">İMH ET</button>
-        `;
+        
+        const nameDiv = document.createElement("div");
+        nameDiv.className = "post-name";
+        nameDiv.textContent = displayName; // OWASP A03: XSS Protection
+        nameDiv.title = file.name;
+        
+        const delBtn = document.createElement("button");
+        delBtn.className = "btn-sm-danger";
+        delBtn.textContent = "İMH ET";
+        delBtn.onclick = () => confirmDelete(file.path, file.sha);
+
+        item.appendChild(nameDiv);
+        item.appendChild(delBtn);
         listContainer.appendChild(item);
     });
 }
@@ -151,7 +185,7 @@ async function confirmDelete(path, sha) {
             
             if (!res.ok) throw new Error("Dosya silinemedi.");
             log(`BAŞARI: ${path} sistemden temizlendi.`);
-            fetchPosts(); // Listeyi yenile
+            fetchPosts(); 
         } catch (err) {
             log(`HATA: ${err.message}`);
         }
@@ -177,7 +211,7 @@ async function publishPost() {
     btn.innerText = "YAYINLANIYOR...";
 
     const slug = slugify(title);
-    const date = new Date().toISOString().split('.')[0] + "+03:00"; // Hugo format
+    const date = new Date().toISOString().split('.')[0] + "+03:00"; 
     const fileName = `${slug}.md`;
     let imagePath = "";
 
@@ -236,7 +270,7 @@ ${content}`;
 async function githubPut(path, contentBase64, message) {
     const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
     
-    // 1. SHA Kontrolü (Dosya güncelleme için gerekli)
+    // 1. SHA Kontrolü
     log(`SHA kontrol ediliyor: ${path}`);
     let sha = "";
     try {
@@ -251,7 +285,7 @@ async function githubPut(path, contentBase64, message) {
             log("Yeni dosya oluşturulacak.");
         }
     } catch (e) {
-        log(`SHA uyarısı (İsteğe bağlı): ${e.message}`);
+        log(`SHA uyarısı: ${e.message}`);
     }
 
     // 2. PUT İsteği
