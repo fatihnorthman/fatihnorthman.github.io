@@ -1,6 +1,6 @@
 +++
 title = "Ventoy Rehberi: Tek Bir USB ile Sınırsız Bootable ISO Dünyası"
-date = "2026-05-02T08:10:00"
+date = "2026-05-02T08:05:00"
 slug = "ventoy-ile-sinirsiz-bootable-iso-usb-hazirlama-rehberi"
 description = "Her seferinde USB formatlamaktan sıkılmadınız mı? Ventoy ile ISO dosyalarını sadece sürükleyip bırakarak kendi çoklu önyükleme (Multi-Boot) diskinizi oluşturun."
 tags = ["linux", "windows", "ventoy", "usb", "bootable", "rehber"]
