@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>North Protocol | Admin Console</title>
+    <link rel="stylesheet" href="admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+    <div class="scanline"></div>
+    <div class="admin-container">
+        <!-- Login Overlay -->
+        <div id="login-overlay" class="overlay">
+            <div class="login-box">
+                <div class="glitch-text" data-text="ACCESS RESTRICTED">ACCESS RESTRICTED</div>
+                <p class="subtitle">GitHub Personal Access Token Gerekli</p>
+                <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
+                <button onclick="authAdmin()" class="btn-primary">Sisteme Bağlan</button>
+                <a href="https://github.com/settings/tokens/new?scopes=repo&description=NorthProtocolAdmin" target="_blank" class="token-link">Token Nasıl Alınır?</a>
+            </div>
+        </div>
+
+        <!-- Main Console -->
+        <header class="console-header">
+            <div class="logo">NORTH_PROTOCOL<span>v2.0</span></div>
+            <div id="status" class="status">SİSTEM ÇEVRİMDIŞI</div>
+        </header>
+
+        <main class="console-main">
+            <section class="editor-section">
+                <div class="input-group">
+                    <label>POST BAŞLIĞI</label>
+                    <input type="text" id="post-title" placeholder="Örn: Linux Çekirdek Yapısı">
+                </div>
+
+                <div class="input-group">
+                    <label>ETİKETLER (Virgülle ayırın)</label>
+                    <input type="text" id="post-tags" placeholder="linux, kernel, tech">
+                </div>
+
+                <div class="input-group">
+                    <label>AÇIKLAMA (SEO)</label>
+                    <input type="text" id="post-desc" placeholder="Yazının kısa özeti...">
+                </div>
+
+                <div class="input-group">
+                    <label>GÖRSEL SEÇ (Opsiyonel)</label>
+                    <input type="file" id="post-image" accept="image/*" class="file-input">
+                    <div id="image-preview" class="image-preview"></div>
+                </div>
+
+                <div class="input-group">
+                    <label>İÇERİK (Markdown)</label>
+                    <textarea id="post-content" placeholder="Protokol kurallarına uygun teknik içeriği buraya yazın..."></textarea>
+                </div>
+
+                <div class="actions">
+                    <button onclick="publishPost()" id="publish-btn" class="btn-primary">PROTOKOLÜ YAYINLA</button>
+                    <button onclick="logout()" class="btn-danger">ÇIKIŞ YAP</button>
+                </div>
+            </section>
+
+            <aside class="log-section">
+                <label>SİSTEM GÜNLÜĞÜ</label>
+                <div id="console-logs" class="logs">
+                    > North Protocol Admin Console başlatıldı...
+                    > Yetki bekleniyor...
+                </div>
+            </aside>
+        </main>
+    </div>
+    <script src="admin.js"></script>
+</body>
+</html>
