@@ -67,6 +67,8 @@ function slugify(text) {
 async function publishPost() {
     const title = document.getElementById("post-title").value.trim();
     const tagsRaw = document.getElementById("post-tags").value.trim();
+    const category = document.getElementById("post-category").value;
+    const weight = document.getElementById("post-weight").value.trim();
     const desc = document.getElementById("post-desc").value.trim();
     const content = document.getElementById("post-content").value.trim();
     const imageFile = document.getElementById("post-image").files[0];
@@ -108,18 +110,20 @@ title: "${title}"
 date: ${date}
 draft: false
 tags: [${tagsArr}]
-categories: ["Genel"]
+categories: ["${category}"]
 author: "Fatih Northman"
 description: "${desc}"
 slug: "${slug}"
+${weight ? `weight: ${weight}` : ""}
 ${imagePath ? `image: "${imagePath}"` : ""}
 ---
 
 ${content}`;
 
-        // 3. Dosyayı GitHub'a Gönder
+        // 3. Dosyayı GitHub'a Gönder (UTF-8 Güvenli)
         log("Markdown dosyası oluşturuluyor...");
-        const base64MD = btoa(unescape(encodeURIComponent(frontMatter)));
+        const utf8Bytes = new TextEncoder().encode(frontMatter);
+        const base64MD = btoa(String.fromCharCode(...utf8Bytes));
         await githubPut(`content/posts/${fileName}`, base64MD, `Post: ${title}`);
         
         log("BAŞARI: Protokol yayına alındı!");

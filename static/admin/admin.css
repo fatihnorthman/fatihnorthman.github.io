@@ -67,7 +67,7 @@ body.admin-body {
     color: var(--red);
 }
 
-input, textarea {
+input, textarea, select {
     background: #000;
     border: 1px solid var(--amber);
     color: var(--amber);
@@ -76,6 +76,12 @@ input, textarea {
     width: 100%;
     margin-bottom: 15px;
     outline: none;
+}
+
+.input-group-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
 }
 
 textarea { height: 300px; resize: none; }
