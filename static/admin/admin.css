@@ -146,13 +146,45 @@ textarea { height: 300px; resize: none; }
 .logs {
     background: #000;
     border: 1px solid var(--amber-dim);
-    height: 100%;
+    height: 300px;
     padding: 15px;
     font-size: 0.75rem;
     line-height: 1.5;
     overflow-y: auto;
     color: #888;
 }
+
+.post-list {
+    background: #000;
+    border: 1px solid var(--amber-dim);
+    height: 400px;
+    padding: 10px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.post-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #222;
+    font-size: 0.7rem;
+}
+
+.post-list-item:hover { background: #111; }
+
+.btn-sm-danger {
+    background: transparent;
+    border: 1px solid var(--red);
+    color: var(--red);
+    padding: 4px 8px;
+    font-size: 0.6rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-sm-danger:hover { background: var(--red); color: #000; }
 
 .image-preview {
     max-width: 100%;

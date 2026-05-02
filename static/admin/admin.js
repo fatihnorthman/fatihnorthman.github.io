@@ -139,6 +139,57 @@ ${content}`;
     }
 }
 
+async function fetchPosts() {
+    try {
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/content/posts`;
+        const res = await fetch(url, { headers: { "Authorization": `token ${GITHUB_TOKEN}` } });
+        if (!res.ok) throw new Error("Yazılar listelenemedi.");
+        const files = await res.json();
+        
+        const listContainer = document.getElementById("post-list");
+        listContainer.innerHTML = "";
+        
+        files.filter(f => f.name.endsWith(".md")).forEach(file => {
+            const item = document.createElement("div");
+            item.className = "post-list-item";
+            item.innerHTML = `
+                <span>${file.name}</span>
+                <button onclick="confirmDelete('${file.path}', '${file.sha}')" class="btn-sm-danger">İMH ET</button>
+            `;
+            listContainer.appendChild(item);
+        });
+        log(`${files.length} yazı başarıyla listelendi.`);
+    } catch (err) {
+        log(`HATA: ${err.message}`);
+    }
+}
+
+async function confirmDelete(path, sha) {
+    if (confirm(`KRİTİK UYARI: ${path} dosyası kalıcı olarak silinecek. Emin misiniz?`)) {
+        try {
+            log(`İmha protokolü başlatıldı: ${path}`);
+            const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+            const res = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    "Authorization": `token ${GITHUB_TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: `System: Delete post ${path}`,
+                    sha: sha
+                })
+            });
+            
+            if (!res.ok) throw new Error("Dosya silinemedi.");
+            log(`BAŞARI: ${path} sistemden temizlendi.`);
+            fetchPosts(); // Listeyi yenile
+        } catch (err) {
+            log(`HATA: ${err.message}`);
+        }
+    }
+}
+
 async function githubPut(path, contentBase64, message) {
     const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
     
