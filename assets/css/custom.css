@@ -2413,8 +2413,8 @@ h3:hover .hanchor { opacity: 1; }
   .hero { padding: 60px 15px; text-align: center; }
   .hero__title { font-size: 2.2rem; line-height: 1.2; }
   .hero__subtitle { font-size: 1rem; }
-  .hero__links { justify-content: center; flex-direction: column; width: 100%; }
-  .hero__cta, .hero__secondary { width: 100%; text-align: center; }
+  .hero__links { align-items: center; flex-direction: column; width: 100%; gap: 12px; }
+  .hero__cta, .hero__secondary, .hero__subscribe-btn { width: 100%; text-align: center; justify-content: center; }
 
   /* Post Kartları Ayarları */
   .post-header { gap: 12px; }
