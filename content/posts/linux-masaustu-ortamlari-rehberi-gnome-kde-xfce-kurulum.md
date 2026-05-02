@@ -1,6 +1,6 @@
 +++
 title = "Linux Masaüstü Ortamları Rehberi: GNOME, KDE, XFCE ve Ötesi"
-date = "2026-05-02T08:15:00"
+date = "2026-05-02T08:07:00"
 slug = "linux-masaustu-ortamlari-rehberi-gnome-kde-xfce"
 description = "Linux'un vitrini: Masaüstü Ortamları. Hangi DE size uygun? Kurulumları nasıl yapılır? Default uygulamaları nelerdir? Kapsamlı teknik analiz."
 tags = ["linux", "desktop-environment", "gnome", "kde", "xfce", "rehber"]
