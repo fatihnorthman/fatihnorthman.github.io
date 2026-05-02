@@ -133,7 +133,15 @@ textarea { height: 300px; resize: none; }
 
 .editor-section {
     overflow-y: auto;
-    padding-right: 10px;
+    padding-right: 15px;
+    border-right: 1px solid var(--amber-dim);
+}
+
+.sidebar-section {
+    display: flex;
+    flex-direction: column;
+    min-width: 320px;
+    overflow-y: auto;
 }
 
 .input-group label {
