@@ -4,6 +4,7 @@ date: 2026-04-30T17:36:00+03:00
 draft: false
 tags: ["Linux", "Windows", "Winboat", "Docker", "Sanallaştırma", "Rehber"]
 categories: ["Yazılım"]
+image: "/images/winboat.png"
 author: "Fatih Northman"
 description: "Linux üzerinde Windows uygulamalarını gerçek bir Windows ortamında ama yerel bir pencere gibi çalıştırmanızı sağlayan Winboat yazılımını inceliyoruz."
 ---
@@ -11,6 +12,8 @@ description: "Linux üzerinde Windows uygulamalarını gerçek bir Windows ortam
 Linux'a geçiş yapmayı düşünen veya halihazırda kullanan pek çok kişinin aklındaki en büyük engellerden biri şudur: **"Peki ya vazgeçemediğim o Windows uygulaması ne olacak?"** 
 
 Eskiden bu sorunun cevabı ya karmaşık Wine konfigürasyonları yapmak, sistemi yoran hantal sanal makineler (VM) kurmak ya da "Dual-Boot" zahmetine katlanmaktı. Ancak oyunun kuralları değişti. Karşınızda, Windows uygulamalarını Linux masaüstünüze adeta yerel (native) bir uygulamaymış gibi kusursuzca entegre eden yepyeni ve şık bir çözüm: **Winboat**.
+
+![Winboat Arayüzü](/images/winboat.png)
 
 ## Winboat Nedir?
 
