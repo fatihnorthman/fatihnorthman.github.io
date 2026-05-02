@@ -141,15 +141,33 @@ ${content}`;
 
 async function fetchPosts() {
     try {
+        log("Yazı listesi talep ediliyor...");
         const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/content/posts`;
-        const res = await fetch(url, { headers: { "Authorization": `token ${GITHUB_TOKEN}` } });
-        if (!res.ok) throw new Error("Yazılar listelenemedi.");
-        const files = await res.json();
+        const res = await fetch(url, { 
+            headers: { 
+                "Authorization": `token ${GITHUB_TOKEN}`,
+                "Accept": "application/vnd.github.v3+json"
+            } 
+        });
         
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(`API Hatası (${res.status}): ${errorData.message}`);
+        }
+        
+        const files = await res.json();
         const listContainer = document.getElementById("post-list");
         listContainer.innerHTML = "";
         
-        files.filter(f => f.name.endsWith(".md")).forEach(file => {
+        const mdFiles = files.filter(f => f.name.endsWith(".md"));
+        
+        if (mdFiles.length === 0) {
+            listContainer.innerHTML = '<div class="loading-msg">Hiç yazı bulunamadı.</div>';
+            log("UYARI: content/posts klasörü boş.");
+            return;
+        }
+
+        mdFiles.forEach(file => {
             const item = document.createElement("div");
             item.className = "post-list-item";
             item.innerHTML = `
@@ -158,9 +176,10 @@ async function fetchPosts() {
             `;
             listContainer.appendChild(item);
         });
-        log(`${files.length} yazı başarıyla listelendi.`);
+        log(`BAŞARI: ${mdFiles.length} yazı yüklendi.`);
     } catch (err) {
-        log(`HATA: ${err.message}`);
+        log(`KRİTİK HATA: ${err.message}`);
+        document.getElementById("post-list").innerHTML = `<div class="loading-msg" style="color:var(--red)">Hata: ${err.message}</div>`;
     }
 }
 
