@@ -5,7 +5,8 @@ theme = 'terminal'
 paginate = 8
 removePathAccents = true
 [outputs]
-  home = ["HTML", "RSS", "JSON"]
+  home = ["HTML", "RSS"]
+
 
 
 [permalinks]

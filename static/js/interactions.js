@@ -9,7 +9,7 @@ function startEngine() {
     const inits = [
         initInteractions, initScrollReveal, init3DTilt, 
         initClickRipple, initCustomCursor, initMouseTrail, 
-        initProgressBar, initSearch
+        initProgressBar
     ];
     
     inits.forEach(fn => {
@@ -437,118 +437,5 @@ function initProgressBar() {
     });
 }
 
-// --- GLOBAL SEARCH ENGINE (Fuse.js) ---
-async function initSearch() {
-    console.log("Search Engine Initializing...");
-    const searchModal = document.getElementById('search-modal');
-    const searchInput = document.getElementById('search-input');
-    const searchResults = document.getElementById('search-results');
-    const backdrop = document.querySelector('.search-modal__backdrop');
 
-    if (!searchModal) {
-        console.error("Search Modal not found in DOM!");
-        return;
-    }
-
-    let searchIndex = null;
-    let fuse = null;
-
-    // Arama modalını aç/kapat
-    const toggleSearch = async (state) => {
-        if (state) {
-            searchModal.classList.add('is-open');
-            document.body.style.overflow = 'hidden';
-            searchInput.focus();
-            
-            // İndeksi yükle (ilk açılışta)
-            if (!searchIndex) {
-                console.log("Loading search index...");
-                try {
-                    // GitHub Pages ve yerel sunucu uyumlu yol
-                    const indexPath = window.location.origin + '/index.json';
-                    const res = await fetch(indexPath);
-                    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-                    searchIndex = await res.json();
-                    console.log("Index loaded successfully.");
-                    
-                    if (typeof Fuse !== 'undefined') {
-                        fuse = new Fuse(searchIndex, {
-                            keys: ['title', 'summary', 'tags'],
-                            threshold: 0.5,
-                            minMatchCharLength: 2,
-                            ignoreLocation: true
-                        });
-                        console.log("Fuse ready.");
-                    }
-                } catch (err) { console.error("Index load failed:", err); }
-            }
-        } else {
-            searchModal.classList.remove('is-open');
-            document.body.style.overflow = '';
-        }
-    };
-
-    // Global tıklama dinleyici (Delege etme) - En güvenli yol
-    document.addEventListener('click', (e) => {
-        const trigger = e.target.closest('.search-btn-trigger');
-        if (trigger) {
-            console.log("Search Trigger Clicked!");
-            e.preventDefault();
-            e.stopPropagation();
-            toggleSearch(true);
-            return false;
-        }
-    });
-    
-    if (backdrop) backdrop.onclick = (e) => { 
-        e.preventDefault();
-        e.stopPropagation(); 
-        toggleSearch(false); 
-    };
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') toggleSearch(false);
-        if (e.ctrlKey && e.key === 'k') { e.preventDefault(); toggleSearch(true); }
-    });
-
-    // Arama lojiği
-    searchInput.oninput = () => {
-        const query = searchInput.value.trim();
-        if (!query || !fuse) {
-            searchResults.innerHTML = '';
-            return;
-        }
-
-        const results = fuse.search(query);
-        console.log(`Query: ${query}, Results: ${results.length}`);
-        
-        if (results.length === 0) {
-            searchResults.innerHTML = '<p style="text-align:center;opacity:0.5;padding:20px;">Eşleşme bulunamadı...</p>';
-            return;
-        }
-
-        searchResults.innerHTML = results.slice(0, 8).map(res => {
-            const item = res.item;
-            return `
-                <a href="${item.permalink}" class="search-result-item" id="res-${item.permalink.split('/').filter(p=>p).pop()}">
-                    <span class="search-result-title">${item.title}</span>
-                    <div class="search-result-meta">
-                        <span>📅 ${item.date}</span>
-                        ${item.tags ? `<span> | 🏷️ ${item.tags.join(', ')}</span>` : ''}
-                    </div>
-                </a>
-            `;
-        }).join('');
-    };
-
-    // Enter tuşu ile ilk sonuca gitme
-    searchInput.onkeydown = (e) => {
-        if (e.key === 'Enter') {
-            const firstResult = searchResults.querySelector('.search-result-item');
-            if (firstResult) {
-                console.log("Navigating to first result...");
-                window.location.href = firstResult.href;
-            }
-        }
-    };
-}
 
