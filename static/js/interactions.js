@@ -464,23 +464,23 @@ async function initSearch() {
             if (!searchIndex) {
                 console.log("Loading search index...");
                 try {
-                    const res = await fetch('/index.json');
+                    // GitHub Pages ve yerel sunucu uyumlu yol
+                    const indexPath = window.location.origin + '/index.json';
+                    const res = await fetch(indexPath);
                     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
                     searchIndex = await res.json();
-                    console.log("Index loaded, items:", searchIndex.length);
+                    console.log("Index loaded successfully.");
                     
                     if (typeof Fuse !== 'undefined') {
                         fuse = new Fuse(searchIndex, {
-                            keys: ['title', 'content', 'tags'],
-                            threshold: 0.4, // Daha esnek eşleşme
+                            keys: ['title', 'summary', 'tags'],
+                            threshold: 0.5,
                             minMatchCharLength: 2,
                             ignoreLocation: true
                         });
-                        console.log("Fuse engine ready!");
-                    } else {
-                        console.error("Fuse library not found!");
+                        console.log("Fuse ready.");
                     }
-                } catch (err) { console.error("Search index load error:", err); }
+                } catch (err) { console.error("Index load failed:", err); }
             }
         } else {
             searchModal.classList.remove('is-open');
