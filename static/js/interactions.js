@@ -462,16 +462,23 @@ async function initSearch() {
             
             // İndeksi yükle (ilk açılışta)
             if (!searchIndex) {
+                console.log("Loading search index...");
                 try {
                     const res = await fetch('/index.json');
+                    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
                     searchIndex = await res.json();
+                    console.log("Index loaded, items:", searchIndex.length);
                     
                     if (typeof Fuse !== 'undefined') {
                         fuse = new Fuse(searchIndex, {
                             keys: ['title', 'content', 'tags'],
-                            threshold: 0.3,
+                            threshold: 0.4, // Daha esnek eşleşme
+                            minMatchCharLength: 2,
                             ignoreLocation: true
                         });
+                        console.log("Fuse engine ready!");
+                    } else {
+                        console.error("Fuse library not found!");
                     }
                 } catch (err) { console.error("Search index load error:", err); }
             }
@@ -512,10 +519,17 @@ async function initSearch() {
         }
 
         const results = fuse.search(query);
+        console.log(`Query: ${query}, Results: ${results.length}`);
+        
+        if (results.length === 0) {
+            searchResults.innerHTML = '<p style="text-align:center;opacity:0.5;padding:20px;">Eşleşme bulunamadı...</p>';
+            return;
+        }
+
         searchResults.innerHTML = results.slice(0, 8).map(res => {
             const item = res.item;
             return `
-                <a href="${item.permalink}" class="search-result-item">
+                <a href="${item.permalink}" class="search-result-item" id="res-${item.permalink.split('/').filter(p=>p).pop()}">
                     <span class="search-result-title">${item.title}</span>
                     <div class="search-result-meta">
                         <span>📅 ${item.date}</span>
@@ -525,4 +539,16 @@ async function initSearch() {
             `;
         }).join('');
     };
+
+    // Enter tuşu ile ilk sonuca gitme
+    searchInput.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+            const firstResult = searchResults.querySelector('.search-result-item');
+            if (firstResult) {
+                console.log("Navigating to first result...");
+                window.location.href = firstResult.href;
+            }
+        }
+    };
 }
+
