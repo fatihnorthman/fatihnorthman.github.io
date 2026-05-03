@@ -437,13 +437,12 @@ function initProgressBar() {
 
 // --- GLOBAL SEARCH ENGINE (Fuse.js) ---
 async function initSearch() {
-    const searchTriggers = document.querySelectorAll('.search-btn-trigger');
     const searchModal = document.getElementById('search-modal');
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
     const backdrop = document.querySelector('.search-modal__backdrop');
 
-    if (searchTriggers.length === 0 || !searchModal) return;
+    if (!searchModal) return;
 
     let searchIndex = null;
     let fuse = null;
@@ -476,11 +475,15 @@ async function initSearch() {
         }
     };
 
-    searchTriggers.forEach(btn => {
-        btn.onclick = (e) => { e.preventDefault(); toggleSearch(true); };
+    // Global tıklama dinleyici (Delege etme) - En güvenli yol
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.search-btn-trigger')) {
+            e.preventDefault();
+            toggleSearch(true);
+        }
     });
     
-    if (backdrop) backdrop.onclick = () => toggleSearch(false);
+    if (backdrop) backdrop.onclick = (e) => { e.stopPropagation(); toggleSearch(false); };
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') toggleSearch(false);
         if (e.ctrlKey && e.key === 'k') { e.preventDefault(); toggleSearch(true); }
