@@ -29,7 +29,10 @@ if (GITHUB_TOKEN) {
     document.getElementById("status").innerText = "SİSTEM ÇEVRİMİÇİ";
     document.getElementById("status").classList.add("online");
     log("Sistem otomatik olarak yetkilendirildi. Veriler çekiliyor...");
-    setTimeout(fetchPosts, 500); 
+    setTimeout(() => {
+        fetchPosts();
+        updatePreview();
+    }, 500); 
 }
 
 function log(msg) {
@@ -67,6 +70,17 @@ function toggleToken() {
 function logout() {
     sessionStorage.removeItem("gh_token");
     location.reload();
+}
+
+// Canlı Önizleme Fonksiyonu
+function updatePreview() {
+    const content = document.getElementById("post-content").value;
+    const previewArea = document.getElementById("preview-area");
+    if (typeof marked !== 'undefined') {
+        previewArea.innerHTML = marked.parse(content);
+    } else {
+        previewArea.textContent = content;
+    }
 }
 
 // Resim Önizleme

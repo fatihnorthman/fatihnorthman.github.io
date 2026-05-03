@@ -4,103 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.githubusercontent.com https://api.github.com; connect-src https://api.github.com;">
-    <title>North Protocol | Admin Console</title>
+    <!-- CSP Güncellendi: marked.js ve fontlar için -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.githubusercontent.com https://api.github.com; connect-src https://api.github.com;">
+    <title>North Protocol | Architect Console</title>
     <link rel="stylesheet" href="admin.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body class="admin-body">
     <div class="scanline"></div>
+    
     <div class="admin-container">
         <!-- Login Overlay -->
         <div id="login-overlay" class="overlay">
             <div class="login-box">
-                <div class="glitch-text" data-text="ACCESS RESTRICTED">ACCESS RESTRICTED</div>
-                <p class="subtitle">GitHub Personal Access Token Gerekli</p>
-                <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
-                <div class="login-actions">
-                    <button onclick="authAdmin()" class="btn-primary">Sisteme Bağlan</button>
-                    <button onclick="toggleToken()" class="btn-sm">👁</button>
+                <div class="glitch-text">NORTH_PROTOCOL</div>
+                <p class="subtitle">Architect Edition v3.0 | Yetki Gerekli</p>
+                <div class="input-group">
+                    <input type="password" id="gh-token" placeholder="GitHub Access Token (ghp_...)" autocomplete="off">
                 </div>
-                <a href="https://github.com/settings/tokens/new?scopes=repo&description=NorthProtocolAdmin" target="_blank" class="token-link">Token Nasıl Alınır?</a>
+                <div class="login-actions" style="display: flex; gap: 10px; justify-content: center;">
+                    <button onclick="authAdmin()" class="btn-primary" style="flex: 1;">SİSTEME BAĞLAN</button>
+                    <button onclick="toggleToken()" class="btn-danger" style="padding: 10px 15px;">👁</button>
+                </div>
+                <a href="https://github.com/settings/tokens/new?scopes=repo&description=NorthProtocolAdmin" target="_blank" class="token-link" style="display: block; margin-top: 20px; font-size: 0.8rem; color: var(--amber); opacity: 0.6;">Yeni token oluştur ↗</a>
             </div>
         </div>
 
         <!-- Main Console -->
         <header class="console-header">
-            <div class="logo">NORTH_PROTOCOL<span>v2.0</span></div>
+            <div class="logo">NORTH_PROTOCOL<span>ARCHITECT_V3</span></div>
             <div id="status" class="status">SİSTEM ÇEVRİMDIŞI</div>
         </header>
 
         <main class="console-main">
+            <!-- Left Side: Editor & Preview -->
             <section class="editor-section">
-                <div class="input-group">
-                    <label>POST BAŞLIĞI</label>
-                    <input type="text" id="post-title" placeholder="Örn: Linux Çekirdek Yapısı">
-                </div>
-
-                <div class="input-group">
-                    <label>ETİKETLER (Virgülle ayırın)</label>
-                    <input type="text" id="post-tags" placeholder="linux, kernel, tech">
-                </div>
-
-                <div class="input-group-row">
+                <div class="editor-inputs">
                     <div class="input-group">
-                        <label>KATEGORİ</label>
-                        <select id="post-category">
-                            <option value="Yazılım">Yazılım</option>
-                            <option value="Siber Güvenlik">Siber Güvenlik</option>
-                            <option value="Donanım">Donanım</option>
-                            <option value="Genel">Genel</option>
-                        </select>
+                        <label>POST BAŞLIĞI</label>
+                        <input type="text" id="post-title" placeholder="Teknik başlığı girin...">
                     </div>
+
+                    <div class="input-group-row">
+                        <div class="input-group">
+                            <label>KATEGORİ</label>
+                            <select id="post-category">
+                                <option value="Yazılım">Yazılım</option>
+                                <option value="Siber Güvenlik">Siber Güvenlik</option>
+                                <option value="Bilişim">Bilişim</option>
+                                <option value="Genel">Genel</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>SIRALAMA (WEIGHT)</label>
+                            <input type="number" id="post-weight" placeholder="Örn: 1">
+                        </div>
+                    </div>
+
                     <div class="input-group">
-                        <label>SIRALAMA (Weight - Opsiyonel)</label>
-                        <input type="number" id="post-weight" placeholder="Örn: 1 (En üst)">
+                        <label>ETİKETLER (Virgülle ayırın)</label>
+                        <input type="text" id="post-tags" placeholder="linux, security, code">
+                    </div>
+
+                    <div class="input-group">
+                        <label>SEO AÇIKLAMASI</label>
+                        <input type="text" id="post-desc" placeholder="Arama motorları için kısa özet...">
+                    </div>
+
+                    <div class="input-group">
+                        <label>KAPAK GÖRSELİ</label>
+                        <input type="file" id="post-image" accept="image/*">
+                        <div id="image-preview" class="image-preview"></div>
+                    </div>
+
+                    <div class="input-group" style="height: calc(100% - 450px);">
+                        <label>İÇERİK (MARKDOWN)</label>
+                        <textarea id="post-content" placeholder="Protokol içeriğini buraya yazın..." oninput="updatePreview()"></textarea>
+                    </div>
+
+                    <div class="actions">
+                        <button onclick="publishPost()" id="publish-btn" class="btn-primary">PROTOKOLÜ YAYINLA</button>
+                        <button onclick="logout()" class="btn-danger">OTURUMU KAPAT</button>
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <label>AÇIKLAMA (SEO)</label>
-                    <input type="text" id="post-desc" placeholder="Yazının kısa özeti...">
-                </div>
-
-                <div class="input-group">
-                    <label>GÖRSEL SEÇ (Opsiyonel)</label>
-                    <input type="file" id="post-image" accept="image/*" class="file-input">
-                    <div id="image-preview" class="image-preview"></div>
-                </div>
-
-                <div class="input-group">
-                    <label>İÇERİK (Markdown)</label>
-                    <textarea id="post-content" placeholder="Protokol kurallarına uygun teknik içeriği buraya yazın..."></textarea>
-                </div>
-
-                <div class="actions">
-                    <button onclick="publishPost()" id="publish-btn" class="btn-primary">PROTOKOLÜ YAYINLA</button>
-                    <button onclick="logout()" class="btn-danger">ÇIKIŞ YAP</button>
+                <!-- Live Preview Card -->
+                <div class="preview-container">
+                    <div class="preview-header">CANLI ÖNİZLEME</div>
+                    <div id="preview-area" class="preview-content markdown-body">
+                        <p style="opacity: 0.3; text-align: center; margin-top: 50px;">İçerik önizlemesi burada görünecek...</p>
+                    </div>
                 </div>
             </section>
 
+            <!-- Right Side: Management -->
             <aside class="sidebar-section">
-                <div class="input-group">
-                    <label>POST YÖNETİMİ</label>
-                    <input type="text" id="post-search" placeholder="Yazı ara..." class="search-input" oninput="filterPosts()">
+                <div class="card">
+                    <label>YAZI YÖNETİMİ</label>
+                    <input type="text" id="post-search" placeholder="Listede ara..." class="search-input" oninput="filterPosts()">
                     <div id="post-list" class="post-list">
-                        <div class="loading-msg">Yazılar taranıyor...</div>
+                        <div class="loading-msg">Veri tabanı taranıyor...</div>
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <label>SİSTEM GÜNLÜĞÜ</label>
+                <div class="card" style="flex: 1;">
+                    <label>SİSTEM GÜNLÜĞÜ (LOGS)</label>
                     <div id="console-logs" class="logs">
-                        > North Protocol Admin Console başlatıldı...
-                        > Yetki bekleniyor...
+                        > Sistem başlatıldı...
                     </div>
                 </div>
             </aside>
         </main>
     </div>
+
     <script src="admin.js"></script>
 </body>
 </html>
