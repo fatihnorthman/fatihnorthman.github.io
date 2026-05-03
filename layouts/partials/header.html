@@ -14,3 +14,24 @@
     {{ partial "menu.html" . }}
   {{ end }}
 </header>
+
+<!-- Search Modal UI (Inlined for reliability) -->
+<div id="search-modal" class="search-modal" role="dialog" aria-modal="true" aria-label="Global Arama">
+    <div class="search-modal__backdrop"></div>
+    <div class="search-modal__box">
+        <div class="search-modal__header">
+            <svg style="width:20px;height:20px;opacity:0.6;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+            <input type="text" id="search-input" class="search-modal__input" placeholder="Yazılarda ara... (Esc ile kapat)" autocomplete="off">
+        </div>
+        <div id="search-results" class="search-modal__results"></div>
+    </div>
+</div>
+
+<!-- Reading Progress Bar -->
+<div class="progress-container"><div class="progress-bar"></div></div>
+
+<!-- Fuse.js -->
+<script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.basic.min.js"></script>
+

@@ -86,16 +86,22 @@ body {
 
 /* ── Global Search UI ───────────────────────────────────────── */
 .search-modal {
-    display: none;
+    display: none !important;
     position: fixed;
     inset: 0;
-    z-index: 2000;
+    z-index: 99999 !important;
     align-items: center;
     justify-content: center;
     padding: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
-.search-modal.is-open { display: flex; }
+.search-modal.is-open { 
+    display: flex !important; 
+    opacity: 1 !important;
+}
+
 
 .search-modal__backdrop {
     position: absolute;

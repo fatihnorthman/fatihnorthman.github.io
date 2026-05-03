@@ -6,15 +6,17 @@ const SUPABASE_URL = `${_0x4a[2]}${_0x4a[0]}.${_0x4a[1]}`;
 const SUPABASE_KEY = `${_0x9b[0]}.${_0x9b[1]}.${_0x9b[2]}`;
 
 function startEngine() {
-    initInteractions();
-    initScrollReveal();
-    init3DTilt();
-    initClickRipple();
-    initCustomCursor();
-    initMouseTrail();
-    initProgressBar();
-    initSearch();
+    const inits = [
+        initInteractions, initScrollReveal, init3DTilt, 
+        initClickRipple, initCustomCursor, initMouseTrail, 
+        initProgressBar, initSearch
+    ];
+    
+    inits.forEach(fn => {
+        try { fn(); } catch (e) { console.error(`Init failed: ${fn.name}`, e); }
+    });
 }
+
 
 function initMouseTrail() {
     // Mobil/Dokunmatik cihazlarda iptal et
@@ -437,12 +439,16 @@ function initProgressBar() {
 
 // --- GLOBAL SEARCH ENGINE (Fuse.js) ---
 async function initSearch() {
+    console.log("Search Engine Initializing...");
     const searchModal = document.getElementById('search-modal');
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
     const backdrop = document.querySelector('.search-modal__backdrop');
 
-    if (!searchModal) return;
+    if (!searchModal) {
+        console.error("Search Modal not found in DOM!");
+        return;
+    }
 
     let searchIndex = null;
     let fuse = null;
@@ -479,6 +485,7 @@ async function initSearch() {
     document.addEventListener('click', (e) => {
         const trigger = e.target.closest('.search-btn-trigger');
         if (trigger) {
+            console.log("Search Trigger Clicked!");
             e.preventDefault();
             e.stopPropagation();
             toggleSearch(true);
