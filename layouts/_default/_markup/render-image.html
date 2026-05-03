@@ -3,7 +3,7 @@
 {{ $title := .Title }}
 
 {{/* Görsel yolundan baştaki eğik çizgiyi kaldır */}}
-{{ $cleanSrc := ltrim "/" $src }}
+{{ $cleanSrc := strings.TrimPrefix "/" $src }}
 
 {{/* Görseli assets içinde ara */}}
 {{ $img := resources.Get $cleanSrc }}

@@ -4,7 +4,7 @@
 {{ $loading := .loading | default "lazy" }}
 
 {{/* Görsel yolundan baştaki eğik çizgiyi kaldır (Hugo resources.Get için) */}}
-{{ $cleanSrc := ltrim "/" $src }}
+{{ $cleanSrc := strings.TrimPrefix "/" $src }}
 
 {{/* Görseli assets içinde ara */}}
 {{ $img := resources.Get $cleanSrc }}
