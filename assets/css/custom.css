@@ -281,52 +281,25 @@ hr {
 }
 
 .search-menu-item {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    margin-left: 10px;
 }
 
-.search-trigger {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255, 193, 7, 0.05);
-    border: 1px solid var(--accent-border);
-    color: var(--accent);
-    padding: 6px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: var(--transition);
-    text-transform: uppercase;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    font-weight: 700;
+.search-btn-trigger {
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    color: var(--accent) !important;
+    text-decoration: none !important;
 }
 
-.search-trigger:hover {
-    background: var(--accent-glow);
-    border-color: var(--accent);
-    box-shadow: 0 0 15px var(--accent-dim);
-    transform: translateY(-1px);
+.search-btn-trigger:hover {
+    opacity: 0.7;
 }
 
-.search-trigger svg {
-    width: 16px;
-    height: 16px;
-    stroke-width: 2.5;
-}
-
-/* Mobil Menü İçin Özel Kart Stili */
-.menu--mobile .search-menu-item {
-    margin: 15px 0 5px 0;
-    display: block !important;
-}
-
-.menu--mobile .search-trigger {
+.menu--mobile .search-btn-trigger {
+    padding: 10px 0;
     width: 100%;
-    justify-content: center;
-    padding: 12px;
-    background: rgba(255, 193, 7, 0.1);
 }
 
 

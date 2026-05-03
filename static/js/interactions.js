@@ -477,13 +477,20 @@ async function initSearch() {
 
     // Global tıklama dinleyici (Delege etme) - En güvenli yol
     document.addEventListener('click', (e) => {
-        if (e.target.closest('.search-btn-trigger')) {
+        const trigger = e.target.closest('.search-btn-trigger');
+        if (trigger) {
             e.preventDefault();
+            e.stopPropagation();
             toggleSearch(true);
+            return false;
         }
     });
     
-    if (backdrop) backdrop.onclick = (e) => { e.stopPropagation(); toggleSearch(false); };
+    if (backdrop) backdrop.onclick = (e) => { 
+        e.preventDefault();
+        e.stopPropagation(); 
+        toggleSearch(false); 
+    };
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') toggleSearch(false);
         if (e.ctrlKey && e.key === 'k') { e.preventDefault(); toggleSearch(true); }
