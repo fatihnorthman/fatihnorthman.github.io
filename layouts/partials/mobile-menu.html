@@ -1,0 +1,28 @@
+<ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      {{ range $.Site.Menus.main }}
+        {{ if not .HasChildren }}
+          <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+        {{ end }}
+      {{ end }}
+      {{ if and $.Site.Params.showLanguageSelector (len $.Site.Home.AllTranslations) }}
+        <hr />
+        {{ range $.Site.Home.AllTranslations }}
+          <li>
+            <a href="{{ .Permalink }}">{{ .Language.LanguageName }}</a>
+          </li>
+        {{ end }}
+      {{ end }}
+      <li>
+        <button class="search-btn-trigger search-trigger" aria-label="Ara" style="width:100%; justify-content: flex-start; padding: 10px 15px; background: transparent; border: none; color: var(--accent); cursor: pointer; display: flex; align-items: center; text-transform: uppercase; font-family: inherit;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px; height:18px;">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+            <span style="margin-left:8px;">ARA</span>
+        </button>
+      </li>
+    </ul>
+  </li>
+</ul>

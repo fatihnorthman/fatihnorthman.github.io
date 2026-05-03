@@ -437,13 +437,13 @@ function initProgressBar() {
 
 // --- GLOBAL SEARCH ENGINE (Fuse.js) ---
 async function initSearch() {
-    const searchBtn = document.getElementById('search-btn');
+    const searchTriggers = document.querySelectorAll('.search-btn-trigger');
     const searchModal = document.getElementById('search-modal');
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
     const backdrop = document.querySelector('.search-modal__backdrop');
 
-    if (!searchBtn || !searchModal) return;
+    if (searchTriggers.length === 0 || !searchModal) return;
 
     let searchIndex = null;
     let fuse = null;
@@ -476,8 +476,11 @@ async function initSearch() {
         }
     };
 
-    searchBtn.onclick = (e) => { e.preventDefault(); toggleSearch(true); };
-    backdrop.onclick = () => toggleSearch(false);
+    searchTriggers.forEach(btn => {
+        btn.onclick = (e) => { e.preventDefault(); toggleSearch(true); };
+    });
+    
+    if (backdrop) backdrop.onclick = () => toggleSearch(false);
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') toggleSearch(false);
         if (e.ctrlKey && e.key === 'k') { e.preventDefault(); toggleSearch(true); }
