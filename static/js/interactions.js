@@ -12,6 +12,8 @@ function startEngine() {
     initClickRipple();
     initCustomCursor();
     initMouseTrail();
+    initProgressBar();
+    initSearch();
 }
 
 function initMouseTrail() {
@@ -418,4 +420,89 @@ async function submitComment(postId, name, content) {
         headers: { "apikey": _SUPABASE_KEY(), "Authorization": `Bearer ${_SUPABASE_KEY()}`, "Content-Type": "application/json", "Prefer": "return=minimal" },
         body: JSON.stringify({ post_id: postId, name, content })
     });
+}
+
+// --- READING PROGRESS BAR ---
+function initProgressBar() {
+    const bar = document.querySelector('.progress-bar');
+    if (!bar) return;
+
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        bar.style.width = scrolled + "%";
+    });
+}
+
+// --- GLOBAL SEARCH ENGINE (Fuse.js) ---
+async function initSearch() {
+    const searchBtn = document.getElementById('search-btn');
+    const searchModal = document.getElementById('search-modal');
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    const backdrop = document.querySelector('.search-modal__backdrop');
+
+    if (!searchBtn || !searchModal) return;
+
+    let searchIndex = null;
+    let fuse = null;
+
+    // Arama modalını aç/kapat
+    const toggleSearch = async (state) => {
+        if (state) {
+            searchModal.classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+            searchInput.focus();
+            
+            // İndeksi yükle (ilk açılışta)
+            if (!searchIndex) {
+                try {
+                    const res = await fetch('/index.json');
+                    searchIndex = await res.json();
+                    
+                    if (typeof Fuse !== 'undefined') {
+                        fuse = new Fuse(searchIndex, {
+                            keys: ['title', 'content', 'tags'],
+                            threshold: 0.3,
+                            ignoreLocation: true
+                        });
+                    }
+                } catch (err) { console.error("Search index load error:", err); }
+            }
+        } else {
+            searchModal.classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+    };
+
+    searchBtn.onclick = (e) => { e.preventDefault(); toggleSearch(true); };
+    backdrop.onclick = () => toggleSearch(false);
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') toggleSearch(false);
+        if (e.ctrlKey && e.key === 'k') { e.preventDefault(); toggleSearch(true); }
+    });
+
+    // Arama lojiği
+    searchInput.oninput = () => {
+        const query = searchInput.value.trim();
+        if (!query || !fuse) {
+            searchResults.innerHTML = '';
+            return;
+        }
+
+        const results = fuse.search(query);
+        searchResults.innerHTML = results.slice(0, 8).map(res => {
+            const item = res.item;
+            return `
+                <a href="${item.permalink}" class="search-result-item">
+                    <span class="search-result-title">${item.title}</span>
+                    <div class="search-result-meta">
+                        <span>📅 ${item.date}</span>
+                        ${item.tags ? `<span> | 🏷️ ${item.tags.join(', ')}</span>` : ''}
+                    </div>
+                </a>
+            `;
+        }).join('');
+    };
 }

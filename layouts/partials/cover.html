@@ -1,5 +1,5 @@
 {{ with .Params.image }}
 <div class="post-cover">
-  <img src="{{ . }}" alt="{{ $.Title }}" loading="lazy">
+  {{ partial "smart-image.html" (dict "src" . "alt" $.Title "loading" "eager") }}
 </div>
 {{ end }}

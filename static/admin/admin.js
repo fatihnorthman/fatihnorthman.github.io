@@ -240,7 +240,7 @@ async function publishPost() {
             });
             
             const imgFileName = `${Date.now()}-${slugify(imageFile.name.split('.')[0])}.${imageFile.name.split('.').pop()}`;
-            await githubPut(`static/images/${imgFileName}`, base64Img, `Upload image: ${imgFileName}`);
+            await githubPut(`assets/images/${imgFileName}`, base64Img, `Upload image: ${imgFileName}`);
             imagePath = `/images/${imgFileName}`;
             log(`Görsel yüklendi: ${imagePath}`);
         }

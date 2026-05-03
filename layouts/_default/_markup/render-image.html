@@ -1,0 +1,24 @@
+{{ $src := .Destination }}
+{{ $alt := .Text }}
+{{ $title := .Title }}
+
+{{/* Görsel yolundan baştaki eğik çizgiyi kaldır */}}
+{{ $cleanSrc := ltrim "/" $src }}
+
+{{/* Görseli assets içinde ara */}}
+{{ $img := resources.Get $cleanSrc }}
+
+{{ if $img }}
+  {{/* Görsel bulundu, WebP'ye dönüştür */}}
+  {{ $webp := $img.Process "webp" }}
+  <img src="{{ $webp.RelPermalink }}" 
+       alt="{{ $alt }}" 
+       {{ with $title }}title="{{ . }}"{{ end }} 
+       loading="lazy">
+{{ else }}
+  {{/* Görsel assets içinde yok, orijinali kullan */}}
+  <img src="{{ $src }}" 
+       alt="{{ $alt }}" 
+       {{ with $title }}title="{{ . }}"{{ end }} 
+       loading="lazy">
+{{ end }}

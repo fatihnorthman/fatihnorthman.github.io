@@ -1,0 +1,25 @@
+{{ $src := .src }}
+{{ $alt := .alt }}
+{{ $class := .class }}
+{{ $loading := .loading | default "lazy" }}
+
+{{/* Görsel yolundan baştaki eğik çizgiyi kaldır (Hugo resources.Get için) */}}
+{{ $cleanSrc := ltrim "/" $src }}
+
+{{/* Görseli assets içinde ara */}}
+{{ $img := resources.Get $cleanSrc }}
+
+{{ if $img }}
+  {{/* Görsel bulundu, WebP'ye dönüştür */}}
+  {{ $webp := $img.Process "webp" }}
+  <img src="{{ $webp.RelPermalink }}" 
+       alt="{{ $alt }}" 
+       {{ with $class }}class="{{ . }}"{{ end }} 
+       loading="{{ $loading }}">
+{{ else }}
+  {{/* Görsel assets içinde yok (static veya harici), orijinali kullan */}}
+  <img src="{{ $src }}" 
+       alt="{{ $alt }}" 
+       {{ with $class }}class="{{ . }}"{{ end }} 
+       loading="{{ $loading }}">
+{{ end }}

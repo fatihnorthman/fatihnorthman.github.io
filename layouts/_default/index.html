@@ -62,7 +62,7 @@
             {{ with .Params.image }}
             <div class="post-card-image">
               <a href="{{ $.RelPermalink }}">
-                <img src="{{ . }}" alt="{{ $.Title }}">
+                {{ partial "smart-image.html" (dict "src" . "alt" $.Title) }}
               </a>
             </div>
             {{ end }}
