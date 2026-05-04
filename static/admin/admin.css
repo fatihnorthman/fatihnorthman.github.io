@@ -370,3 +370,61 @@ textarea {
     .input-group-row { grid-template-columns: 1fr; }
     .actions { grid-template-columns: 1fr; }
 }
+
+/* --- EDIT MODE STYLES --- */
+.btn-sm-edit {
+    background: rgba(255, 193, 7, 0.1);
+    color: var(--amber);
+    border: 1px solid var(--amber);
+    padding: 4px 8px;
+    font-size: 0.65rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: 'Fira Code', monospace;
+    transition: all 0.2s;
+    margin-right: 5px;
+}
+
+.btn-sm-edit:hover {
+    background: var(--amber);
+    color: var(--bg-darker);
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #888;
+    border: 1px solid #444;
+    padding: 12px 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: all 0.3s;
+    flex: 1;
+}
+
+.btn-secondary:hover {
+    border-color: #888;
+    color: #fff;
+}
+
+.edit-mode-active #publish-btn {
+    background: #4caf50;
+    color: #fff;
+    border-color: #4caf50;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+}
+
+.edit-indicator {
+    display: none;
+    color: #4caf50;
+    font-size: 0.7rem;
+    margin-bottom: 5px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.edit-mode-active .edit-indicator {
+    display: block;
+}

@@ -3,7 +3,12 @@ const REPO_NAME = "fatihnorthman.github.io";
 let GITHUB_TOKEN = sessionStorage.getItem("gh_token") || "";
 let INACTIVITY_TIMER;
 
-// Inactivity Timeout (15 Dakika) - OWASP A01
+// EDIT MODE STATE
+let IS_EDIT_MODE = false;
+let EDIT_SHA = "";
+let EDIT_PATH = "";
+
+// Inactivity Timeout (15 Dakika)
 function resetInactivityTimer() {
     clearTimeout(INACTIVITY_TIMER);
     INACTIVITY_TIMER = setTimeout(() => {
@@ -16,14 +21,11 @@ window.onload = resetInactivityTimer;
 window.onmousemove = resetInactivityTimer;
 window.onkeypress = resetInactivityTimer;
 
-// Global Hata Yakalayıcı
 window.onerror = function(msg, url, line) {
     log(`KRİTİK SİSTEM HATASI: ${msg} (Satır: ${line})`);
     return false;
 };
 
-// Başlangıç Kontrolü
-log("Sistem çekirdeği yükleniyor...");
 if (GITHUB_TOKEN) {
     document.getElementById("login-overlay").style.display = "none";
     document.getElementById("status").innerText = "SİSTEM ÇEVRİMİÇİ";
@@ -39,7 +41,6 @@ function log(msg) {
     const consoleLogs = document.getElementById("console-logs");
     if (!consoleLogs) return;
     const time = new Date().toLocaleTimeString();
-    // Sanitized log entry
     const div = document.createElement("div");
     div.textContent = `> [${time}] ${msg}`;
     consoleLogs.appendChild(div);
@@ -72,7 +73,6 @@ function logout() {
     location.reload();
 }
 
-// Canlı Önizleme Fonksiyonu
 function updatePreview() {
     const content = document.getElementById("post-content").value;
     const previewArea = document.getElementById("preview-area");
@@ -83,7 +83,6 @@ function updatePreview() {
     }
 }
 
-// Resim Önizleme
 document.getElementById("post-image").onchange = function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -91,7 +90,7 @@ document.getElementById("post-image").onchange = function(e) {
         reader.onload = function(event) {
             const preview = document.getElementById("image-preview");
             preview.style.display = "block";
-            preview.innerHTML = ""; // Clear
+            preview.innerHTML = ""; 
             const img = document.createElement("img");
             img.src = event.target.result;
             preview.appendChild(img);
@@ -101,7 +100,6 @@ document.getElementById("post-image").onchange = function(e) {
     }
 };
 
-// ASCII Slug Oluşturucu (Protokol Kuralı)
 function slugify(text) {
     const trMap = {
         'ç': 'c', 'ğ': 'g', 'ı': 'i', 'İ': 'i', 'ö': 'o', 'ş': 's', 'ü': 'u',
@@ -135,7 +133,7 @@ async function fetchPosts() {
         }
         
         const files = await res.json();
-        ALL_POSTS = files.filter(f => f.name.endsWith(".md"));
+        ALL_POSTS = files.filter(f => f.name.endsWith(".md") && f.name !== "_index.md");
         renderPostList(ALL_POSTS);
         log(`BAŞARI: ${ALL_POSTS.length} yazı yüklendi.`);
     } catch (err) {
@@ -160,16 +158,26 @@ function renderPostList(posts) {
         
         const nameDiv = document.createElement("div");
         nameDiv.className = "post-name";
-        nameDiv.textContent = displayName; // OWASP A03: XSS Protection
+        nameDiv.textContent = displayName;
         nameDiv.title = file.name;
         
+        const actionsDiv = document.createElement("div");
+        actionsDiv.className = "post-item-actions";
+
+        const editBtn = document.createElement("button");
+        editBtn.className = "btn-sm-edit";
+        editBtn.textContent = "EDİTLE";
+        editBtn.onclick = () => loadPostForEdit(file.path, file.sha);
+
         const delBtn = document.createElement("button");
         delBtn.className = "btn-sm-danger";
         delBtn.textContent = "İMH ET";
         delBtn.onclick = () => confirmDelete(file.path, file.sha);
 
+        actionsDiv.appendChild(editBtn);
+        actionsDiv.appendChild(delBtn);
         item.appendChild(nameDiv);
-        item.appendChild(delBtn);
+        item.appendChild(actionsDiv);
         listContainer.appendChild(item);
     });
 }
@@ -178,6 +186,93 @@ function filterPosts() {
     const query = document.getElementById("post-search").value.toLowerCase();
     const filtered = ALL_POSTS.filter(p => p.name.toLowerCase().includes(query));
     renderPostList(filtered);
+}
+
+// --- EDIT LOGIC ---
+async function loadPostForEdit(path, sha) {
+    try {
+        log(`Yazı yükleniyor: ${path}`);
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+        const res = await fetch(url, {
+            headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` }
+        });
+        const data = await res.json();
+        const content = decodeURIComponent(escape(atob(data.content)));
+
+        // YAML Parsing (Regex)
+        const parts = content.split('---');
+        if (parts.length < 3) throw new Error("Dosya formatı uyumsuz (Front-matter bulunamadı).");
+
+        const yaml = parts[1];
+        const body = parts.slice(2).join('---').trim();
+
+        const getValue = (key) => {
+            const regex = new RegExp(`${key}:\\s*["']?(.*?)["']?\\s*(\\n|$)`, 'i');
+            const match = yaml.match(regex);
+            return match ? match[1].trim() : "";
+        };
+
+        const getTags = () => {
+            const match = yaml.match(/tags:\s*\[(.*?)\]/i);
+            return match ? match[1].replace(/"/g, '').trim() : "";
+        };
+
+        // Fill Form
+        document.getElementById("post-title").value = getValue("title");
+        document.getElementById("post-category").value = getValue("categories").replace(/[\[\]"]/g, "") || "Genel";
+        document.getElementById("post-weight").value = getValue("weight");
+        document.getElementById("post-tags").value = getTags();
+        document.getElementById("post-desc").value = getValue("description");
+        document.getElementById("post-content").value = body;
+
+        // Mode UI Update
+        IS_EDIT_MODE = true;
+        EDIT_SHA = sha;
+        EDIT_PATH = path;
+        
+        document.body.classList.add("edit-mode-active");
+        const publishBtn = document.getElementById("publish-btn");
+        publishBtn.innerText = "DEĞİŞİKLİKLERİ KAYDET";
+        
+        // Add Cancel Button if not exists
+        if (!document.getElementById("cancel-edit-btn")) {
+            const cancelBtn = document.createElement("button");
+            cancelBtn.id = "cancel-edit-btn";
+            cancelBtn.className = "btn-secondary";
+            cancelBtn.innerText = "İPTAL";
+            cancelBtn.style.marginTop = "10px";
+            cancelBtn.onclick = cancelEdit;
+            publishBtn.parentNode.appendChild(cancelBtn);
+        }
+
+        updatePreview();
+        log("Yazı düzenleme modunda yüklendi.");
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    } catch (err) {
+        log(`Yükleme Hatası: ${err.message}`);
+    }
+}
+
+function cancelEdit() {
+    IS_EDIT_MODE = false;
+    EDIT_SHA = "";
+    EDIT_PATH = "";
+    document.body.classList.remove("edit-mode-active");
+    document.getElementById("publish-btn").innerText = "PROTOKOLÜ YAYINLA";
+    const cancelBtn = document.getElementById("cancel-edit-btn");
+    if (cancelBtn) cancelBtn.remove();
+    
+    // Clear Form
+    document.getElementById("post-title").value = "";
+    document.getElementById("post-tags").value = "";
+    document.getElementById("post-weight").value = "";
+    document.getElementById("post-desc").value = "";
+    document.getElementById("post-content").value = "";
+    document.getElementById("image-preview").innerHTML = "";
+    document.getElementById("post-image").value = "";
+    updatePreview();
+    log("Düzenleme iptal edildi.");
 }
 
 async function confirmDelete(path, sha) {
@@ -222,17 +317,16 @@ async function publishPost() {
 
     const btn = document.getElementById("publish-btn");
     btn.disabled = true;
-    btn.innerText = "YAYINLANIYOR...";
+    btn.innerText = IS_EDIT_MODE ? "GÜNCELLEME İŞLENİYOR..." : "YAYINLANIYOR...";
 
     const slug = slugify(title);
     const date = new Date().toISOString().split('.')[0] + "+03:00"; 
-    const fileName = `${slug}.md`;
+    const fileName = IS_EDIT_MODE ? EDIT_PATH.split('/').pop() : `${slug}.md`;
     let imagePath = "";
 
     try {
-        // 1. Varsa Görseli Yükle
         if (imageFile) {
-            log("Görsel yükleniyor...");
+            log("Yeni görsel yükleniyor...");
             const reader = new FileReader();
             const base64Img = await new Promise((resolve) => {
                 reader.onload = () => resolve(reader.result.split(',')[1]);
@@ -242,10 +336,8 @@ async function publishPost() {
             const imgFileName = `${Date.now()}-${slugify(imageFile.name.split('.')[0])}.${imageFile.name.split('.').pop()}`;
             await githubPut(`assets/images/${imgFileName}`, base64Img, `Upload image: ${imgFileName}`);
             imagePath = `/images/${imgFileName}`;
-            log(`Görsel yüklendi: ${imagePath}`);
         }
 
-        // 2. Markdown Dosyasını Oluştur (YAML Front-matter)
         const tagsArr = tagsRaw.split(',').map(t => `"${t.trim()}"`).join(', ');
         const frontMatter = `---
 title: "${title}"
@@ -262,48 +354,41 @@ ${imagePath ? `image: "${imagePath}"` : ""}
 
 ${content}`;
 
-        // 3. Dosyayı GitHub'a Gönder (UTF-8 Güvenli)
-        log("Markdown dosyası oluşturuluyor...");
+        log(IS_EDIT_MODE ? "Dosya güncelleniyor..." : "Markdown dosyası oluşturuluyor...");
         const utf8Bytes = new TextEncoder().encode(frontMatter);
         const base64MD = btoa(String.fromCharCode(...utf8Bytes));
-        await githubPut(`content/posts/${fileName}`, base64MD, `Post: ${title}`);
         
-        log("BAŞARI: Protokol yayına alındı!");
-        alert("Yazı başarıyla paylaşıldı! Birkaç dakika içinde yayında olacaktır.");
+        const targetPath = IS_EDIT_MODE ? EDIT_PATH : `content/posts/${fileName}`;
+        await githubPut(targetPath, base64MD, IS_EDIT_MODE ? `Update post: ${title}` : `Post: ${title}`, IS_EDIT_MODE ? EDIT_SHA : "");
+        
+        log(IS_EDIT_MODE ? "BAŞARI: Güncelleme tamamlandı!" : "BAŞARI: Protokol yayına alındı!");
+        alert(IS_EDIT_MODE ? "Yazı başarıyla güncellendi!" : "Yazı başarıyla paylaşıldı!");
         location.reload();
 
     } catch (err) {
         log(`KRİTİK HATA: ${err.message}`);
-        console.error(err);
     } finally {
         btn.disabled = false;
         btn.innerText = "PROTOKOLÜ YAYINLA";
     }
 }
 
-async function githubPut(path, contentBase64, message) {
+async function githubPut(path, contentBase64, message, forceSha = "") {
     const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
-    
-    // 1. SHA Kontrolü
-    log(`SHA kontrol ediliyor: ${path}`);
-    let sha = "";
-    try {
-        const check = await fetch(url, { 
-            headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` } 
-        });
-        if (check.ok) {
-            const data = await check.json();
-            sha = data.sha;
-            log("Dosya mevcut, güncellenecek.");
-        } else if (check.status === 404) {
-            log("Yeni dosya oluşturulacak.");
-        }
-    } catch (e) {
-        log(`SHA uyarısı: ${e.message}`);
+    let sha = forceSha;
+
+    if (!sha) {
+        try {
+            const check = await fetch(url, { 
+                headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` } 
+            });
+            if (check.ok) {
+                const data = await check.json();
+                sha = data.sha;
+            }
+        } catch (e) {}
     }
 
-    // 2. PUT İsteği
-    log(`GitHub'a veri gönderiliyor...`);
     const res = await fetch(url, {
         method: 'PUT',
         headers: {
@@ -321,7 +406,5 @@ async function githubPut(path, contentBase64, message) {
         const error = await res.json();
         throw new Error(error.message || `HTTP ${res.status}`);
     }
-    
-    log(`GitHub onayı alındı.`);
     return await res.json();
 }
