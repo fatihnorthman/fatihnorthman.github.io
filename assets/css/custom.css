@@ -1601,7 +1601,7 @@ h3:hover .hanchor { opacity: 1; }
 }
 
 .share-item svg { width: 16px; height: 16px; fill: #888; transition: all 0.25s ease; }
-.share-item.copy svg { fill: none; stroke: #888; }
+.share-item.copy svg { fill: #888; }
 
 .share-item.wa:hover  { background: rgba(37,211,102,0.15); border-color: #25d366; }
 .share-item.wa:hover svg { fill: #25d366; }
@@ -1610,7 +1610,7 @@ h3:hover .hanchor { opacity: 1; }
 .share-item.tw:hover  { background: rgba(255,255,255,0.1); border-color: #fff; }
 .share-item.tw:hover svg { fill: #fff; }
 .share-item.copy:hover { background: rgba(229,57,53,0.15); border-color: var(--accent); }
-.share-item.copy:hover svg { stroke: var(--accent); }
+.share-item.copy:hover svg { fill: var(--accent); }
 
 .action-btn {
   background: var(--bg-surface);
