@@ -3177,6 +3177,12 @@ body.is-pdf-printing .post-meta,
 body.is-pdf-printing .post-tags,
 body.is-pdf-printing .post-header {
     display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
 }
 
 body.is-pdf-printing .post {
