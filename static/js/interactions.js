@@ -77,56 +77,69 @@ function initPDF() {
     if (!btn) return;
 
     btn.onclick = async () => {
-        console.log("PDF Generation Started...");
+        console.log("PDF Generation Triggered...");
         
         if (typeof html2pdf === 'undefined') {
-            alert('PDF kütüphanesi henüz yüklenmedi, lütfen saniyeler sonra tekrar deneyin.');
+            alert('PDF motoru henüz hazır değil, lütfen 2-3 saniye bekleyip tekrar deneyin.');
             return;
         }
 
-        const element = document.querySelector('article.post');
+        // Makale içeriğini bul (Daha esnek seçici)
+        const element = document.querySelector('.post');
         if (!element) {
-            console.error("Post element not found!");
+            console.error("Post container not found!");
             return;
         }
 
         // Buton durumunu güncelle
         const label = btn.querySelector('.label');
         const originalText = label ? label.innerText : 'İndir';
-        if (label) label.innerText = 'Bekleyin...';
+        if (label) label.innerText = 'Hazırlanıyor...';
         btn.style.opacity = '0.5';
+        btn.style.pointerEvents = 'none';
 
-        // PDF Seçenekleri
+        // PDF Seçenekleri (Optimize edildi)
         const opt = {
             margin:       [15, 10],
             filename:     `${document.title.split('|')[0].trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
+            image:        { type: 'jpeg', quality: 0.95 },
             html2canvas:  { 
-                scale: 2, 
+                scale: 1.5, // Bellek dostu ölçek (2'den 1.5'e çekildi)
                 useCORS: true, 
                 letterRendering: true,
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                logging: false
             },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
             pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
-        // PDF için özel hazırlık
+        // PDF Baskı Moduna Geç
         document.body.classList.add('is-printing-pdf');
 
         try {
-            await html2pdf().from(element).set(opt).save();
-            console.log("PDF successfully generated!");
+            // Küçük bir gecikme ile DOM'un hazırlanmasına izin ver
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            const worker = html2pdf().from(element).set(opt);
+            await worker.save();
+            
+            console.log("PDF generated successfully.");
         } catch (err) {
-            console.error('PDF Generation Error:', err);
-            alert('PDF oluşturulurken bir teknik hata oluştu.');
+            console.error('PDF Generation Technical Error:', err);
+            // Hata anında hemen normal moda dön ki ekran beyaz kalmasın
+            document.body.classList.remove('is-printing-pdf');
+            alert('PDF oluşturulurken bir teknik hata oluştu. Lütfen sayfayı yenileyip tekrar deneyin.');
         } finally {
+            // Her durumda restorasyon
             document.body.classList.remove('is-printing-pdf');
             if (label) label.innerText = originalText;
             btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
         }
     };
 }
+
 
 function initCustomCursor() {
     const cursor = document.querySelector('.custom-cursor');
