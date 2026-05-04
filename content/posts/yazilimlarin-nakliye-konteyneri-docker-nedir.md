@@ -1,14 +1,14 @@
 ---
 title: "Yazılımların Nakliye Konteyneri: Docker Nedir?"
-date: 2026-05-04T15:08:32+03:00
+date: 2026-05-04T15:15:58+03:00
 draft: false
 tags: ["Docker", "Konteyner", "Container", "Virtual Machine", "Sanal Makine", "Linux", "Windows", "WSL 2", "Docker Desktop", "Yazılım Geliştirme", "Sistem Yöneticisi", "DevOps", "Microservices", "Mikroservis", "Bilişim Teknolojileri", "Dockerfile", "Docker Image", "Teknoloji Rehberi"]
 categories: ["Yazılım"]
 author: "Fatih Northman"
 description: "Docker nedir ve sanal makinelerden (VM) farkı nedir? Linux ve Windows (WSL 2) sistemlerinde Docker konteyner mimarisinin nasıl çalıştığını bu kapsamlı rehberle keşfedin."
 slug: "yazilimlarin-nakliye-konteyneri-docker-nedir"
-
-image: "/images/1777907312376-docker.png"
+weight: 1
+image: "/images/1777907758329-docker.png"
 ---
 
 Geçmişte uluslararası ticaret yapan gemilere yükleme yapmak bir kabustu. Çuvallar, fıçılar, sandıklar ve kutular üst üste yığılır, gemiye yüklenmesi haftalar sürer ve yolda mutlaka hasar görürdü. Sonra standart "Konteynerler" icat edildi. İçinde ne olduğu fark etmeksizin hepsi aynı boyuttaydı, aynı vinçle taşınıyor, gemiye ve tıra kusursuz oturuyordu.
