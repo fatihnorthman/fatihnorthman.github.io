@@ -77,86 +77,88 @@ function initPDF() {
     if (!btn) return;
 
     btn.onclick = async () => {
-        console.log("PDF Generation Triggered...");
+        console.log("PDF Generation Started...");
         
         if (typeof html2pdf === 'undefined') {
             alert('PDF motoru henüz hazır değil, lütfen 2-3 saniye bekleyip tekrar deneyin.');
             return;
         }
 
-        const element = document.querySelector('.post');
-        if (!element) return;
+        const postContent = document.querySelector('.post-content');
+        const postTitle = document.querySelector('.post-title');
+        if (!postContent) return;
 
         // Buton durumunu güncelle
         const label = btn.querySelector('.label');
         const originalText = label ? label.innerText : 'İndir';
-        if (label) label.innerText = 'İşleniyor...';
+        if (label) label.innerText = 'PDF Hazırlanıyor...';
         btn.style.opacity = '0.5';
         btn.style.pointerEvents = 'none';
 
-        // Dinamik Ölçeklendirme (Çok uzun sayfalar için bellek koruması)
-        const height = element.offsetHeight;
-        let dynamicScale = 1.2;
-        if (height > 8000) dynamicScale = 0.8;
-        if (height > 15000) dynamicScale = 0.6;
+        // 1. ADIM: Render Edilecek Saf İçeriği Hazırla
+        const container = document.createElement('div');
+        container.style.padding = '40px';
+        container.style.background = '#ffffff';
+        container.style.color = '#000000';
+        container.style.width = '700px';
+        container.style.position = 'absolute';
+        container.style.left = '-9999px';
 
-        // PDF Seçenekleri
+        // Başlığı ekle
+        if (postTitle) {
+            const tClone = postTitle.cloneNode(true);
+            tClone.style.color = '#000';
+            tClone.style.borderBottom = '1px solid #333';
+            tClone.style.paddingBottom = '10px';
+            tClone.style.marginBottom = '30px';
+            container.appendChild(tClone);
+        }
+
+        // İçeriği ekle ve TEMİZLE
+        const cClone = postContent.cloneNode(true);
+        cClone.querySelectorAll('ins, script, iframe, .adsbygoogle, .in-feed-ad, .multiplex-ad-container, .hanchor').forEach(el => el.remove());
+        cClone.style.color = '#111';
+        container.appendChild(cClone);
+        
+        document.body.appendChild(container);
+
+        // 2. ADIM: Resimlerin Yüklendiğinden Emin Ol
+        const imgs = container.querySelectorAll('img');
+        const imgPromises = Array.from(imgs).map(img => {
+            if (img.complete) return Promise.resolve();
+            return new Promise(resolve => { img.onload = resolve; img.onerror = resolve; });
+        });
+        await Promise.all(imgPromises);
+
+        // 3. ADIM: PDF Seçenekleri
         const opt = {
-            margin:       [12, 10],
-            filename:     `${document.title.split('|')[0].trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
+            margin:       [15, 15],
+            filename:     `${document.title.split('|')[0].trim()}.pdf`,
             image:        { type: 'jpeg', quality: 0.95 },
             html2canvas:  { 
-                scale: dynamicScale,
+                scale: 1, 
                 useCORS: true,
-                backgroundColor: '#ffffff',
-                onclone: (clonedDoc) => {
-                    const post = clonedDoc.querySelector('.post');
-                    if (post) {
-                        // AGRESİF TEMİZLİK: Tüm reklam ve dış bileşenleri yok et
-                        const junkSelectors = [
-                            '.adsbygoogle', 'ins', 'iframe', 'script', 
-                            '.in-feed-ad', '.multiplex-ad-container', 
-                            '.post-interaction-hub', '.scroll-to-comments', 
-                            '.hanchor', '.pagination', '.footer', '.navigation-menu'
-                        ];
-                        junkSelectors.forEach(sel => {
-                            post.querySelectorAll(sel).forEach(el => el.remove());
-                            clonedDoc.querySelectorAll(sel).forEach(el => el.remove());
-                        });
-                        
-                        // PDF Stilleri
-                        post.style.background = 'white';
-                        post.style.color = 'black';
-                        post.style.padding = '30px';
-                        post.style.width = '100%';
-                        
-                        // Font ve Renk Zorlaması
-                        post.querySelectorAll('*').forEach(el => {
-                            el.style.color = 'black';
-                            el.style.borderColor = '#eee';
-                            el.style.textShadow = 'none';
-                            el.style.boxShadow = 'none';
-                        });
-                    }
-                }
+                backgroundColor: '#ffffff'
             },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
             pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
         try {
-            await html2pdf().from(element).set(opt).save();
+            await html2pdf().from(container).set(opt).save();
             console.log("PDF generated successfully.");
         } catch (err) {
-            console.error('PDF Generation Technical Error:', err);
-            alert('Bu içerik PDF motoru limitlerini aşıyor. Lütfen tarayıcınızın Yazdır (Ctrl+P) özelliğini kullanarak "PDF Olarak Kaydet" seçeneğini deneyin.');
+            console.error('PDF Error:', err);
+            alert('PDF oluşturulamadı. İçerik çok büyük olabilir.');
         } finally {
+            if (document.body.contains(container)) document.body.removeChild(container);
             if (label) label.innerText = originalText;
             btn.style.opacity = '1';
             btn.style.pointerEvents = 'auto';
         }
     };
 }
+
 
 
 
