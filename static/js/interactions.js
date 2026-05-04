@@ -77,8 +77,18 @@ function initPDF() {
     if (!btn) return;
 
     btn.onclick = async () => {
-        const element = document.querySelector('.post');
-        if (!element) return;
+        console.log("PDF Generation Started...");
+        
+        if (typeof html2pdf === 'undefined') {
+            alert('PDF kütüphanesi henüz yüklenmedi, lütfen saniyeler sonra tekrar deneyin.');
+            return;
+        }
+
+        const element = document.querySelector('article.post');
+        if (!element) {
+            console.error("Post element not found!");
+            return;
+        }
 
         // Buton durumunu güncelle
         const label = btn.querySelector('.label');
@@ -106,8 +116,10 @@ function initPDF() {
 
         try {
             await html2pdf().from(element).set(opt).save();
+            console.log("PDF successfully generated!");
         } catch (err) {
             console.error('PDF Generation Error:', err);
+            alert('PDF oluşturulurken bir teknik hata oluştu.');
         } finally {
             document.body.classList.remove('is-printing-pdf');
             if (label) label.innerText = originalText;
@@ -115,6 +127,7 @@ function initPDF() {
         }
     };
 }
+
 function initCustomCursor() {
     const cursor = document.querySelector('.custom-cursor');
     if (!cursor) return;
