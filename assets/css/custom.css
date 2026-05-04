@@ -3154,5 +3154,21 @@ body.is-printing-pdf {
 }
 
 /* PDF Share Item Styling */
+.share-item.pdf {
+    width: auto !important;
+    padding: 0 16px !important;
+    gap: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.share-item.pdf .label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
 .share-item.pdf:hover { background: rgba(255, 152, 0, 0.15); border-color: #ff9800; }
 .share-item.pdf:hover svg { fill: #ff9800; }
