@@ -94,36 +94,53 @@ function initPDF() {
         btn.style.opacity = '0.5';
         btn.style.pointerEvents = 'none';
 
+        // Dinamik Ölçeklendirme (Çok uzun sayfalar için bellek koruması)
+        const height = element.offsetHeight;
+        let dynamicScale = 1.2;
+        if (height > 8000) dynamicScale = 0.8;
+        if (height > 15000) dynamicScale = 0.6;
+
         // PDF Seçenekleri
         const opt = {
-            margin:       [15, 12],
+            margin:       [12, 10],
             filename:     `${document.title.split('|')[0].trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
+            image:        { type: 'jpeg', quality: 0.95 },
             html2canvas:  { 
-                scale: 1.5,
+                scale: dynamicScale,
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 onclone: (clonedDoc) => {
-                    // Klon üzerinde temizlik yap
                     const post = clonedDoc.querySelector('.post');
                     if (post) {
-                        // Reklamları ve gereksizleri kaldır
-                        post.querySelectorAll('.adsbygoogle, .in-feed-ad, .multiplex-ad-container, .post-interaction-hub, .scroll-to-comments, .hanchor, script, iframe').forEach(el => el.remove());
+                        // AGRESİF TEMİZLİK: Tüm reklam ve dış bileşenleri yok et
+                        const junkSelectors = [
+                            '.adsbygoogle', 'ins', 'iframe', 'script', 
+                            '.in-feed-ad', '.multiplex-ad-container', 
+                            '.post-interaction-hub', '.scroll-to-comments', 
+                            '.hanchor', '.pagination', '.footer', '.navigation-menu'
+                        ];
+                        junkSelectors.forEach(sel => {
+                            post.querySelectorAll(sel).forEach(el => el.remove());
+                            clonedDoc.querySelectorAll(sel).forEach(el => el.remove());
+                        });
                         
-                        // PDF Stillerini Uygula
+                        // PDF Stilleri
                         post.style.background = 'white';
                         post.style.color = 'black';
-                        post.style.padding = '20px';
+                        post.style.padding = '30px';
+                        post.style.width = '100%';
                         
-                        // Başlık ve metin renklerini siyaha zorla
-                        post.querySelectorAll('h1, h2, h3, h4, p, span, li').forEach(el => {
+                        // Font ve Renk Zorlaması
+                        post.querySelectorAll('*').forEach(el => {
                             el.style.color = 'black';
-                            el.style.background = 'transparent';
+                            el.style.borderColor = '#eee';
+                            el.style.textShadow = 'none';
+                            el.style.boxShadow = 'none';
                         });
                     }
                 }
             },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
             pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
@@ -132,7 +149,7 @@ function initPDF() {
             console.log("PDF generated successfully.");
         } catch (err) {
             console.error('PDF Generation Technical Error:', err);
-            alert('PDF oluşturulurken bir hata oluştu. Sayfa çok uzun olabilir.');
+            alert('Bu içerik PDF motoru limitlerini aşıyor. Lütfen tarayıcınızın Yazdır (Ctrl+P) özelliğini kullanarak "PDF Olarak Kaydet" seçeneğini deneyin.');
         } finally {
             if (label) label.innerText = originalText;
             btn.style.opacity = '1';
@@ -140,6 +157,7 @@ function initPDF() {
         }
     };
 }
+
 
 
 
