@@ -93,53 +93,60 @@ function initPDF() {
         // Buton durumunu güncelle
         const label = btn.querySelector('.label');
         const originalText = label ? label.innerText : 'İndir';
-        if (label) label.innerText = 'Hazırlanıyor...';
+        if (label) label.innerText = 'İşleniyor...';
         btn.style.opacity = '0.5';
         btn.style.pointerEvents = 'none';
 
-        // 1. ADIM: Güvenli Kopya Oluştur (Sanitization)
+        // 1. ADIM: Temiz Kopya ve Görünmez Yerleşim
         const clone = sourceElement.cloneNode(true);
-        clone.querySelectorAll('.adsbygoogle, .in-feed-ad, .multiplex-ad-container, .post-interaction-hub, script, iframe, .scroll-to-comments').forEach(el => el.remove());
+        clone.querySelectorAll('.adsbygoogle, .in-feed-ad, .multiplex-ad-container, .post-interaction-hub, script, iframe, .scroll-to-comments, .hanchor').forEach(el => el.remove());
         
-        // Klonun stilini PDF için optimize et
+        // Stil iyileştirmeleri
         clone.style.background = '#ffffff';
         clone.style.color = '#000000';
-        clone.style.padding = '40px';
-        clone.style.width = '800px'; // Standart genişlik sabitleme
+        clone.style.padding = '30px';
+        clone.style.width = '750px'; 
+        clone.style.position = 'absolute';
+        clone.style.left = '-9999px'; // Ekran dışına at
+        clone.style.top = '0';
+        
+        document.body.appendChild(clone);
 
-        // PDF Seçenekleri
+        // PDF Seçenekleri (Maksimum Kararlılık)
         const opt = {
-            margin:       [15, 12],
+            margin:       [10, 10],
             filename:     `${document.title.split('|')[0].trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
-            image:        { type: 'png', quality: 1 }, // PNG daha kararlı render sağlar
+            image:        { type: 'jpeg', quality: 0.98 }, 
             html2canvas:  { 
-                scale: 1.2, // Bellek hatalarını önlemek için ölçek optimize edildi
+                scale: 1, // Bellek hatalarını sıfırlamak için 1:1 ölçek
                 useCORS: true, 
                 logging: false,
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                scrollY: 0
             },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
             pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
-        // PDF Baskı Moduna Geç (Görsel geri bildirim için)
-        document.body.classList.add('is-printing-pdf');
-
         try {
-            // Arka planda sessizce oluştur
+            // Küçük bir bekleme (Render hazırlığı için)
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
             await html2pdf().from(clone).set(opt).save();
             console.log("PDF generated successfully.");
         } catch (err) {
             console.error('PDF Generation Technical Error:', err);
-            alert('PDF oluşturulurken bir hata oluştu. Sayfa çok uzun veya görseller çok büyük olabilir.');
+            alert('PDF oluşturulurken bir hata oluştu. Sayfa çok uzun olabilir. Alternatif olarak tarayıcının Yazdır (Ctrl+P) özelliğini kullanabilirsiniz.');
         } finally {
-            document.body.classList.remove('is-printing-pdf');
+            // Temizlik
+            if (document.body.contains(clone)) document.body.removeChild(clone);
             if (label) label.innerText = originalText;
             btn.style.opacity = '1';
             btn.style.pointerEvents = 'auto';
         }
     };
 }
+
 
 
 
