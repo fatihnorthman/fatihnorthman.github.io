@@ -84,7 +84,6 @@ function initPDF() {
             return;
         }
 
-        // Makale içeriğini bul (Daha esnek seçici)
         const element = document.querySelector('.post');
         if (!element) {
             console.error("Post container not found!");
@@ -98,17 +97,25 @@ function initPDF() {
         btn.style.opacity = '0.5';
         btn.style.pointerEvents = 'none';
 
-        // PDF Seçenekleri (Optimize edildi)
+        // PDF Seçenekleri (Reklam Filtreleme Eklendi)
         const opt = {
             margin:       [15, 10],
             filename:     `${document.title.split('|')[0].trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
             image:        { type: 'jpeg', quality: 0.95 },
             html2canvas:  { 
-                scale: 1.5, // Bellek dostu ölçek (2'den 1.5'e çekildi)
+                scale: 1.5,
                 useCORS: true, 
                 letterRendering: true,
                 backgroundColor: '#ffffff',
-                logging: false
+                logging: false,
+                ignoreElements: (el) => {
+                    // Reklamları, iframe'leri ve etkileşim butonlarını PDF'den tamamen dışla
+                    return el.tagName === 'IFRAME' || 
+                           el.classList.contains('adsbygoogle') || 
+                           el.classList.contains('multiplex-ad-container') ||
+                           el.classList.contains('post-interaction-hub') ||
+                           el.classList.contains('in-feed-ad');
+                }
             },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
             pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
@@ -118,20 +125,15 @@ function initPDF() {
         document.body.classList.add('is-printing-pdf');
 
         try {
-            // Küçük bir gecikme ile DOM'un hazırlanmasına izin ver
-            await new Promise(resolve => setTimeout(resolve, 300));
-            
+            await new Promise(resolve => setTimeout(resolve, 400));
             const worker = html2pdf().from(element).set(opt);
             await worker.save();
-            
             console.log("PDF generated successfully.");
         } catch (err) {
             console.error('PDF Generation Technical Error:', err);
-            // Hata anında hemen normal moda dön ki ekran beyaz kalmasın
             document.body.classList.remove('is-printing-pdf');
-            alert('PDF oluşturulurken bir teknik hata oluştu. Lütfen sayfayı yenileyip tekrar deneyin.');
+            alert('PDF oluşturulurken bir hata oluştu. Reklam engelleyiciniz varsa kapatıp tekrar deneyebilir misiniz?');
         } finally {
-            // Her durumda restorasyon
             document.body.classList.remove('is-printing-pdf');
             if (label) label.innerText = originalText;
             btn.style.opacity = '1';
@@ -139,6 +141,7 @@ function initPDF() {
         }
     };
 }
+
 
 
 function initCustomCursor() {
