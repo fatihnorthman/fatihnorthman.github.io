@@ -9,7 +9,7 @@ function startEngine() {
     const inits = [
         initInteractions, initScrollReveal, init3DTilt, 
         initClickRipple, initCustomCursor, initMouseTrail, 
-        initProgressBar
+        initProgressBar, initPDF
     ];
     
     inits.forEach(fn => {
@@ -71,9 +71,50 @@ function initMouseTrail() {
     animate();
 }
 
+// --- PROFESSIONAL PDF GENERATION ---
+function initPDF() {
+    const btn = document.getElementById('download-pdf');
+    if (!btn) return;
 
+    btn.onclick = async () => {
+        const element = document.querySelector('.post');
+        if (!element) return;
 
+        // Buton durumunu güncelle
+        const label = btn.querySelector('.label');
+        const originalText = label ? label.innerText : 'İndir';
+        if (label) label.innerText = 'Bekleyin...';
+        btn.style.opacity = '0.5';
 
+        // PDF Seçenekleri
+        const opt = {
+            margin:       [15, 10],
+            filename:     `${document.title.split('|')[0].trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { 
+                scale: 2, 
+                useCORS: true, 
+                letterRendering: true,
+                backgroundColor: '#ffffff'
+            },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+        };
+
+        // PDF için özel hazırlık
+        document.body.classList.add('is-printing-pdf');
+
+        try {
+            await html2pdf().from(element).set(opt).save();
+        } catch (err) {
+            console.error('PDF Generation Error:', err);
+        } finally {
+            document.body.classList.remove('is-printing-pdf');
+            if (label) label.innerText = originalText;
+            btn.style.opacity = '1';
+        }
+    };
+}
 function initCustomCursor() {
     const cursor = document.querySelector('.custom-cursor');
     if (!cursor) return;
