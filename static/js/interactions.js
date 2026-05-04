@@ -260,19 +260,29 @@ async function initInteractions() {
     if (commentForm) {
         commentForm.onsubmit = async (e) => {
             e.preventDefault();
+            
+            // 1. GÜVENLİK: Honeypot (Bot Koruması)
             const honeypot = document.getElementById('comment-honeypot')?.value;
-            if (honeypot) return; // Bot tespit edildi
+            if (honeypot) return;
+
+            // 2. GÜVENLİK: Ardışık Yorum Engeli (Spam Koruması - 30 sn)
+            const lastPost = localStorage.getItem('last_comment_time');
+            const now = Date.now();
+            if (lastPost && (now - lastPost < 30000)) {
+                alert('Çok hızlı yorum yapıyorsunuz! Lütfen biraz bekleyin.');
+                return;
+            }
 
             const name = document.getElementById('comment-name')?.value?.trim();
             const content = document.getElementById('comment-text')?.value?.trim();
 
-            // Basit doğrulama
-            if (!name || name.length < 2) {
-                alert('Lütfen geçerli bir isim girin.');
+            // 3. GÜVENLİK: Sert Input Validasyonu
+            if (!name || name.length < 2 || name.length > 50) {
+                alert('İsim 2 ile 50 karakter arasında olmalıdır.');
                 return;
             }
-            if (!content || content.length < 3) {
-                alert('Lütfen bir yorum yazın.');
+            if (!content || content.length < 3 || content.length > 3000) {
+                alert('Yorum 3 ile 3000 karakter arasında olmalıdır.');
                 return;
             }
 
@@ -280,20 +290,21 @@ async function initInteractions() {
             const postId = `/${slug}`;
 
             const submitBtn = commentForm.querySelector('button[type="submit"]');
-            if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = 'Gönderiliyor...'; }
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = 'Güvenli Gönderim...'; }
 
             try {
                 await submitComment(postId, name, content);
+                localStorage.setItem('last_comment_time', Date.now().toString()); // Zamanı kaydet
                 commentForm.reset();
                 fetchComments(postId);
-                // Başarı geri bildirimi
+                
                 const msg = document.createElement('p');
                 msg.style.cssText = 'color:#4caf50;font-size:0.9rem;margin-top:8px;';
-                msg.innerText = '✓ Yorumunuz gönderildi!';
+                msg.innerText = '✓ Yorumunuz güvenli bir şekilde gönderildi!';
                 commentForm.appendChild(msg);
                 setTimeout(() => msg.remove(), 3000);
             } catch (err) {
-                alert('Yorum gönderilemedi, lütfen tekrar deneyin.');
+                alert('Yorum gönderilemedi. Lütfen internet bağlantınızı kontrol edin.');
                 console.error('Comment submit error:', err);
             } finally {
                 if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = 'Gönder'; }
