@@ -84,68 +84,79 @@ function initPDF() {
             return;
         }
 
-        const sourceElement = document.querySelector('.post');
-        if (!sourceElement) {
-            console.error("Post container not found!");
+        const source = document.querySelector('.post');
+        const postContent = document.querySelector('.post-content');
+        if (!source || !postContent) {
+            console.error("Post content not found!");
             return;
         }
 
         // Buton durumunu güncelle
         const label = btn.querySelector('.label');
         const originalText = label ? label.innerText : 'İndir';
-        if (label) label.innerText = 'İşleniyor...';
+        if (label) label.innerText = 'Hazırlanıyor...';
         btn.style.opacity = '0.5';
         btn.style.pointerEvents = 'none';
 
-        // 1. ADIM: Temiz Kopya ve Görünmez Yerleşim
-        const clone = sourceElement.cloneNode(true);
-        clone.querySelectorAll('.adsbygoogle, .in-feed-ad, .multiplex-ad-container, .post-interaction-hub, script, iframe, .scroll-to-comments, .hanchor').forEach(el => el.remove());
+        // 1. ADIM: Saf İçerik Klonu Oluştur
+        const cloneContainer = document.createElement('div');
         
-        // Stil iyileştirmeleri
-        clone.style.background = '#ffffff';
-        clone.style.color = '#000000';
-        clone.style.padding = '30px';
-        clone.style.width = '750px'; 
-        clone.style.position = 'absolute';
-        clone.style.left = '-9999px'; // Ekran dışına at
-        clone.style.top = '0';
-        
-        document.body.appendChild(clone);
+        // Başlığı ekle
+        const title = source.querySelector('.post-title');
+        if (title) {
+            const titleClone = title.cloneNode(true);
+            titleClone.style.color = '#000000';
+            titleClone.style.marginBottom = '20px';
+            titleClone.style.borderBottom = '2px solid #333';
+            titleClone.style.paddingBottom = '10px';
+            cloneContainer.appendChild(titleClone);
+        }
 
-        // PDF Seçenekleri (Maksimum Kararlılık)
+        // Makale içeriğini ekle
+        const contentClone = postContent.cloneNode(true);
+        contentClone.querySelectorAll('script, iframe, .adsbygoogle, .in-feed-ad').forEach(el => el.remove());
+        cloneContainer.appendChild(contentClone);
+        
+        // Stil iyileştirmeleri (Saf Beyaz Arka Plan)
+        cloneContainer.style.background = '#ffffff';
+        cloneContainer.style.color = '#000000';
+        cloneContainer.style.padding = '40px';
+        cloneContainer.style.width = '750px'; 
+        cloneContainer.style.position = 'absolute';
+        cloneContainer.style.left = '-9999px';
+        
+        document.body.appendChild(cloneContainer);
+
+        // PDF Seçenekleri
         const opt = {
-            margin:       [10, 10],
+            margin:       [15, 12],
             filename:     `${document.title.split('|')[0].trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 }, 
             html2canvas:  { 
-                scale: 1, // Bellek hatalarını sıfırlamak için 1:1 ölçek
+                scale: 1, 
                 useCORS: true, 
-                logging: false,
-                backgroundColor: '#ffffff',
-                scrollY: 0
+                backgroundColor: '#ffffff'
             },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
             pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
         try {
-            // Küçük bir bekleme (Render hazırlığı için)
             await new Promise(resolve => setTimeout(resolve, 500));
-            
-            await html2pdf().from(clone).set(opt).save();
+            await html2pdf().from(cloneContainer).set(opt).save();
             console.log("PDF generated successfully.");
         } catch (err) {
             console.error('PDF Generation Technical Error:', err);
-            alert('PDF oluşturulurken bir hata oluştu. Sayfa çok uzun olabilir. Alternatif olarak tarayıcının Yazdır (Ctrl+P) özelliğini kullanabilirsiniz.');
+            alert('Bu makale PDF motoru için çok uzun. Lütfen Ctrl+P (Yazdır) yaparak PDF olarak kaydetmeyi deneyin.');
         } finally {
-            // Temizlik
-            if (document.body.contains(clone)) document.body.removeChild(clone);
+            if (document.body.contains(cloneContainer)) document.body.removeChild(cloneContainer);
             if (label) label.innerText = originalText;
             btn.style.opacity = '1';
             btn.style.pointerEvents = 'auto';
         }
     };
 }
+
 
 
 
