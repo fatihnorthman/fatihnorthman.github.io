@@ -3152,3 +3152,7 @@ body.is-printing-pdf {
     height: 20px !important;
     margin-right: 4px;
 }
+
+/* PDF Share Item Styling */
+.share-item.pdf:hover { background: rgba(255, 152, 0, 0.15); border-color: #ff9800; }
+.share-item.pdf:hover svg { fill: #ff9800; }
