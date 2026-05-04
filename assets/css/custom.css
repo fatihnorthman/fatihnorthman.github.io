@@ -2998,16 +2998,18 @@ html, body {
   box-shadow: 0 0 15px rgba(229, 57, 53, 0.2);
 }
 
-/* Mobilde ve Küçük Ekranlarda Reklamları Gizle */
-@media screen and (max-width: 1300px) {
-  .ad-sidebar {
-    display: none !important;
-  }
-}
-
-/* ── In-Feed & Multiplex Ad Slots (Hidden until approved) ─────────────────────────── */
-.in-feed-ad, .multiplex-ad-container {
+/* ── Nükleer Reklam Gizleme (Onay Alana Kadar) ─────────────────────────── */
+.in-feed-ad, 
+.multiplex-ad-container, 
+.ad-sidebar, 
+.in-article-adsense, 
+.ad-placeholder-horizontal,
+.adsbygoogle {
   display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  visibility: hidden !important;
 }
 
 /* ── PDF Download Styles ────────────────────────────────────── */
