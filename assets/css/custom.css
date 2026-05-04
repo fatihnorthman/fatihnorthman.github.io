@@ -3153,22 +3153,59 @@ body.is-printing-pdf {
     margin-right: 4px;
 }
 
-/* PDF Share Item Styling */
-.share-item.pdf {
-    width: auto !important;
-    padding: 0 16px !important;
-    gap: 8px;
-    display: flex;
-    align-items: center;
+/* ── PDF Export Mode ─────────────────────────────────────── */
+body.is-pdf-printing {
+    background: #ffffff !important;
+    color: #000000 !important;
+    overflow: visible !important;
 }
 
-.share-item.pdf .label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+body.is-pdf-printing .header,
+body.is-pdf-printing .footer,
+body.is-pdf-printing .navigation-menu,
+body.is-pdf-printing .post-interaction-hub,
+body.is-pdf-printing .comments-section,
+body.is-pdf-printing .pagination,
+body.is-pdf-printing .multiplex-ad-container,
+body.is-pdf-printing .in-feed-ad,
+body.is-pdf-printing .adsbygoogle,
+body.is-pdf-printing .scroll-to-comments,
+body.is-pdf-printing .hanchor,
+body.is-pdf-printing .fn-avatar-frame,
+body.is-pdf-printing .post-user-info,
+body.is-pdf-printing .post-meta,
+body.is-pdf-printing .post-tags,
+body.is-pdf-printing .post-header {
+    display: none !important;
 }
 
+body.is-pdf-printing .post {
+    margin: 0 !important;
+    padding: 40px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 800px !important;
+}
+
+body.is-pdf-printing .post-content {
+    color: #000000 !important;
+    font-size: 12pt !important;
+}
+
+body.is-pdf-printing h1, 
+body.is-pdf-printing h2, 
+body.is-pdf-printing h3, 
+body.is-pdf-printing a {
+    color: #000000 !important;
+    text-decoration: none !important;
+    border-bottom: 1px solid #eee !important;
+}
+
+/* PDF Share Item Styling (RESTORED) */
+.share-item.pdf { width: auto !important; padding: 0 16px !important; gap: 8px; display: flex; align-items: center; }
+.share-item.pdf .label { font-size: 0.8rem; font-weight: 600; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; }
 .share-item.pdf:hover { background: rgba(255, 152, 0, 0.15); border-color: #ff9800; }
 .share-item.pdf:hover svg { fill: #ff9800; }
