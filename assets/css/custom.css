@@ -1510,8 +1510,9 @@ h3:hover .hanchor { opacity: 1; }
 .post-interaction-hub {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 32px 0;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 48px 0;
   flex-wrap: wrap;
 }
 
