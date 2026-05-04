@@ -1601,8 +1601,8 @@ h3:hover .hanchor { opacity: 1; }
   text-decoration: none;
 }
 
-.share-item svg { width: 16px; height: 16px; fill: #ccc; transition: all 0.25s ease; }
-.share-item.copy svg { fill: #ccc; }
+.share-item svg { width: 16px !important; height: 16px !important; fill: #ccc !important; display: block !important; transition: all 0.25s ease; }
+.share-item.copy svg { fill: #ccc !important; visibility: visible !important; opacity: 1 !important; }
 
 .share-item.wa:hover  { background: rgba(37,211,102,0.15); border-color: #25d366; }
 .share-item.wa:hover svg { fill: #25d366; }
