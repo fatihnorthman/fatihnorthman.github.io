@@ -84,8 +84,8 @@ function initPDF() {
             return;
         }
 
-        const element = document.querySelector('.post');
-        if (!element) {
+        const sourceElement = document.querySelector('.post');
+        if (!sourceElement) {
             console.error("Post container not found!");
             return;
         }
@@ -97,42 +97,41 @@ function initPDF() {
         btn.style.opacity = '0.5';
         btn.style.pointerEvents = 'none';
 
-        // PDF Seçenekleri (Reklam Filtreleme Eklendi)
+        // 1. ADIM: Güvenli Kopya Oluştur (Sanitization)
+        const clone = sourceElement.cloneNode(true);
+        clone.querySelectorAll('.adsbygoogle, .in-feed-ad, .multiplex-ad-container, .post-interaction-hub, script, iframe, .scroll-to-comments').forEach(el => el.remove());
+        
+        // Klonun stilini PDF için optimize et
+        clone.style.background = '#ffffff';
+        clone.style.color = '#000000';
+        clone.style.padding = '40px';
+        clone.style.width = '800px'; // Standart genişlik sabitleme
+
+        // PDF Seçenekleri
         const opt = {
-            margin:       [15, 10],
+            margin:       [15, 12],
             filename:     `${document.title.split('|')[0].trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
-            image:        { type: 'jpeg', quality: 0.95 },
+            image:        { type: 'png', quality: 1 }, // PNG daha kararlı render sağlar
             html2canvas:  { 
-                scale: 1.5,
+                scale: 1.2, // Bellek hatalarını önlemek için ölçek optimize edildi
                 useCORS: true, 
-                letterRendering: true,
-                backgroundColor: '#ffffff',
                 logging: false,
-                ignoreElements: (el) => {
-                    // Reklamları, iframe'leri ve etkileşim butonlarını PDF'den tamamen dışla
-                    return el.tagName === 'IFRAME' || 
-                           el.classList.contains('adsbygoogle') || 
-                           el.classList.contains('multiplex-ad-container') ||
-                           el.classList.contains('post-interaction-hub') ||
-                           el.classList.contains('in-feed-ad');
-                }
+                backgroundColor: '#ffffff'
             },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
             pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
-        // PDF Baskı Moduna Geç
+        // PDF Baskı Moduna Geç (Görsel geri bildirim için)
         document.body.classList.add('is-printing-pdf');
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 400));
-            const worker = html2pdf().from(element).set(opt);
-            await worker.save();
+            // Arka planda sessizce oluştur
+            await html2pdf().from(clone).set(opt).save();
             console.log("PDF generated successfully.");
         } catch (err) {
             console.error('PDF Generation Technical Error:', err);
-            document.body.classList.remove('is-printing-pdf');
-            alert('PDF oluşturulurken bir hata oluştu. Reklam engelleyiciniz varsa kapatıp tekrar deneyebilir misiniz?');
+            alert('PDF oluşturulurken bir hata oluştu. Sayfa çok uzun veya görseller çok büyük olabilir.');
         } finally {
             document.body.classList.remove('is-printing-pdf');
             if (label) label.innerText = originalText;
@@ -141,6 +140,7 @@ function initPDF() {
         }
     };
 }
+
 
 
 
