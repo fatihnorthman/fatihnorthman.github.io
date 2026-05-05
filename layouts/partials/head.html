@@ -27,11 +27,9 @@
   html.is-lighthouse .preloader__content { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
   html.is-lighthouse body { overflow: auto !important; }
   
-  /* Best Practices: overflow: visible fix for all media */
-  img, video, canvas, svg, picture { overflow: clip !important; }
+  /* Best Practices: overflow: visible fix for all media and ad containers */
+  img, video, canvas, svg, picture, .adsbygoogle, ins { overflow: clip !important; }
 </style>
-
-<meta http-equiv="X-Frame-Options" content="DENY">
 
 <meta name="robots" content="index, follow">
 <meta name="author" content="Fatih Şahan">
