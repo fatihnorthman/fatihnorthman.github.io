@@ -1,32 +1,29 @@
-# fatihnorthman.com - Robots.txt
-# Optimized for Google & Privacy-First Security
+# NORTH PROTOCOL - Robots.txt
+# Optimized for Google AdSense & Search Visibility
+
+# 1. AdSense Botlarına Tam Yetki (Kritik!)
+User-agent: Mediapartners-Google
+Allow: /
 
 User-agent: *
-# Tüm yararlı içeriklere izin ver
+# Tüm yararlı içeriğe izin ver
 Allow: /
 Allow: /index.xml
 Allow: /sitemap.xml
 
-# Yinelenen içerik ve SEO kirliliğini engelle
+# Yinelenen içerik engelleme
 Disallow: /tags/
 Disallow: /categories/
 Disallow: /search/
-Disallow: /cgi-bin/
-Disallow: /private/
 Disallow: /admin/
 
-# Agresif ve veri toplayan botları engelle (Güvenlik Önlemi)
+# Agresif AI botlarını engelle
 User-agent: GPTBot
 Disallow: /
-
 User-agent: CCBot
 Disallow: /
-
 User-agent: ClaudeBot
 Disallow: /
-
-# Tarama hızı optimizasyonu
-Crawl-delay: 1
 
 # Site Haritası
 Sitemap: https://fatihnorthman.github.io/sitemap.xml
