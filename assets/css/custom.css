@@ -2268,8 +2268,8 @@ h3:hover .hanchor { opacity: 1; }
 }
 
 @keyframes pulseLogo {
-  0%, 100% { transform: scale(0.95); opacity: 0.5; filter: drop-shadow(0 0 5px rgba(229, 57, 53, 0)); }
-  50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 20px rgba(229, 57, 53, 0.4)); }
+  0%, 100% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.05); opacity: 1; }
 }
 
 @keyframes fillBar {
