@@ -34,9 +34,9 @@ removePathAccents = true
       mainSections = ["posts"]
 
 [sitemap]
-  changefreq = "weekly"
+  changefreq = "daily"
   filename = "sitemap.xml"
-  priority = 0.5
+  priority = 0.7
 
 [markup]
   [markup.highlight]
