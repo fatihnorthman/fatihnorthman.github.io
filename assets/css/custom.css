@@ -2991,7 +2991,7 @@ html, body {
 }
 
 /* Lighthouse pürüzsüzce ölçüm yapabilsin diye */
-body.lighthouse-audit .adsbygoogle {
+html.is-lighthouse .adsbygoogle {
   opacity: 1;
   display: block !important;
   visibility: visible !important;
