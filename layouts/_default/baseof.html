@@ -7,6 +7,7 @@
   {{ partial "head.html" . }}
 </head>
 <body class="colorscheme-dark">
+  <a href="#main-content" class="skip-link">İçeriğe Atla</a>
   <div class="custom-cursor"></div>
   <canvas id="trail-canvas"></canvas>
   
@@ -68,7 +69,7 @@
 
   {{ partial "header.html" . }}
 
-  <main class="content">
+  <main class="content" id="main-content" role="main">
     {{ block "main" . }}
     {{ end }}
   </main>

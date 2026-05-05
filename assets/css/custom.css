@@ -3208,3 +3208,21 @@ body.is-pdf-printing a {
         justify-content: center;
     }
 }
+
+/* Skip Link Styling for Accessibility */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: #e53935;
+    color: #fff !important;
+    padding: 10px 20px;
+    z-index: 9999;
+    transition: top 0.3s;
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom-right-radius: 8px;
+}
+.skip-link:focus {
+    top: 0;
+}
