@@ -42,12 +42,9 @@
 
 <link rel="canonical" href="{{ .Permalink }}" />
 
-{{- /* Theme CSS Assets (Orijinal Mantık) */ -}}
-{{ $css := resources.Match "css/*.css" }}
-{{ range $css }}
-  {{ $styles := . | minify | fingerprint }}
-  <link rel="stylesheet" href="{{ $styles.Permalink }}">
-{{ end }}
+{{- /* Theme CSS Bundle (Performance Optimized) */ -}}
+{{ $styles := resources.Match "css/*.css" | resources.Concat "css/bundle.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $styles.Permalink }}" integrity="{{ $styles.Data.Integrity }}" crossorigin="anonymous">
 
 {{- /* Open Graph / Facebook */ -}}
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
@@ -61,10 +58,6 @@
 <meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
 <meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.subtitle }}{{ end }}{{ end }}">
 <meta name="twitter:image" content="{{ if .Params.image }}{{ .Site.BaseURL }}{{ .Params.image | strings.TrimPrefix "/" }}{{ else }}{{ .Site.BaseURL }}logo.png{{ end }}">
-
-{{- /* Font Preconnect */ -}}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 {{- /* JSON-LD Structured Data */ -}}
 <script type="application/ld+json">

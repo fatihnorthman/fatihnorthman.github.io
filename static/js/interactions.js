@@ -9,7 +9,7 @@ function startEngine() {
     const inits = [
         initInteractions, initScrollReveal, init3DTilt, 
         initClickRipple, initCustomCursor, initMouseTrail, 
-        initProgressBar, initPDF
+        initPDF
     ];
     
     inits.forEach(fn => {
@@ -225,8 +225,11 @@ function init3DTilt() {
 async function initInteractions() {
     const likeButtons = document.querySelectorAll('.like-btn, .stat-card.likeable');
     const commentForm = document.getElementById('comment-form');
-    fetchGlobalLikes();
-    fetchGlobalCommentCounts(); // Ana sayfadaki yorum sayılarını güncelle
+    // Performance Optimization: Delay DB calls to reduce TBT
+    setTimeout(() => {
+        fetchGlobalLikes();
+        fetchGlobalCommentCounts();
+    }, 2000);
     likeButtons.forEach(btn => {
         const rawId = btn.dataset.postId || window.location.pathname;
         const cleanId = decodeURIComponent(rawId).replace(/\/$/, ""); 
@@ -510,18 +513,7 @@ async function submitComment(postId, name, content) {
     });
 }
 
-// --- READING PROGRESS BAR ---
-function initProgressBar() {
-    const bar = document.querySelector('.progress-bar');
-    if (!bar) return;
-
-    window.addEventListener('scroll', () => {
-        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const scrolled = (winScroll / height) * 100;
-        bar.style.width = scrolled + "%";
-    });
-}
+// Removed redundant initProgressBar for TBT optimization
 
 
 
