@@ -11,8 +11,11 @@
 <meta name="referrer" content="no-referrer-when-downgrade">
 
 <meta name="robots" content="index, follow">
-<meta name="author" content="{{ .Site.Title }}">
+<meta name="author" content="Fatih Şahan">
+<meta name="publisher" content="North Protocol Architect">
+<link rel="author" href="https://fatihnorthman.github.io/about">
 <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.subtitle }}{{ end }}{{ end }}">
+<meta name="keywords" content="linux, infrastructure, architect, siber güvenlik, yazılım, teknoloji, rehber">
 
 <link rel="canonical" href="{{ .Permalink }}" />
 
@@ -66,7 +69,17 @@
     }
   },
   "datePublished": "{{ .Date.Format "2006-01-02" }}",
-  "dateModified": "{{ if .Lastmod }}{{ .Lastmod.Format "2006-01-02" }}{{ else }}{{ .Date.Format "2006-01-02" }}{{ end }}"
+  "dateModified": "{{ if .Lastmod }}{{ .Lastmod.Format "2006-01-02" }}{{ else }}{{ .Date.Format "2006-01-02" }}{{ end }}",
+  "mainEntity": {
+    "@type": "Person",
+    "name": "Fatih Şahan",
+    "jobTitle": "Infrastructure Architect",
+    "url": "https://fatihnorthman.github.io/about",
+    "sameAs": [
+      "https://github.com/fatihnorthman",
+      "https://www.linkedin.com/in/fatih-sahan"
+    ]
+  }
 }
 </script>
 
