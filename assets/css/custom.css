@@ -2975,19 +2975,36 @@ html, body {
   box-shadow: 0 0 15px rgba(229, 57, 53, 0.2);
 }
 
-/* ── Profesyonel Reklam Yönetimi (Audit Dostu) ─────────────────────────── */
+/* ── Profesyonel Reklam Yönetimi (İnceleme & Onay Modu) ─────────────────────────── */
 .in-feed-ad, 
 .multiplex-ad-container, 
 .ad-sidebar, 
 .in-article-adsense, 
 .ad-placeholder-horizontal,
 .adsbygoogle {
-  /* display: none yerine layout'u bozmayan gizleme */
-  opacity: 0;
-  pointer-events: none;
-  min-width: 250px; /* AdSense minimum şartı */
-  min-height: 50px;
+  /* Onay sürecinde görünürlük şarttır! */
+  opacity: 1 !important;
+  visibility: visible !important;
+  min-width: 250px; 
+  min-height: 250px;
+  background: rgba(229, 57, 53, 0.03) !important;
+  border: 1px dashed rgba(229, 57, 53, 0.2) !important;
+  position: relative;
   overflow: hidden;
+  margin: 20px auto !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Reklam alanı olduğunu Google'a ve kullanıcıya belli et */
+.adsbygoogle::before {
+  content: "ADVERTISEMENT / REKLAM ALANI";
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(229, 57, 53, 0.4);
+  font-weight: 800;
 }
 
 /* Lighthouse pürüzsüzce ölçüm yapabilsin diye */
