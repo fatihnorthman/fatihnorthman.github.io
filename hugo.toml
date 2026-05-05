@@ -33,6 +33,11 @@ removePathAccents = true
     [languages.tr.params]
       mainSections = ["posts"]
 
+[sitemap]
+  changefreq = "weekly"
+  filename = "sitemap.xml"
+  priority = 0.5
+
 [markup]
   [markup.highlight]
     noClasses = false
