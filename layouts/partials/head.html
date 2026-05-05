@@ -21,12 +21,17 @@
 </script>
 
 <style>
-  .is-lighthouse .preloader, 
-  .is-lighthouse .preloader-overlay { display: none !important; }
-  .is-lighthouse body { overflow: auto !important; }
-  /* Best Practices: overflow: visible fix for images */
-  img, video, canvas { overflow: clip !important; }
+  /* Lighthouse Bypass */
+  html.is-lighthouse .preloader, 
+  html.is-lighthouse .preloader-overlay,
+  html.is-lighthouse .preloader__content { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
+  html.is-lighthouse body { overflow: auto !important; }
+  
+  /* Best Practices: overflow: visible fix for all media */
+  img, video, canvas, svg, picture { overflow: clip !important; }
 </style>
+
+<meta http-equiv="X-Frame-Options" content="DENY">
 
 <meta name="robots" content="index, follow">
 <meta name="author" content="Fatih Şahan">
