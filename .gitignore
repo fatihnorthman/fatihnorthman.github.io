@@ -57,3 +57,4 @@ Thumbs.db
 *.swo
 *~
 .hugo_build.lock
+NEWSLETTER_GUIDE.md
