@@ -25,6 +25,8 @@ removePathAccents = true
   TocTitle = "İçindekiler"
   github = "fatihnorthman"
   email = "sahanfatih2798@gmail.com"
+  subtitle = "Infrastructure Architect & Linux Enthusiast"
+  description = "Linux, altyapı mimarisi, siber güvenlik ve teknoloji üzerine derinlemesine rehberler ve teknik dökümanlar."
 
 [languages]
   [languages.tr]
