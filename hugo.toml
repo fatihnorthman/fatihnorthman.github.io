@@ -34,6 +34,7 @@ removePathAccents = true
     subtitle = "Infrastructure Architect & Linux Enthusiast"
     [languages.tr.params]
       mainSections = ["posts"]
+      description = "Linux, altyapı mimarisi, siber güvenlik ve teknoloji üzerine derinlemesine rehberler ve teknik dökümanlar."
 
 [sitemap]
   changefreq = "daily"
