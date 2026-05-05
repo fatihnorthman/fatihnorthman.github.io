@@ -1,2 +1,59 @@
+# --- HUGO & WEB ---
 public/
 resources/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- TEST & DEV SCRIPTS ---
+test-*.py
+debug-*.py
+*.test.js
+*.spec.js
+scripts/temp/
+
+# --- SECRETS & ENV ---
+.env
+.env.*
+*.secret
+*.key
+*.pem
+credentials.json
+gh_token.txt
+
+# --- PYTHON ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.flakes/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv
+venv/
+ENV/
+
+# --- SYSTEM & EDITORS ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.hugo_build.lock
