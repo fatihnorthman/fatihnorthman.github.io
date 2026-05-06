@@ -225,11 +225,11 @@ function init3DTilt() {
 async function initInteractions() {
     const likeButtons = document.querySelectorAll('.like-btn, .stat-card.likeable');
     const commentForm = document.getElementById('comment-form');
-    // Performance Optimization: Delay DB calls to reduce TBT
+    // Performance Optimization: Delay DB calls slightly to keep TBT low
     setTimeout(() => {
         fetchGlobalLikes();
         fetchGlobalCommentCounts();
-    }, 2000);
+    }, 500);
     likeButtons.forEach(btn => {
         const rawId = btn.dataset.postId || window.location.pathname;
         const cleanId = decodeURIComponent(rawId).replace(/\/$/, ""); 
