@@ -5,7 +5,10 @@ theme = 'terminal'
 paginate = 8
 removePathAccents = true
 [outputs]
-  home = ["HTML", "RSS"]
+  home = ["HTML", "RSS", "SITEMAP"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML"]
+  term = ["HTML"]
 
 
 
