@@ -25,11 +25,18 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
           python3 << 'PYEOF'
           import os, re, json, urllib.request, smtplib, urllib.parse, glob, time
           from email.mime.text import MIMEText
           from email.mime.multipart import MIMEMultipart
+
+          # Guncelleme commit'lerinde bildirim gonderme
+          commit_msg = os.environ.get('COMMIT_MSG', '').lower()
+          if any(kw in commit_msg for kw in ['update post', 'edit:', 'fix:', 'update:', 'guncel']):
+              print(f"Guncelleme commit'i tespit edildi ({commit_msg}), bildirim atlanıyor.")
+              exit(0)
 
           # 1. En yeni dosyayı bul (İçerikteki 'date' alanına göre)
           files = glob.glob('content/posts/*.md')
@@ -77,7 +84,7 @@ jobs:
           html = html.replace('{{POST_TITLE}}', title).replace('{{POST_DESC}}', description).replace('{{POST_DATE}}', date_str).replace('{{POST_TAGS}}', tag_html).replace('{{POST_URL}}', url)
 
           # 4. Aboneleri çek (En yalın haliyle)
-          sb_url = 'https://xusjivptdjytbcobarxh.supabase.co'
+          sb_url = os.environ.get('SUPABASE_URL', '').strip()
           sb_key = os.environ.get('SUPABASE_SERVICE_KEY', '').strip()
           
           try:
