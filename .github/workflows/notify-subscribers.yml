@@ -67,7 +67,8 @@ jobs:
 
           # 2. Meta verileri çek
           def get_meta(key, default=""):
-              m = re.search(rf'^{key}\s*[:=]\s*["\']?(.*?)["\']?\s*$', content, re.MULTILINE)
+              pattern = r'^' + key + r'\s*[:=]\s*["\']?(.*?)["\']?\s*$'
+              m = re.search(pattern, content, re.MULTILINE)
               return m.group(1).strip() if m else default
 
           title = get_meta("title", "Yeni Yazı")
