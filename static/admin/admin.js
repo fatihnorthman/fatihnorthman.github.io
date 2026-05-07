@@ -102,13 +102,19 @@ document.getElementById("post-image").onchange = function(e) {
 
 function slugify(text) {
     const trMap = {
-        'ç': 'c', 'ğ': 'g', 'ı': 'i', 'İ': 'i', 'ö': 'o', 'ş': 's', 'ü': 'u',
-        'Ç': 'c', 'Ğ': 'g', 'Ö': 'o', 'Ş': 's', 'Ü': 'u', ' ': '-'
+        'ç': 'c', 'Ç': 'c',
+        'ğ': 'g', 'Ğ': 'g',
+        'ı': 'i', 'İ': 'i',
+        'ö': 'o', 'Ö': 'o',
+        'ş': 's', 'Ş': 's',
+        'ü': 'u', 'Ü': 'u',
+        ' ': '-'
     };
-    for (let key in trMap) {
-        text = text.replace(new RegExp(key, 'g'), trMap[key]);
+    let result = '';
+    for (let char of text) {
+        result += trMap[char] !== undefined ? trMap[char] : char;
     }
-    return text.toLowerCase()
+    return result.toLowerCase()
         .replace(/[^-a-z0-9]/g, '')
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '');
@@ -224,6 +230,16 @@ async function loadPostForEdit(path, sha) {
         document.getElementById("post-tags").value = getTags();
         document.getElementById("post-desc").value = getValue("description");
         document.getElementById("post-content").value = body;
+        
+        // Orijinal tarihi sakla (edit modunda korunacak)
+        let originalDateInput = document.getElementById('original-date');
+        if (!originalDateInput) {
+            originalDateInput = document.createElement('input');
+            originalDateInput.type = 'hidden';
+            originalDateInput.id = 'original-date';
+            document.body.appendChild(originalDateInput);
+        }
+        originalDateInput.value = getValue("date") || new Date().toISOString().split('.')[0] + "+03:00";
 
         // Mode UI Update
         IS_EDIT_MODE = true;
@@ -339,15 +355,23 @@ async function publishPost() {
         }
 
         const tagsArr = tagsRaw.split(',').map(t => `"${t.trim()}"`).join(', ');
+        const nowDate = new Date();
+        const isoNow = nowDate.toISOString().split('.')[0] + "+03:00";
+        
+        // Edit modunda orijinal date'i koru, lastmod'u güncelle
+        const originalDate = IS_EDIT_MODE ? (document.getElementById('original-date')?.value || isoNow) : isoNow;
+        
         const frontMatter = `---
 title: "${title}"
-date: ${date}
+date: ${originalDate}
+lastmod: ${isoNow}
 draft: false
 tags: [${tagsArr}]
 categories: ["${category}"]
 author: "Fatih Northman"
 description: "${desc}"
 slug: "${slug}"
+readingTime: true
 ${weight ? `weight: ${weight}` : ""}
 ${imagePath ? `image: "${imagePath}"` : ""}
 ---

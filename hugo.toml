@@ -5,7 +5,7 @@ theme = 'terminal'
 paginate = 8
 removePathAccents = true
 [outputs]
-  home = ["HTML", "RSS", "SITEMAP"]
+  home = ["HTML", "RSS"]
   section = ["HTML", "RSS"]
   taxonomy = ["HTML"]
   term = ["HTML"]
@@ -40,9 +40,7 @@ removePathAccents = true
       description = "Linux, altyapı mimarisi, siber güvenlik ve teknoloji üzerine derinlemesine rehberler ve teknik dökümanlar."
 
 [sitemap]
-  changefreq = "daily"
   filename = "sitemap.xml"
-  priority = 0.7
 
 [markup]
   [markup.highlight]
