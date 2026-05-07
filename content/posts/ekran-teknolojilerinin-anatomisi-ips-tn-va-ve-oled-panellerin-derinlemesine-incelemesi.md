@@ -1,6 +1,6 @@
 ---
 title: "Ekran Teknolojilerinin Anatomisi: IPS, TN, VA ve OLED Panellerin Derinlemesine İncelemesi"
-date: 2026-05-07T16:38:03+03:00
+date: 2026-05-07T16:41:04+03:00
 draft: false
 tags: ["Monitör Panelleri", "IPS Panel", "TN Panel", "VA Panel", "OLED Ekran", "Ekran Teknolojileri", "Monitör Tavsiyesi", "Görüntü Teknolojileri", "Refresh Rate", "Tepki Süresi", "Ghosting", "IPS Glow", "Ekran Yanığı", "Burn In", "LCD", "Kontrast Oranı", "Oyun Monitörü", "Grafik Tasarım Monitörü", "Teknoloji Rehberi", "Donanım"]
 categories: ["Genel"]
