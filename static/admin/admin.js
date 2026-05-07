@@ -203,7 +203,9 @@ async function loadPostForEdit(path, sha) {
             headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` }
         });
         const data = await res.json();
-        const content = decodeURIComponent(escape(atob(data.content)));
+        // Türkçe karakter desteği için TextDecoder kullan
+        const bytes = Uint8Array.from(atob(data.content.replace(/\n/g, '')), c => c.charCodeAt(0));
+        const content = new TextDecoder('utf-8').decode(bytes);
 
         // YAML Parsing (Regex)
         const parts = content.split('---');
@@ -336,7 +338,6 @@ async function publishPost() {
     btn.innerText = IS_EDIT_MODE ? "GÜNCELLEME İŞLENİYOR..." : "YAYINLANIYOR...";
 
     const slug = slugify(title);
-    const date = new Date().toISOString().split('.')[0] + "+03:00"; 
     const fileName = IS_EDIT_MODE ? EDIT_PATH.split('/').pop() : `${slug}.md`;
     let imagePath = "";
 

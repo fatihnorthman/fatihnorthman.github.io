@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -28,53 +28,61 @@ jobs:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
           python3 << 'PYEOF'
-          import os, re, json, urllib.request, smtplib, urllib.parse, glob, time
+          import os, re, json, urllib.request, smtplib, urllib.parse, subprocess
           from email.mime.text import MIMEText
           from email.mime.multipart import MIMEMultipart
 
-          # Guncelleme commit'lerinde bildirim gonderme
           commit_msg = os.environ.get('COMMIT_MSG', '').lower()
-          if any(kw in commit_msg for kw in ['update post', 'edit:', 'fix:', 'update:', 'guncel']):
-              print(f"Guncelleme commit'i tespit edildi ({commit_msg}), bildirim atlanıyor.")
+          print(f"Commit mesajı: {commit_msg}")
+
+          # Güncelleme commit'lerinde bildirim gönderme
+          skip_keywords = ['update post', 'edit:', 'fix:', 'update:', 'guncel', 'system: delete']
+          if any(kw in commit_msg for kw in skip_keywords):
+              print(f"Güncelleme/silme commit'i, bildirim atlanıyor.")
               exit(0)
 
-          # 1. En yeni dosyayı bul (İçerikteki 'date' alanına göre)
-          files = glob.glob('content/posts/*.md')
-          files = [f for f in files if '_index.md' not in f]
-          if not files:
-              print("Yazı bulunamadı.")
-              exit(0)
-          
-          def extract_date(filepath):
-              try:
-                  with open(filepath, 'r', encoding='utf-8') as f:
-                      c = f.read()
-                      m = re.search(r'date\s*[:=]\s*["\']?(.*?)["\']?$', c, re.MULTILINE)
-                      return m.group(1).strip() if m else "1970-01-01"
-              except: return "1970-01-01"
+          # 1. Bu commit'te değişen/eklenen .md dosyasını bul (en güvenilir yöntem)
+          try:
+              result = subprocess.run(
+                  ['git', 'diff', '--name-only', '--diff-filter=A', 'HEAD~1', 'HEAD'],
+                  capture_output=True, text=True
+              )
+              changed_files = [f for f in result.stdout.strip().split('\n')
+                              if f.startswith('content/posts/') and f.endswith('.md') and '_index' not in f]
+              print(f"Bu commit'te eklenen dosyalar: {changed_files}")
+          except Exception as e:
+              print(f"Git diff hatası: {e}")
+              changed_files = []
 
-          post_file = max(files, key=extract_date)
-          print(f"Bülten için seçilen en yeni dosya: {post_file}")
-          
+          # Eğer yeni dosya yoksa (sadece güncelleme), dur
+          if not changed_files:
+              print("Bu commit'te yeni post eklenmedi, bildirim atlanıyor.")
+              exit(0)
+
+          post_file = changed_files[0]
+          print(f"Bülten için seçilen dosya: {post_file}")
+
           with open(post_file, 'r', encoding='utf-8') as f:
               content = f.read()
 
-          # 2. Meta verileri çek (Esnek Regex)
+          # 2. Meta verileri çek
           def get_meta(key, default=""):
-              m = re.search(f'{key}\s*[:=]\s*["\']?(.*?)["\']?$', content, re.MULTILINE)
+              m = re.search(rf'^{key}\s*[:=]\s*["\']?(.*?)["\']?\s*$', content, re.MULTILINE)
               return m.group(1).strip() if m else default
 
           title = get_meta("title", "Yeni Yazı")
           description = get_meta("description")
-          date_str = get_meta("date", "2026-05-01").replace('"', '').replace("'", "").split('T')[0]
+          date_str = get_meta("date", "2026-01-01").replace('"', '').replace("'", "").split('T')[0]
           slug = get_meta("slug")
           if not slug:
               slug = urllib.parse.quote(title.lower().replace(' ', '-'))
-          
+
           tags_match = re.search(r'tags\s*[:=]\s*\[(.*?)\]', content, re.MULTILINE)
           tags = tags_match.group(1).replace('"', '').replace("'", "") if tags_match else ""
 
           url = f"https://fatihnorthman.github.io/{slug}/"
+          print(f"Post URL: {url}")
+          print(f"Title: {title}")
 
           # 3. Şablonu hazırla
           with open('.github/email-template.html', 'r', encoding='utf-8') as f:
@@ -83,32 +91,44 @@ jobs:
           tag_html = "".join([f'<span style="color:#ffc107;margin-right:8px;">#{t.strip()}</span> ' for t in tags.split(',') if t.strip()])
           html = html.replace('{{POST_TITLE}}', title).replace('{{POST_DESC}}', description).replace('{{POST_DATE}}', date_str).replace('{{POST_TAGS}}', tag_html).replace('{{POST_URL}}', url)
 
-          # 4. Aboneleri çek (En yalın haliyle)
+          # 4. Aboneleri çek
           sb_url = os.environ.get('SUPABASE_URL', '').strip()
           sb_key = os.environ.get('SUPABASE_SERVICE_KEY', '').strip()
-          
+
+          if not sb_url or not sb_key:
+              print("HATA: SUPABASE_URL veya SUPABASE_SERVICE_KEY secret tanımlı değil!")
+              exit(1)
+
+          print(f"Supabase URL: {sb_url[:30]}...")
+
           try:
-              # Filtreyi kaldırıp sadece email çekiyoruz (Hata payını sıfıra indirmek için)
-              req = urllib.request.Request(f"{sb_url}/rest/v1/subscribers?select=email", headers={"apikey": sb_key, "Authorization": f"Bearer {sb_key}"})
+              req = urllib.request.Request(
+                  f"{sb_url}/rest/v1/subscribers?select=email",
+                  headers={"apikey": sb_key, "Authorization": f"Bearer {sb_key}"}
+              )
               with urllib.request.urlopen(req) as response:
                   subscribers = json.loads(response.read().decode())
+              print(f"Toplam abone sayısı: {len(subscribers)}")
           except Exception as e:
               print(f"Supabase Hatası: {str(e)}")
-              # Hata olsa bile diğer işlemleri bozma veya manuel liste kullan
-              subscribers = []
+              exit(1)
 
           if not subscribers:
-              print("Gönderilecek abone bulunamadı.")
+              print("Veritabanında abone bulunamadı.")
               exit(0)
 
           # 5. Gmail SMTP üzerinden gönder
           gmail_user = os.environ.get('GMAIL_EMAIL', '').strip()
           gmail_pwd = os.environ.get('GMAIL_PASSWORD', '').strip()
-          
+
+          if not gmail_user or not gmail_pwd:
+              print("HATA: GMAIL_EMAIL veya GMAIL_PASSWORD secret tanımlı değil!")
+              exit(1)
+
           try:
               server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
               server.login(gmail_user, gmail_pwd)
-
+              sent = 0
               for sub in subscribers:
                   try:
                       msg = MIMEMultipart()
@@ -117,11 +137,12 @@ jobs:
                       msg['Subject'] = f"Yeni Yazı: {title}"
                       msg.attach(MIMEText(html, 'html'))
                       server.send_message(msg)
+                      sent += 1
                   except Exception as sub_err:
-                      print(f"E-posta gönderim hatası ({sub['email']}): {str(sub_err)}")
-              
+                      print(f"Gönderim hatası ({sub['email']}): {str(sub_err)}")
+
               server.quit()
-              print(f"Bülten başarıyla {len(subscribers)} kişiye gönderildi.")
+              print(f"Bülten başarıyla {sent}/{len(subscribers)} kişiye gönderildi.")
           except Exception as smtp_err:
               print(f"SMTP Bağlantı Hatası: {str(smtp_err)}")
               exit(1)
