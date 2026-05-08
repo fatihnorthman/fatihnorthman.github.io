@@ -517,3 +517,47 @@ async function submitComment(postId, name, content) {
 
 
 
+
+// --- Page Transitions ---
+function initPageTransitions() {
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+        // Yoksayılacak link tipleri
+        if (!href || 
+            href.startsWith('#') || 
+            href.startsWith('mailto:') ||
+            link.target === '_blank' || 
+            link.hostname !== window.location.hostname || 
+            e.ctrlKey || 
+            e.metaKey || 
+            link.hasAttribute('download')) {
+            return;
+        }
+
+        e.preventDefault();
+        
+        // Çıkış animasyonu sınıfını ekle
+        document.body.classList.add('page-transitioning');
+        
+        // 350ms bekle (CSS transition süresiyle uyumlu) ve sayfayı değiştir
+        setTimeout(() => {
+            window.location.href = link.href;
+        }, 350);
+    });
+
+    // Sayfa geri tuşuyla gelirse veya önbellekten yüklenirse siyah kalmasını önle
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted || document.body.classList.contains('page-transitioning')) {
+            document.body.classList.remove('page-transitioning');
+        }
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPageTransitions);
+} else {
+    initPageTransitions();
+}
