@@ -64,6 +64,18 @@ body {
   to   { opacity: 1; }
 }
 
+/* ── Parallax Background Canvas ─────────────────────────────── */
+#parallax-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
 /* ── Reading Progress Bar ───────────────────────────────────── */
 .progress-container {
     position: fixed;
@@ -91,6 +103,8 @@ body {
   margin: 0 auto !important;
   padding: 0 0 80px !important;
   border-right: none !important;
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Typography ─────────────────────────────────────────────── */
