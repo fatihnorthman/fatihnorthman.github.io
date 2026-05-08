@@ -1,16 +1,11 @@
 {{ printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-  {{/* Ana Sayfa - en yüksek öncelik */}}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>{{ .Site.BaseURL }}</loc>
     <lastmod>{{ now.Format "2006-01-02" }}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-  {{/* Sadece gerçek içerik sayfaları - tag/kategori sayfaları hariç */}}
   {{- range .Site.RegularPages.ByLastmod.Reverse }}
   <url>
     <loc>{{ .Permalink }}</loc>
