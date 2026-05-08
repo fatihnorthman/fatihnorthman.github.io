@@ -1,0 +1,32 @@
+{{ if or .NextInSection .PrevInSection }}
+<nav class="post-nav" aria-label="Yazılar arası gezinme">
+  <div class="post-nav__label">Diğer Yazılar</div>
+  <div class="post-nav__grid">
+
+    {{ if .NextInSection }}
+    <a href="{{ .NextInSection.Permalink }}" class="post-nav__card post-nav__card--prev">
+      <span class="post-nav__dir">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Önceki Yazı
+      </span>
+      <span class="post-nav__title">{{ .NextInSection.Title | truncate 72 }}</span>
+      <span class="post-nav__date">{{ .NextInSection.Date.Format "02 Jan 2006" }}</span>
+    </a>
+    {{ else }}
+    <div class="post-nav__card post-nav__card--empty"></div>
+    {{ end }}
+
+    {{ if .PrevInSection }}
+    <a href="{{ .PrevInSection.Permalink }}" class="post-nav__card post-nav__card--next">
+      <span class="post-nav__dir">
+        Sonraki Yazı
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </span>
+      <span class="post-nav__title">{{ .PrevInSection.Title | truncate 72 }}</span>
+      <span class="post-nav__date">{{ .PrevInSection.Date.Format "02 Jan 2006" }}</span>
+    </a>
+    {{ end }}
+
+  </div>
+</nav>
+{{ end }}
