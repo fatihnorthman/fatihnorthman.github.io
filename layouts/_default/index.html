@@ -30,8 +30,8 @@
       <h2 class="subscribe-modal__title">Yeni yazılardan haberdar ol</h2>
       <p class="subscribe-modal__desc">Yeni bir yazı yayınlandığında doğrudan e-posta kutuna gelsin. Spam yok, sadece içerik.</p>
       <form id="subscribe-form" class="subscribe-form" novalidate>
-        <input type="text" id="sub-name" placeholder="Adın" required maxlength="60" autocomplete="name">
-        <input type="email" id="sub-email" placeholder="E-posta adresin" required maxlength="120" autocomplete="email">
+        <input type="text" id="sub-name" aria-label="Adınız" placeholder="Adın" required maxlength="60" autocomplete="name">
+        <input type="email" id="sub-email" aria-label="E-posta adresiniz" placeholder="E-posta adresin" required maxlength="120" autocomplete="email">
         <!-- Honeypot -->
         <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
         <button type="submit" class="subscribe-submit" id="subscribe-submit-btn">
