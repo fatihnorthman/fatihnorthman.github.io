@@ -299,8 +299,11 @@ hr {
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  animation: slideUp 0.8s var(--ease) both;
-  transition: var(--transition);
+  /* Scroll reveal için başlangıç durumu */
+  opacity: 0.01;
+  transform: translateY(40px) scale(0.95);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease), background 0.3s var(--ease) !important;
+  will-change: transform, opacity;
   position: relative;
   /* Kalıcı derin gölge */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(229, 57, 53, 0.06);
@@ -308,10 +311,14 @@ hr {
   flex-direction: column;
 }
 
-.post.on-list:hover {
-  transform: translateY(-4px);
+.post.on-list.reveal-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.post.on-list.reveal-visible:hover {
+  transform: translateY(-4px) scale(1.01);
   border-color: var(--accent-border);
-  /* Hover'da daha derin ve kırmızı aksan */
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(229, 57, 53, 0.15), 0 4px 16px rgba(229, 57, 53, 0.12);
   background: #151525;
 }
