@@ -52,8 +52,7 @@ body {
   line-height: 1.8;
   margin: 0;
   animation: fadeIn 0.5s var(--ease) forwards;
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity, transform;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   background-image: 
     radial-gradient(circle at 10% 20%, rgba(229, 57, 53, 0.04) 0%, transparent 40%),
     radial-gradient(circle at 90% 80%, rgba(229, 57, 53, 0.04) 0%, transparent 40%),
@@ -63,7 +62,6 @@ body {
 
 body.page-transitioning {
   opacity: 0 !important;
-  transform: translateY(20px) scale(0.98);
 }
 
 @keyframes fadeIn {
