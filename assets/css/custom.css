@@ -6,10 +6,10 @@
 
 /* ── Design Tokens ─────────────────────────────────────────── */
 :root {
-  --bg:         #0d0d17;
-  --bg-surface: #121220;
-  --bg-card:    #16162a;
-  --bg-code:    #0e0e1c;
+  --bg:         #07070f;
+  --bg-surface: #0c0c18;
+  --bg-card:    #111124;
+  --bg-code:    #0a0a16;
 
   --accent:     #e53935;
   --accent-dim: #c62828;
