@@ -4,7 +4,7 @@ title = 'Fatih Şahan'
 theme = 'terminal'
 paginate = 8
 removePathAccents = true
-disableKinds = ["sitemap", "robotsTXT"]
+disableKinds = ["robotsTXT"]
 [outputs]
   home = ["HTML", "RSS"]
   section = ["HTML", "RSS"]
