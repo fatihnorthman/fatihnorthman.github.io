@@ -302,7 +302,7 @@ hr {
   /* Scroll reveal için başlangıç durumu */
   opacity: 0.01;
   transform: translateY(40px) scale(0.95);
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease), background 0.3s var(--ease) !important;
+  transition: opacity 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease), background 0.3s var(--ease) !important;
   will-change: transform, opacity;
   position: relative;
   /* Kalıcı derin gölge */
