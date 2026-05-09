@@ -786,6 +786,153 @@ li {
 
 li::marker { color: var(--accent); }
 
+/* ── Task Lists (Checkbox) ─────────────────────────────────── */
+.post-content ul li:has(> input[type="checkbox"]) {
+  list-style: none;
+  margin-left: -1.2rem;
+}
+
+.post-content input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--accent);
+  border-radius: 4px;
+  background: transparent;
+  vertical-align: middle;
+  margin-right: 10px;
+  position: relative;
+  cursor: default;
+}
+
+.post-content input[type="checkbox"]:checked {
+  background: var(--accent);
+}
+
+.post-content input[type="checkbox"]:checked::after {
+  content: "✓";
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ── Footnotes ─────────────────────────────────────────────── */
+.footnote-ref {
+  font-size: 0.75em;
+  vertical-align: super;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.footnotes ol { padding-left: 1.5rem; }
+.footnotes li { margin-bottom: 0.5rem; }
+.footnotes .footnote-backref { color: var(--accent); text-decoration: none; margin-left: 4px; }
+
+/* ── Horizontal Rule ───────────────────────────────────────── */
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(229, 57, 53, 0.4), transparent);
+  margin: 3rem 0;
+}
+
+/* ── Strikethrough ─────────────────────────────────────────── */
+del {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* ── Definition Lists ──────────────────────────────────────── */
+dl {
+  margin: 1.5rem 0;
+}
+
+dt {
+  font-weight: 700;
+  color: #fff;
+  margin-top: 1rem;
+}
+
+dd {
+  margin-left: 1.5rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--accent-border);
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+/* ── Keyboard Keys ─────────────────────────────────────────── */
+kbd {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  padding: 2px 7px;
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  color: #e2e2e2;
+}
+
+/* ── Abbreviations ─────────────────────────────────────────── */
+abbr[title] {
+  text-decoration: underline dotted var(--accent);
+  cursor: help;
+}
+
+/* ── Mark (Highlight) ──────────────────────────────────────── */
+mark {
+  background: rgba(229, 57, 53, 0.25);
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+/* ── Details / Summary (Collapsible) ───────────────────────── */
+details {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 1.5rem 0;
+  padding: 0;
+}
+
+summary {
+  padding: 14px 20px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+summary:hover { background: rgba(255, 255, 255, 0.03); }
+
+details[open] summary {
+  border-bottom: 1px solid var(--border);
+}
+
+details > *:not(summary) {
+  padding: 0 20px;
+}
+
+details > p:first-of-type { margin-top: 16px; }
+details > *:last-child { margin-bottom: 16px; }
+
 /* ── Anchor Links ───────────────────────────────────────────── */
 .hanchor {
   color: var(--text-muted) !important;

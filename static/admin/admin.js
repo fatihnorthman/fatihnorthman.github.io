@@ -77,7 +77,41 @@ function updatePreview() {
     const content = document.getElementById("post-content").value;
     const previewArea = document.getElementById("preview-area");
     if (typeof marked !== 'undefined') {
-        previewArea.innerHTML = marked.parse(content);
+        // marked.js tam GFM yapılandırması
+        marked.setOptions({
+            gfm: true,
+            breaks: true,
+            pedantic: false,
+            smartypants: true,
+            highlight: function(code, lang) {
+                if (typeof hljs !== 'undefined' && lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(code, { language: lang }).value;
+                    } catch (e) {}
+                }
+                if (typeof hljs !== 'undefined') {
+                    try {
+                        return hljs.highlightAuto(code).value;
+                    } catch (e) {}
+                }
+                return code;
+            }
+        });
+
+        let html = marked.parse(content);
+
+        // Görev listesi (task list) desteği: - [ ] ve - [x]
+        html = html.replace(/<li>\s*\[ \]/g, '<li class="task-item"><input type="checkbox" disabled> ');
+        html = html.replace(/<li>\s*\[x\]/gi, '<li class="task-item task-done"><input type="checkbox" checked disabled> ');
+
+        previewArea.innerHTML = html;
+
+        // Highlight.js tarafından yakalanamayan blokları da işle
+        if (typeof hljs !== 'undefined') {
+            previewArea.querySelectorAll('pre code:not(.hljs)').forEach(block => {
+                hljs.highlightElement(block);
+            });
+        }
     } else {
         previewArea.textContent = content;
     }

@@ -47,9 +47,30 @@ disableKinds = ["sitemap", "robotsTXT"]
   [markup.highlight]
     noClasses = false
     style = "monokai"
+    guessSyntax = true
+    lineNos = false
+    lineNumbersInTable = true
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+    [markup.goldmark.extensions]
+      strikethrough = true
+      table = true
+      taskList = true
+      typographer = true
+      [markup.goldmark.extensions.footnote]
+      [markup.goldmark.extensions.passthrough]
+        enable = false
+    [markup.goldmark.parser]
+      autoHeadingID = true
+      autoHeadingIDType = "github"
+      [markup.goldmark.parser.attribute]
+        block = true
+        title = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+    ordered = false
 
 [[menu.main]]
   name = "Ana Sayfa"
