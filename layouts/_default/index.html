@@ -114,11 +114,11 @@
                   <span class="count">0</span>
                   <span class="label">Beğeni</span>
                 </button>
-                <div class="stat-card comment-count-card" data-post-id="{{ .RelPermalink }}">
+                <a href="{{ .RelPermalink }}#comments-section" class="stat-card comment-count-card" data-post-id="{{ .RelPermalink }}" style="text-decoration: none; color: inherit;">
                   <span class="icon">💬</span> 
                   <span class="count">0</span>
                   <span class="label">Yorum</span>
-                </div>
+                </a>
               </div>
               <a class="read-more button inline" href="{{ .RelPermalink }}" aria-label="{{ .Title }} yazısını oku">
                 Yazıyı Oku →

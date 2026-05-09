@@ -2391,6 +2391,10 @@ h3:hover .hanchor { opacity: 1; }
   cursor: default;
 }
 
+a.stat-card {
+  cursor: pointer;
+}
+
 .stat-card .icon {
   font-size: 1rem;
 }
@@ -2642,7 +2646,8 @@ h3:hover .hanchor { opacity: 1; }
 /* ── Fix Button Clickability in 3D Cards ───────────────────── */
 .post-card-inner button, 
 .post-card-inner a.button,
-.post-card-inner .stat-card.likeable {
+.post-card-inner .stat-card.likeable,
+.post-card-inner a.stat-card {
   position: relative;
   z-index: 50; /* Butonları en öne çek */
   transform: translateZ(20px); /* 3D düzlemde öne fırlat */
