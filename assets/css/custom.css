@@ -165,6 +165,106 @@ hr {
   align-items: center;
   justify-content: center;
   width: 100%;
+  position: relative;
+}
+
+/* ── Language Switcher ──────────────────────────────────────── */
+.lang-switcher {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  padding: 5px 10px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s var(--ease);
+  z-index: 100;
+}
+
+.lang-switcher:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(229, 57, 53, 0.3);
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  transition: all 0.25s var(--ease);
+  outline: none;
+}
+
+.lang-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.lang-btn.active {
+  color: var(--accent);
+  background: rgba(229, 57, 53, 0.12);
+  border: 1px solid rgba(229, 57, 53, 0.25);
+}
+
+.lang-flag {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.lang-code {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.lang-divider {
+  color: rgba(255, 255, 255, 0.15);
+  font-size: 0.8rem;
+  line-height: 1;
+  user-select: none;
+}
+
+/* Google Translate araç çubuğunu gizle */
+.goog-te-banner-frame,
+.goog-te-gadget,
+#goog-gt-tt,
+.goog-tooltip,
+.goog-tooltip:hover,
+.skiptranslate {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+.goog-te-menu-value { display: none !important; }
+
+/* Mobilde lang switcher */
+@media (max-width: 768px) {
+  .lang-switcher {
+    position: static;
+    margin: 8px auto;
+    order: -1;
+  }
+
+  .lang-code { display: none; }
+  .lang-btn { padding: 4px 6px; }
 }
 
 /* ── Logo ───────────────────────────────────────────────────── */

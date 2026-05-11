@@ -3,6 +3,20 @@
     <div class="header__logo">
       {{ partial "logo.html" . }}
     </div>
+
+    <!-- 🌐 Dil Değiştirici -->
+    <div class="lang-switcher" id="lang-switcher">
+      <button class="lang-btn active" id="lang-tr" onclick="setLang('tr')" aria-label="Türkçe">
+        <span class="lang-flag">🇹🇷</span>
+        <span class="lang-code">TR</span>
+      </button>
+      <span class="lang-divider">|</span>
+      <button class="lang-btn" id="lang-en" onclick="setLang('en')" aria-label="English">
+        <span class="lang-flag">🇬🇧</span>
+        <span class="lang-code">EN</span>
+      </button>
+    </div>
+
     {{ if len $.Site.Menus }}
       {{ partial "mobile-menu.html" . }}
     {{ end }}
@@ -15,6 +29,9 @@
   {{ end }}
 </header>
 
+<!-- Google Translate Element (gizli) -->
+<div id="google_translate_element" style="display:none;"></div>
+
 <!-- html2pdf.js for professional PDF downloads -->
 {{ if .IsPage }}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -22,3 +39,4 @@
 
 <!-- Reading Progress Bar -->
 <div class="progress-container"><div class="progress-bar"></div></div>
+
