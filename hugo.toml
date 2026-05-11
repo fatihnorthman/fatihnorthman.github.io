@@ -6,10 +6,16 @@ paginate = 8
 removePathAccents = true
 disableKinds = ["robotsTXT"]
 [outputs]
-  home = ["HTML", "RSS"]
+  home = ["HTML", "RSS", "Sitemap"]
   section = ["HTML", "RSS"]
   taxonomy = ["HTML"]
   term = ["HTML"]
+
+[outputFormats]
+  [outputFormats.Sitemap]
+    mediaType = "application/xml"
+    baseName = "sitemap"
+    isPlainText = true
 
 
 
@@ -41,7 +47,12 @@ disableKinds = ["robotsTXT"]
       description = "Linux, altyapı mimarisi, siber güvenlik ve teknoloji üzerine derinlemesine rehberler ve teknik dökümanlar."
 
 [sitemap]
+  changefreq = "weekly"
   filename = "sitemap.xml"
+  priority = 0.5
+
+[minify]
+  disableXML = true
 
 [markup]
   [markup.highlight]

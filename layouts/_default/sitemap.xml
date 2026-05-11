@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{{ .Site.BaseURL }}</loc>
+    <lastmod>{{ now.Format "2006-01-02" }}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  {{- range where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+  {{- if not .Draft }}
+  <url>
+    <loc>{{ .Permalink }}</loc>
+    <lastmod>{{ .Lastmod.Format "2006-01-02" }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  {{- end }}
+  {{- end }}
+  {{- range where .Site.Pages "Kind" "page" }}
+  {{- if and (ne .Type "posts") (ne .RelPermalink "/") (not .Draft) }}
+  <url>
+    <loc>{{ .Permalink }}</loc>
+    <lastmod>{{ .Lastmod.Format "2006-01-02" }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  {{- end }}
+  {{- end }}
+</urlset>
