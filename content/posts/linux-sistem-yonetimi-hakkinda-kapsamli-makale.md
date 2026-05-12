@@ -3,14 +3,14 @@ title: "Linux Sistem Yönetimi Hakkında Kapsamlı Makale"
 date: 2026-05-12T18:13:23+03:00
 lastmod: 2026-05-12T18:13:23+03:00
 draft: false
-tags: ["#Linux #SistemYönetimi #SysAdmin #LinuxSecurity #OpenSource #DevOps #Cybersecurity #BilgiGüvenliği #LinuxTips #ServerManagement #ITSecurity #Bash #CloudComputing #Infrastructure #TechTurkiye #Yazılım #SistemGüvenliği #NetworkSecurity #LinuxAdmin #Programlama"]
+tags: ["Linux", "SistemYönetimi", "SysAdmin", "LinuxSecurity", "OpenSource", "DevOps", "Cybersecurity", "BilgiGüvenliği", "LinuxTips", "ServerManagement", "ITSecurity", "Bash", "CloudComputing", "Infrastructure", "TechTurkiye", "Yazılım", "SistemGüvenliği", "NetworkSecurity", "LinuxAdmin", "Programlama"]
 categories: ["Genel"]
 author: "Fatih Northman"
 description: "Linux sistem yönetimi; kullanıcı denetimi, dosya izinleri, güvenlik denetimi ve servis yönetimini kapsayan bu kapsamlı rehber, hem yeni başlayan hem de deneyimli sistem yöneticileri için pratik komutlar ve en iyi pratiklerle hazırlanmıştır."
 slug: "linux-sistem-yonetimi-hakkinda-kapsamli-makale"
 readingTime: true
 weight: 1
-image: "/images/1778609602010-linux-nasil-kurulur-1719834963.jpg"
+image: "/images/1778609602010-linux-nasil-kurulur-1719834963.webp"
 ---
 
 ## İçindekiler
