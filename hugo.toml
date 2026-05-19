@@ -4,18 +4,16 @@ title = 'Fatih Şahan'
 theme = 'terminal'
 paginate = 8
 removePathAccents = true
-disableKinds = ["robotsTXT"]
 [outputs]
   home = ["HTML", "RSS", "Sitemap"]
+
+[outputFormats.Sitemap]
+  mediaType = "application/xml"
+  baseName = "sitemap"
+  isPlainText = true
   section = ["HTML", "RSS"]
   taxonomy = ["HTML"]
   term = ["HTML"]
-
-[outputFormats]
-  [outputFormats.Sitemap]
-    mediaType = "application/xml"
-    baseName = "sitemap"
-    isPlainText = true
 
 
 
