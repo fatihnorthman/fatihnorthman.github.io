@@ -7,16 +7,6 @@ removePathAccents = true
 [outputs]
   home = ["HTML", "RSS", "Sitemap"]
 
-[outputFormats.Sitemap]
-  mediaType = "application/xml"
-  baseName = "sitemap"
-  isPlainText = true
-  section = ["HTML", "RSS"]
-  taxonomy = ["HTML"]
-  term = ["HTML"]
-
-
-
 [permalinks]
   posts = "/:slug/"
 
