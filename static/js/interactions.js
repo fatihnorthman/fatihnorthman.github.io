@@ -79,9 +79,22 @@ function initPDF() {
     btn.onclick = async () => {
         console.log("PDF Generation (Aggressive Cleanup Mode) Started...");
         
+        // Dynamically load html2pdf only when button is clicked
         if (typeof html2pdf === 'undefined') {
-            alert('PDF motoru hazır değil, lütfen bekleyin.');
-            return;
+            try {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+                script.integrity = 'sha384-Yv5O+t3uE3hunW8uyrbpPW3iw6/5/Y7HitWJBLgqfMoA36NogMmy+8wWZMpn3HWc';
+                script.crossOrigin = 'anonymous';
+                await new Promise((resolve, reject) => {
+                    script.onload = resolve;
+                    script.onerror = () => reject(new Error('html2pdf yüklenemedi'));
+                    document.head.appendChild(script);
+                });
+            } catch (e) {
+                alert('PDF motoru yüklenemedi. Lütfen sayfayı yenileyin.');
+                return;
+            }
         }
 
         const postElement = document.querySelector('.post');

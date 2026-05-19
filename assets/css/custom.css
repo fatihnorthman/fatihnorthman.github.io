@@ -435,21 +435,6 @@ body {
   margin-bottom: 16px;
 }
 
-.post-avatar {
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, var(--accent) 0%, #ff6659 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  color: #fff;
-  font-size: 0.9rem;
-  box-shadow: 0 0 15px rgba(229, 57, 53, 0.3);
-}
-
 .post-user-info {
   display: flex;
   flex-direction: column;
@@ -1107,36 +1092,6 @@ h3:hover .hanchor { opacity: 1; }
   background: var(--accent-glow);
 }
 
-/* ── Post Navigation ────────────────────────────────────────── */
-.posts-nav {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 48px;
-  padding-top: 40px;
-  border-top: 1px solid var(--border);
-}
-
-.posts-nav-item {
-  padding: 20px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  transition: var(--transition);
-}
-
-.posts-nav-item:hover {
-  border-color: var(--accent-border);
-  background: var(--accent-glow);
-}
-
-.posts-nav-item a {
-  font-size: 0.9rem !important;
-  color: var(--text) !important;
-  text-decoration: none !important;
-  border: none !important;
-}
-
 /* ── Pagination ──────────────────────────────────────────────── */
 .pagination-nav {
   margin: 48px 0 24px;
@@ -1318,27 +1273,6 @@ h3:hover .hanchor { opacity: 1; }
   color: var(--accent) !important;
 }
 
-/* Eski copyright sınıfları (uyumluluk için) */
-.copyright, .copyright--user {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--text-muted) !important;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-
-.copyright a, .copyright--user a {
-  color: var(--text-muted) !important;
-  transition: color 0.2s;
-  border: none !important;
-}
-
-.copyright a:hover, .copyright--user a:hover {
-  color: var(--accent) !important;
-}
-
 @media (max-width: 600px) {
   .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
   .footer-nav { gap: 8px 16px; }
@@ -1458,30 +1392,6 @@ h3:hover .hanchor { opacity: 1; }
   justify-content: center;
   gap: 14px;
   flex-wrap: wrap;
-}
-
-.hero__cta {
-  display: inline-flex;
-  align-items: center;
-  padding: 12px 28px;
-  background: transparent !important;
-  color: var(--accent) !important;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 600;
-  border-radius: 8px;
-  text-decoration: none !important;
-  border: 2px solid var(--accent) !important;
-  transition: var(--transition);
-  letter-spacing: 0.02em;
-}
-
-.hero__cta:hover {
-  background: var(--accent-glow) !important;
-  color: #fff !important;
-  border-color: var(--accent) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(229, 57, 53, 0.25);
 }
 
 .hero__secondary {
@@ -1633,39 +1543,6 @@ h3:hover .hanchor { opacity: 1; }
   line-height: 1.9;
 }
 
-/* ── Tags Page ──────────────────────────────────────────────── */
-.terms ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.terms ul li {
-  margin: 0;
-}
-
-.terms ul li a {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--text-dim) !important;
-  border: 1px solid var(--border);
-  padding: 8px 18px;
-  border-radius: 8px;
-  text-decoration: none !important;
-  transition: var(--transition);
-}
-
-.terms ul li a:hover {
-  color: var(--accent) !important;
-  border-color: var(--accent-border);
-  background: var(--accent-glow);
-}
-
 /* ── Mobile about ───────────────────────────────────────────── */
 @media (max-width: 560px) {
   .about-header {
@@ -1680,18 +1557,7 @@ h3:hover .hanchor { opacity: 1; }
 
 /* Duplicated preloader removed for performance */
 
-/* ── Post Interactions (Likes & Shares) ────────────────────── */
-.post-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 24px 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  margin: 48px 0;
-}
-
-/* ── Masaüstü: Interaction Hub Kompakt Stili ──────────────── */
+/* ── Interaction Hub ───────────────────────────────────────── */
 .post-interaction-hub {
   display: flex;
   align-items: center;
@@ -1822,43 +1688,6 @@ h3:hover .hanchor { opacity: 1; }
 }
 
 .like-btn .icon { color: var(--accent); font-size: 1.1rem; }
-
-.post-actions__share {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.share-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.share-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--text-dim) !important;
-  transition: var(--transition);
-  background: transparent;
-}
-
-.share-btn:hover {
-  border-color: var(--accent);
-  color: #fff !important;
-  background: var(--accent-glow);
-  transform: translateY(-3px);
-}
 
 /* ── Privacy Policy Page ────────────────────────────────────── */
 .privacy-page {
@@ -2135,31 +1964,6 @@ h3:hover .hanchor { opacity: 1; }
   box-shadow: 0 8px 24px rgba(229, 57, 53, 0.4);
 }
 
-/* ── Post Card Stats (Home Page) ────────────────────────────── */
-.post-stats {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-left: 12px;
-  padding-left: 12px;
-  border-left: 1px solid var(--border);
-}
-
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-}
-
-.stat-item .icon {
-  font-size: 0.85rem;
-}
-
-.stat-item:first-child .icon { color: var(--accent); }
-
 /* ── Scroll to Comments Button (Single Post) ────────────────── */
 .scroll-to-comments {
   display: inline-flex;
@@ -2184,67 +1988,11 @@ h3:hover .hanchor { opacity: 1; }
   transform: translateY(-2px);
 }
 
-/* ── Refined Share Link Button ──────────────────────────────── */
-.share-link-btn {
-  border-style: dashed !important;
-  background: transparent !important;
-}
-
-.share-link-btn:hover {
-  border-style: solid !important;
-  background: var(--accent-glow) !important;
-}
-
-/* ── Social Share Icon Buttons ─────────────────────────────── */
-.share-buttons-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.share-icon-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition);
-  background: var(--bg-surface);
-  color: var(--text-dim) !important;
-  cursor: pointer;
-}
-
-.share-icon-btn svg {
-  width: 20px;
-  height: 20px;
-}
-
-.share-icon-btn:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent);
-  color: #fff !important;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-}
-
-.share-icon-btn.wa:hover { color: #25D366 !important; border-color: #25D366; }
-.share-icon-btn.in:hover { color: #0077B5 !important; border-color: #0077B5; }
-.share-icon-btn.tw:hover { color: #fff !important; border-color: #fff; }
-.share-icon-btn.link:hover { color: var(--accent) !important; border-color: var(--accent); }
-
-/* ── Refined Post Card Stats (Social Style) ─────────────────── */
+/* ── Post Card Stats (Social Style) ──────────────────────────── */
 .post-card-stats {
   display: flex;
   align-items: center;
   gap: 20px;
-}
-
-.post-card-stats .stat-item {
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-dim);
 }
 
 .post-card-stats .icon {
@@ -2266,35 +2014,6 @@ h3:hover .hanchor { opacity: 1; }
 .post-tags-list a:hover {
   opacity: 1;
   text-decoration: underline !important;
-}
-
-/* ── Refined Share Copy Button ─────────────────────────────── */
-.share-copy-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  padding: 8px 16px;
-  border-radius: 10px;
-  color: var(--text-dim);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.share-copy-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-.share-copy-btn:hover {
-  border-color: var(--accent);
-  color: #fff;
-  background: var(--accent-glow);
-  transform: translateY(-2px);
 }
 
 /* ── Post Card Stat Cards ──────────────────────────────────── */
@@ -3150,19 +2869,13 @@ html, body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  pointer-events: none; /* Tıklamalara engel olma */
+  pointer-events: none;
   z-index: 9999998;
 }
 
-  box-shadow: 0 0 15px rgba(229, 57, 53, 0.2);
-}
-
-/* ── Profesyonel Reklam Yönetimi (İnceleme & Onay Modu) ─────────────────────────── */
+/* ── Ad Management ──────────────────────────────────────────── */
 .in-feed-ad, 
-.multiplex-ad-container, 
-.ad-sidebar, 
-.in-article-adsense, 
-.ad-placeholder-horizontal,
+.in-article-adsense,
 .adsbygoogle {
   /* Onay sürecinde görünürlük şarttır! */
   opacity: 1 !important;
@@ -3251,7 +2964,6 @@ body.is-printing-pdf {
 .is-printing-pdf .in-feed-ad,
 .is-printing-pdf .post-interaction-hub,
 .is-printing-pdf .comments-section,
-.is-printing-pdf .multiplex-ad-container,
 .is-printing-pdf .posts-pagination,
 .is-printing-pdf .navigation-menu,
 .is-printing-pdf .header,
@@ -3320,7 +3032,6 @@ body.is-pdf-printing .navigation-menu,
 body.is-pdf-printing .post-interaction-hub,
 body.is-pdf-printing .comments-section,
 body.is-pdf-printing .pagination,
-body.is-pdf-printing .multiplex-ad-container,
 body.is-pdf-printing .in-feed-ad,
 body.is-pdf-printing .adsbygoogle,
 body.is-pdf-printing .scroll-to-comments,

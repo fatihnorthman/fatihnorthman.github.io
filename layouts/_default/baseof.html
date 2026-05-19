@@ -70,14 +70,14 @@
     const preloader = document.querySelector('.preloader');
     const overlay = document.querySelector('.preloader-overlay');
     
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       if(preloader) preloader.classList.add('preloader--hidden');
       if(overlay) {
         overlay.style.opacity = '0';
-        setTimeout(() => overlay.style.display = 'none', 500);
+        overlay.style.pointerEvents = 'none';
       }
       document.body.style.overflow = 'auto';
-    }, 300); 
+    });
   });
 
   // Scroll Progress Logic
