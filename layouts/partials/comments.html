@@ -1,0 +1,6 @@
+{{ if site.Config.Services.Disqus.Shortname }}
+  <section id="comments-section" class="comments-wrapper">
+    <h2>Yorumlar</h2>
+    {{ template "_internal/disqus.html" . }}
+  </section>
+{{ end }}

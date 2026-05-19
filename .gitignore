@@ -1,3 +1,6 @@
+# --- ADMIN PANEL (lokal, yayinlanmaz) ---
+static/admin/
+
 # --- HUGO & WEB ---
 public/
 resources/
