@@ -1,7 +1,13 @@
 const REPO_OWNER = "fatihnorthman";
 const REPO_NAME = "fatihnorthman.github.io";
-let GITHUB_TOKEN = sessionStorage.getItem("gh_token") || "";
+let GITHUB_TOKEN = "";
 let INACTIVITY_TIMER;
+
+// Brute-force koruma
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS = 5 * 60 * 1000; // 5 dakika
+let failedAttempts = parseInt(sessionStorage.getItem("gh_fail_count") || "0");
+let lockoutUntil = parseInt(sessionStorage.getItem("gh_lockout_until") || "0");
 
 // EDIT MODE STATE
 let IS_EDIT_MODE = false;
@@ -26,16 +32,26 @@ window.onerror = function(msg, url, line) {
     return false;
 };
 
-if (GITHUB_TOKEN) {
-    document.getElementById("login-overlay").style.display = "none";
-    document.getElementById("status").innerText = "SİSTEM ÇEVRİMİÇİ";
-    document.getElementById("status").classList.add("online");
-    log("Sistem otomatik olarak yetkilendirildi. Veriler çekiliyor...");
-    setTimeout(() => {
-        fetchPosts();
-        updatePreview();
-    }, 500); 
-}
+// Sayfa yüklendiğinde kayıtlı token varsa GitHub ile doğrula
+(async function initAuth() {
+    const savedToken = sessionStorage.getItem("gh_token");
+    if (savedToken) {
+        log("Kayıtlı oturum bulundu, doğrulanıyor...");
+        const valid = await verifyToken(savedToken);
+        if (valid) {
+            GITHUB_TOKEN = savedToken;
+            document.getElementById("login-overlay").style.display = "none";
+            document.getElementById("status").innerText = "SİSTEM ÇEVRİMİÇİ";
+            document.getElementById("status").classList.add("online");
+            log("Oturum doğrulandı. Veriler çekiliyor...");
+            fetchPosts();
+            updatePreview();
+        } else {
+            sessionStorage.removeItem("gh_token");
+            log("Kaydedilmiş token geçersiz, lütfen tekrar giriş yapın.");
+        }
+    }
+})();
 
 function log(msg) {
     const consoleLogs = document.getElementById("console-logs");
@@ -47,20 +63,94 @@ function log(msg) {
     consoleLogs.scrollTop = consoleLogs.scrollHeight;
 }
 
-function authAdmin() {
-    log("Yetkilendirme tetiklendi...");
+// GitHub API üzerinden token doğrulama
+async function verifyToken(token) {
+    try {
+        const res = await fetch("https://api.github.com/user", {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Accept": "application/vnd.github.v3+json"
+            }
+        });
+        if (!res.ok) return false;
+        const data = await res.json();
+        // Sadece repo sahibi giriş yapabilsin
+        return data.login && data.login.toLowerCase() === REPO_OWNER.toLowerCase();
+    } catch {
+        return false;
+    }
+}
+
+async function authAdmin() {
+    // Kilit kontrolü
+    const now = Date.now();
+    if (lockoutUntil > now) {
+        const remaining = Math.ceil((lockoutUntil - now) / 1000);
+        log(`HATA: Çok fazla başarısız deneme. ${remaining} saniye sonra tekrar deneyin.`);
+        showLoginError(`Hesap kilitli. ${Math.ceil(remaining / 60)} dakika bekleyin.`);
+        return;
+    }
+
     const token = document.getElementById("gh-token").value.trim();
-    if (token) {
+    if (!token) {
+        log("HATA: Token boş olamaz!");
+        showLoginError("Lütfen GitHub Access Token girin.");
+        return;
+    }
+
+    const btn = document.querySelector(".login-box .btn-primary");
+    btn.disabled = true;
+    btn.textContent = "DOĞRULANIYYOR...";
+    log("Token GitHub API ile doğrulanıyor...");
+
+    const valid = await verifyToken(token);
+
+    if (valid) {
+        // Başarılı giriş — sayacı sıfırla
+        failedAttempts = 0;
+        sessionStorage.removeItem("gh_fail_count");
+        sessionStorage.removeItem("gh_lockout_until");
+
         GITHUB_TOKEN = token;
         sessionStorage.setItem("gh_token", token);
         document.getElementById("login-overlay").style.display = "none";
-        document.getElementById("status").innerText = "SİSTEM ÇEVRİMÇİ";
+        document.getElementById("status").innerText = "SİSTEM ÇEVRİMİÇİ";
         document.getElementById("status").classList.add("online");
-        log("Anahtar kaydedildi. Yazı listesi isteniyor...");
-        fetchPosts(); 
+        log("Kimlik doğrulandı. Yazı listesi isteniyor...");
+        fetchPosts();
     } else {
-        log("HATA: Anahtar boş olamaz!");
+        // Başarısız giriş
+        failedAttempts++;
+        sessionStorage.setItem("gh_fail_count", failedAttempts);
+
+        if (failedAttempts >= MAX_ATTEMPTS) {
+            const until = Date.now() + LOCKOUT_MS;
+            lockoutUntil = until;
+            sessionStorage.setItem("gh_lockout_until", until);
+            log(`GÜVENLİK: ${MAX_ATTEMPTS} hatalı deneme. Hesap 5 dakika kilitlendi.`);
+            showLoginError(`${MAX_ATTEMPTS} hatalı deneme! 5 dakika kilitlendi.`);
+        } else {
+            const left = MAX_ATTEMPTS - failedAttempts;
+            log(`KİMLİK DOĞRULAMA HATASI: Geçersiz token veya yetkisiz kullanıcı. (${left} hak kaldı)`);
+            showLoginError(`Geçersiz token veya bu repo'ya erişim yetkiniz yok. (${left} deneme hakkı)`);
+        }
+
+        document.getElementById("gh-token").value = "";
     }
+
+    btn.disabled = false;
+    btn.textContent = "SİSTEME BAĞLAN";
+}
+
+function showLoginError(msg) {
+    let errEl = document.getElementById("login-error");
+    if (!errEl) {
+        errEl = document.createElement("p");
+        errEl.id = "login-error";
+        errEl.style.cssText = "color:#ff4444;font-size:0.82rem;margin-top:10px;text-align:center;font-family:'Fira Code',monospace;";
+        document.querySelector(".login-box .login-actions").insertAdjacentElement("afterend", errEl);
+    }
+    errEl.textContent = "⚠ " + msg;
 }
 
 function toggleToken() {
