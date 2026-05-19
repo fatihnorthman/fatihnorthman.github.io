@@ -23,11 +23,9 @@
 </script>
 
 <style>
-  /* Lighthouse Bypass */
-  html.is-lighthouse .preloader, 
-  html.is-lighthouse .preloader-overlay,
-  html.is-lighthouse .preloader__content { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
-  html.is-lighthouse body { overflow: auto !important; }
+  /* Page transition */
+  body { opacity: 0; transition: opacity 0.15s ease; }
+  body.page-ready { opacity: 1; }
   
   /* Best Practices: overflow: visible fix for all media and ad containers */
   img, video, canvas, svg, picture, .adsbygoogle, ins { overflow: clip !important; }
