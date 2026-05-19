@@ -13,7 +13,7 @@
       <span class="footer-copy">© {{ now.Year }} <strong>Fatih Şahan</strong> — Tüm hakları saklıdır.</span>
       <span class="footer-social">
         <a href="https://github.com/fatihnorthman" target="_blank" rel="noopener" title="GitHub">GitHub</a>
-        <a href="mailto:sahanfatih2798@gmail.com" title="E-posta">E-posta</a>
+        <a href="#" class="email-link" data-part1="sahanfatih2798" data-part2="gmail.com" title="E-posta">E-posta</a>
       </span>
     </div>
 
@@ -29,4 +29,15 @@
 <script src="/js/parallax-bg.js" defer></script>
 
 
+<script>
+(function() {
+  var links = document.querySelectorAll('.email-link');
+  for (var i = 0; i < links.length; i++) {
+    var el = links[i];
+    var email = el.getAttribute('data-part1') + '@' + el.getAttribute('data-part2');
+    el.href = 'mailto:' + email;
+    el.textContent = email;
+  }
+})();
+</script>
 {{ partial "extended_footer.html" . }}

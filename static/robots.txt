@@ -25,3 +25,6 @@ User-agent: ClaudeBot
 Disallow: /
 
 Sitemap: https://fatihnorthman.github.io/sitemap.xml
+
+# Security
+# https://fatihnorthman.github.io/.well-known/security.txt
