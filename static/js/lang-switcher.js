@@ -27,31 +27,50 @@
     return null;
   }
 
+  var _gtLoaded = false;
+
+  function loadGoogleTranslate(callback) {
+    if (_gtLoaded) { if (callback) callback(); return; }
+    window.googleTranslateElementInit = function() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'tr',
+        includedLanguages: 'en',
+        autoDisplay: false,
+        layout: google.translate.TranslateElement.InlineLayout.NONE
+      }, 'google_translate_element');
+      _gtLoaded = true;
+      if (callback) callback();
+    };
+    var s = document.createElement('script');
+    s.src = '//translate.googleapis.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.defer = true;
+    document.head.appendChild(s);
+  }
+
   // Google Translate cookie ile dil değiştir
   window.setLang = function (lang) {
     var trBtn = document.getElementById('lang-tr');
     var enBtn = document.getElementById('lang-en');
 
     if (lang === 'en') {
-      // Google Translate cookie'sini İngilizce'ye ayarla
-      setCookie('googtrans', '/tr/en', 1);
-      if (trBtn) trBtn.classList.remove('active');
-      if (enBtn) enBtn.classList.add('active');
+      loadGoogleTranslate(function() {
+        setCookie('googtrans', '/tr/en', 1);
+        if (trBtn) trBtn.classList.remove('active');
+        if (enBtn) enBtn.classList.add('active');
+        location.reload();
+      });
     } else {
       // Çeviriyi sıfırla — TR'ye dön
       setCookie('googtrans', '', -1);
-      // googtrans cookie'sini tüm path varyantlarından sil
       document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname + ';';
       if (trBtn) trBtn.classList.add('active');
       if (enBtn) enBtn.classList.remove('active');
+      location.reload();
     }
-
-    // Sayfayı yenile — çeviri aktif olsun
-    location.reload();
   };
 
-  // Sayfa yüklendiğinde mevcut dili oku ve butonu güncelle
+  // Sayfa yüklendiğinde mevcut dili oku, butonu güncelle ve gerekirse GT'yi yükle
   document.addEventListener('DOMContentLoaded', function () {
     var currentLang = getCookie('googtrans');
     var trBtn = document.getElementById('lang-tr');
@@ -60,6 +79,7 @@
     if (currentLang && currentLang.includes('/en')) {
       if (trBtn) trBtn.classList.remove('active');
       if (enBtn) enBtn.classList.add('active');
+      loadGoogleTranslate();
     } else {
       if (trBtn) trBtn.classList.add('active');
       if (enBtn) enBtn.classList.remove('active');

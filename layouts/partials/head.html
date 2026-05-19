@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Optimized CSP for AdSense Review -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googlesyndication.com https://*.google.com https://*.googletagservices.com https://cdnjs.cloudflare.com https://ep2.adtrafficquality.google https://translate.googleapis.com https://translate-pa.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://translate.googleapis.com; font-src 'self' https://fonts.gstatic.com https://translate.googleapis.com; img-src 'self' data: https: https://translate.google.com https://www.gstatic.com; connect-src 'self' https: https://*.google-analytics.com https://*.analytics.google.com https://*.googlesyndication.com https://translate.googleapis.com https://translate-pa.googleapis.com; frame-src 'self' https://*.doubleclick.net https://*.googlesyndication.com https://*.google.com https://ep2.adtrafficquality.google;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googlesyndication.com https://*.google.com https://*.googletagservices.com https://cdnjs.cloudflare.com https://ep2.adtrafficquality.google https://translate.googleapis.com https://translate-pa.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://translate.googleapis.com; font-src 'self' https://fonts.gstatic.com https://translate.googleapis.com; img-src 'self' data: https: https://translate.google.com https://www.gstatic.com; connect-src 'self' https: https://*.google-analytics.com https://*.analytics.google.com https://*.googlesyndication.com https://translate.googleapis.com https://translate-pa.googleapis.com; frame-src 'self' https://*.doubleclick.net https://*.googlesyndication.com https://*.google.com https://ep2.adtrafficquality.google; frame-ancestors 'none';">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
 <meta name="referrer" content="no-referrer-when-downgrade">
 
 <script>
@@ -29,6 +30,8 @@
   
   /* Best Practices: overflow: visible fix for all media and ad containers */
   img, video, canvas, svg, picture, .adsbygoogle, ins { overflow: clip !important; }
+  .custom-cursor { display: none; }
+  @media (hover: none) and (pointer: coarse) { .custom-cursor, #trail-canvas { display: none !important; } }
 </style>
 
 <meta name="robots" content="index, follow">
@@ -99,15 +102,4 @@
 
 <link rel="shortcut icon" href="/logo.svg">
 
-<!-- Google Translate Init -->
-<script type="text/javascript">
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'tr',
-    includedLanguages: 'en',
-    autoDisplay: false,
-    layout: google.translate.TranslateElement.InlineLayout.NONE
-  }, 'google_translate_element');
-}
-</script>
-<script src="//translate.googleapis.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
+

@@ -150,6 +150,7 @@ function initPDF() {
 }
 
 function initCustomCursor() {
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
     const cursor = document.querySelector('.custom-cursor');
     if (!cursor) return;
 
@@ -177,6 +178,7 @@ if (document.readyState === 'loading') {
 
 // --- CLICK RIPPLE ENGINE ---
 function initClickRipple() {
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
     window.addEventListener('mousedown', (e) => {
         const ripple = document.createElement('div');
         ripple.className = 'click-ripple';
