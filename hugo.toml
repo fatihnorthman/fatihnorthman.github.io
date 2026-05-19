@@ -4,6 +4,7 @@ title = 'Fatih Şahan'
 theme = 'terminal'
 paginate = 8
 removePathAccents = true
+disableHugoGeneratorInject = true
 [outputs]
   home = ["HTML", "RSS", "Sitemap"]
 
